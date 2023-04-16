@@ -1,0 +1,22 @@
+<h3>Lobby Chat</h3>
+<div>
+  <table>
+    <tr *ngFor="let msg of chatlog">
+      <td>{{ msg.timestamp | date : "medium" }}</td>
+      <td>{{ msg.email }}:</td>
+      <td>{{ msg.message }}</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <form [formGroup]="chatForm" (ngSubmit)="onSubmitMessage()">
+    <table>
+      <tr>
+        <td>
+          <textarea rows="5" cols="40" formControlName="message"></textarea>
+        </td>
+        <td><button type="submit">Send</button></td>
+      </tr>
+    </table>
+  </form>
+</div>

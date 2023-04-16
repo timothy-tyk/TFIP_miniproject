@@ -1,0 +1,5 @@
+<div *ngIf="userInfo != null">
+  <h2>Welcome back {{ userInfo.name }}</h2>
+  <img [src]="userInfo.picture" />
+  <button type="button" (click)="editProfile()">Edit</button>
+</div>

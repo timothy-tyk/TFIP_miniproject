@@ -1,0 +1,25 @@
+<h2>Edit User {{ email }}</h2>
+<form
+  [formGroup]="userForm"
+  *ngIf="userInfo != null"
+  (ngSubmit)="updateProfile()"
+>
+  <table>
+    <tr>
+      <td>Name:</td>
+      <td><input type="text" formControlName="name" /></td>
+    </tr>
+    <tr>
+      <td>Image:</td>
+      <td>
+        <input type="file" #file accept="image/*" formControlName="picture" />
+      </td>
+    </tr>
+    <tr>
+      <td><img [src]="userInfo.picture" /></td>
+    </tr>
+    <tr>
+      <td><button type="submit">Update</button></td>
+    </tr>
+  </table>
+</form>
