@@ -24,6 +24,13 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { ChatComponent } from './components/lobby/chat.component';
 import { WebsocketService } from './services/websocket/websocket.service';
 import { ChatService } from './services/chat/chat.service';
+import { RoomListComponent } from './components/rooms/room-list.component';
+import { AddRoomComponent } from './components/rooms/add-room.component';
+import { RoomComponent } from './components/rooms/room.component';
+import { RoomChatComponent } from './components/rooms/room-chat.component';
+import { PlayerComponent } from './components/player/player.component';
+import { SpotifyAuthService } from './services/auth/spotify-auth.service';
+import { LandingPageComponent } from './components/landing/landing-page.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +40,12 @@ import { ChatService } from './services/chat/chat.service';
     UserInfoComponent,
     UserEditComponent,
     ChatComponent,
+    RoomListComponent,
+    AddRoomComponent,
+    RoomComponent,
+    RoomChatComponent,
+    PlayerComponent,
+    LandingPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +64,7 @@ import { ChatService } from './services/chat/chat.service';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,
   ],
-  providers: [UserService, ChatService, WebsocketService],
+  providers: [UserService, ChatService, WebsocketService, SpotifyAuthService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

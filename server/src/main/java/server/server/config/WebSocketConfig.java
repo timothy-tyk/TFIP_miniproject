@@ -6,13 +6,13 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
-
+ 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
   @Override
   public void registerStompEndpoints(StompEndpointRegistry reg){
-    reg.addEndpoint("/socket").setAllowedOrigins("http://localhost:4200").withSockJS();
+    reg.addEndpoint("/chat").setAllowedOrigins("http://localhost:4200").withSockJS();
   }
   @Override
   public void configureMessageBroker(MessageBrokerRegistry msgReg){

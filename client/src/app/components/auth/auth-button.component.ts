@@ -13,7 +13,7 @@ export class AuthButtonComponent implements OnInit {
   ngOnInit(): void {
     this.auth.isAuthenticated$.subscribe((p) => {
       if (p) {
-        this.router.navigate(['/lobby']);
+        this.router.navigate(['/login']);
       }
     });
   }

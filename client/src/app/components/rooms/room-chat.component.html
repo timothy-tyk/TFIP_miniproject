@@ -1,0 +1,17 @@
+<h3>Room Chat</h3>
+<table *ngIf="chatlog != null">
+  <tr *ngFor="let msg of chatlog">
+    <td>{{ msg.email }}:</td>
+    <td>{{ msg.message }}</td>
+  </tr>
+</table>
+<form [formGroup]="chatForm" (ngSubmit)="onSubmitMessage()">
+  <table>
+    <tr>
+      <td>
+        <textarea rows="5" cols="30" formControlName="message"></textarea>
+      </td>
+      <td><button type="submit">Send</button></td>
+    </tr>
+  </table>
+</form>

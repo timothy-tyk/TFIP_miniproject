@@ -1,0 +1,20 @@
+<h3>Add New Room</h3>
+<form [formGroup]="addRoomForm" (ngSubmit)="submitRoomForm()">
+  <table>
+    <tr>
+      <td>Room Name:</td>
+      <td><input type="text" size="40" formControlName="name" /></td>
+    </tr>
+    <tr>
+      <td>Room Description:</td>
+      <td>
+        <textarea rows="5" cols="30" formControlName="description"></textarea>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <button type="submit" [disabled]="addRoomForm.invalid">Submit</button>
+      </td>
+    </tr>
+  </table>
+</form>

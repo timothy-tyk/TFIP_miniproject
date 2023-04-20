@@ -2,10 +2,12 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { ChatMessage } from 'src/app/models/chatmessage-model';
 import { User } from 'src/app/models/user-model';
 import { ChatService } from 'src/app/services/chat/chat.service';
@@ -16,10 +18,12 @@ import { WebsocketService } from 'src/app/services/websocket/websocket.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   @Input() userInfo!: User;
   chatForm!: FormGroup;
-  chatlog: ChatMessage[] = this.websocketSvc.messages;
+  currentLocation: string = location.pathname;
+  chatlog: ChatMessage[] = this.websocketSvc.messages.get('/lobby')!;
+  msgSubscription!: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -27,9 +31,16 @@ export class ChatComponent implements OnInit {
     private websocketSvc: WebsocketService
   ) {}
   ngOnInit(): void {
+    // this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
     this.websocketSvc.initializeConnection();
     this.initializeChatForm();
-    // this.retrieveChatMessages();
+    this.msgSubscription = this.websocketSvc.messageAdded.subscribe(
+      () => (this.chatlog = this.websocketSvc.messages.get('/lobby')!)
+    );
+  }
+  ngOnDestroy(): void {
+    console.log('disconnecting');
+    this.websocketSvc.disconnect(this.currentLocation);
   }
 
   initializeChatForm() {
@@ -45,8 +56,9 @@ export class ChatComponent implements OnInit {
       location: 'lobby',
       timestamp: new Date().getTime(),
     };
-    // this.chatSvc.submitChatMessage(msg).then((res) => console.log(res));
+
     this.websocketSvc.sendMessage(JSON.stringify(msg));
+    this.initializeChatForm();
   }
 
   retrieveChatMessages() {

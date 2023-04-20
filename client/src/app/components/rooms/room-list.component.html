@@ -1,0 +1,13 @@
+<h3>Room List</h3>
+<table *ngIf="roomList != null">
+  <tr>
+    <td>
+      <button type="button" [routerLink]="['/rooms/add']">Add Room</button>
+    </td>
+  </tr>
+  <tr *ngFor="let room of roomList; index as i">
+    <td>{{ i }}</td>
+    <td>{{ room.name }}</td>
+    <button type="button" (click)="enterRoom(room.roomId)">Enter</button>
+  </tr>
+</table>

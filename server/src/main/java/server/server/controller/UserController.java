@@ -41,4 +41,9 @@ public class UserController {
       user.setPicture(picture);
       return userSvc.updateUserDetails(user);
   }
+
+  // @GetMapping(path = "user/spotify")
+  // public ResponseEntity<String> getSpotifyAccessToken(){
+
+  // }
 }

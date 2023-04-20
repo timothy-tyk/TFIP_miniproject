@@ -1,0 +1,9 @@
+<p>room works!</p>
+<div *ngIf="room != null">
+  <p>{{ room.roomId }}</p>
+  <p>{{ room.name }}</p>
+  <p>{{ room.description }}</p>
+</div>
+<app-player></app-player>
+<app-room-chat [roomId]="id"></app-room-chat>
+<button type="button" (click)="backToLobby()">Back</button>
