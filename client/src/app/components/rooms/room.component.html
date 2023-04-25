@@ -4,6 +4,13 @@
   <p>{{ room.name }}</p>
   <p>{{ room.description }}</p>
 </div>
-<app-player></app-player>
+<app-player
+  (onTrackEnded)="updatePlayerTrack($event)"
+  [trackList]="trackList"
+></app-player>
+<app-search-add-track
+  [roomId]="id"
+  [trackList]="trackList"
+></app-search-add-track>
 <app-room-chat [roomId]="id"></app-room-chat>
 <button type="button" (click)="backToLobby()">Back</button>

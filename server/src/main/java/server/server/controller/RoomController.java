@@ -10,10 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import server.server.model.Room;
+import server.server.model.TrackList;
 import server.server.service.RoomService;
 
 @Controller
@@ -29,6 +31,7 @@ public class RoomController {
 
   @PostMapping()
   public ResponseEntity<Room> createRoom(@RequestBody Room room){
+    System.out.println(room);
     room.setRoomId(UUID.randomUUID().toString().substring(0,8));
     return roomSvc.addRoom(room);
   }
@@ -36,6 +39,12 @@ public class RoomController {
   @GetMapping("/{roomId}")
   public ResponseEntity<Room> getRoomById(@PathVariable String roomId){
     return roomSvc.getRoomById(roomId);
+  }
 
+  @PutMapping("/{roomId}")
+  public ResponseEntity<Room> updateRoomAddTrack(@PathVariable String roomId,@RequestBody TrackList trackListUris){
+    String trackList = trackListUris.getTrackListUris();
+    System.out.println(trackList);
+    return roomSvc.updateRoomAddTrack(roomId, trackList);
   }
 }

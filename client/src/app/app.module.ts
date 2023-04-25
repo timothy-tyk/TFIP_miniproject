@@ -21,6 +21,7 @@ import { NgxContextModule } from 'ngx-context';
 // Firebase
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+// Components
 import { ChatComponent } from './components/lobby/chat.component';
 import { WebsocketService } from './services/websocket/websocket.service';
 import { ChatService } from './services/chat/chat.service';
@@ -31,6 +32,7 @@ import { RoomChatComponent } from './components/rooms/room-chat.component';
 import { PlayerComponent } from './components/player/player.component';
 import { SpotifyAuthService } from './services/auth/spotify-auth.service';
 import { LandingPageComponent } from './components/landing/landing-page.component';
+import { SearchAddTrackComponent } from './components/player/search-add-track.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import { LandingPageComponent } from './components/landing/landing-page.componen
     RoomChatComponent,
     PlayerComponent,
     LandingPageComponent,
+    SearchAddTrackComponent,
   ],
   imports: [
     BrowserModule,

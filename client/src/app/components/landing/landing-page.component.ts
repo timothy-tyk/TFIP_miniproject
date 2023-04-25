@@ -39,6 +39,7 @@ export class LandingPageComponent implements OnInit {
     this.spotifyAuth
       .getSpotifyUserLogin()
       .then((res: any) => window.location.replace(res.link))
+      .then((token) => console.log(token))
       .catch((err) => console.log(err));
   }
 }

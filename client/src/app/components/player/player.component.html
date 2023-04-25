@@ -1,1 +1,17 @@
-<script src="https://sdk.scdn.co/spotify-player.js"></script>
+<h2>Player</h2>
+<script
+  src="https://open.spotify.com/embed-podcast/iframe-api/v1"
+  async
+></script>
+<div *ngIf="trackList != null">
+  <div id="embed-iframe"></div>
+  <table>
+    <tr>
+      <td>
+        <button type="button" (click)="onTogglePlay()">
+          {{ playerStatus == "Play" ? "Pause" : "Play" }}
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>

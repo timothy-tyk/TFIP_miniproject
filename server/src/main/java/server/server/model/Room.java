@@ -15,4 +15,5 @@ public class Room {
   private Integer userCount;
   private String roomId;
   private boolean active;
+  private String trackList;
 }

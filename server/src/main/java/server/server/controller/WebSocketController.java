@@ -25,6 +25,14 @@ public class WebSocketController {
     ChatMessage cm = ChatMessage.fromJson(json);
     chatSvc.storeChatMessage(cm);
     String destination = "/message/"+location;
+    System.out.println(destination);
     this.smTemplate.convertAndSend(destination,message);
+  }
+
+  @MessageMapping("/chat/{location}/control")
+  public void sendControls(@DestinationVariable("location")String location,String command){
+    String destination = "/message/control/"+location;
+    System.out.println(destination);
+    this.smTemplate.convertAndSend(destination, command);
   }
 }

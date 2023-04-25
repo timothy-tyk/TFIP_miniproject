@@ -28,12 +28,13 @@ public class SpotifyController {
               .setClientSecret("763c40ff86a9462497afc7da0f1a5ef9")
               .setRedirectUri(redirectUri)
               .build();
+  private String spotifyToken = "";
 
   @GetMapping(path = "/login")
   @ResponseBody
   public String spotifyLogin(){
     AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
-    .scope("user-read-private, user-read-email, user-top-read")
+    .scope("user-read-private, user-read-email, user-top-read, ugc-image-upload, user-read-playback-state, user-modify-playback-state, user-read-currently-playing, app-remote-control, streaming, playlist-read-private, playlist-read-collaborative, playlist-modify-private, playlist-modify-public, user-read-playback-position, user-read-recently-played")
     .show_dialog(true)
     .build();
   final URI uri = authorizationCodeUriRequest.execute();
@@ -55,6 +56,19 @@ public class SpotifyController {
       System.out.println(e);
     }
     response.sendRedirect("http://localhost:4200/lobby");
+    System.out.println(spotifyApi.getAccessToken());
+    spotifyToken = spotifyApi.getAccessToken();
+    
     return spotifyApi.getAccessToken();
   }
+
+  @GetMapping(path = "/gettoken")
+  @ResponseBody
+  public String getSpotifyToken(){
+    // TODO: add some security validation here
+    JsonObject json = Json.createObjectBuilder().add("token", spotifyToken).build();
+    return json.toString();
+  }
+
+  
 }

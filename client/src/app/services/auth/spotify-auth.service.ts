@@ -14,4 +14,10 @@ export class SpotifyAuthService {
       this.httpClient.get(`${SERVER_URL}/spotify/login`).pipe()
     );
   }
+
+  getSpotifyToken() {
+    return firstValueFrom(
+      this.httpClient.get(`${SERVER_URL}/spotify/gettoken`).pipe()
+    );
+  }
 }

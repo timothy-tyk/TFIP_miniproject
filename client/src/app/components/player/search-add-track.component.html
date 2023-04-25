@@ -1,0 +1,9 @@
+<form [formGroup]="searchForm" (submit)="addTrack()">
+  <table>
+    <tr>
+      <td>Track Uri:</td>
+      <td><input type="text" formControlName="trackUri" size="40" /></td>
+      <td><button type="submit">Add</button></td>
+    </tr>
+  </table>
+</form>

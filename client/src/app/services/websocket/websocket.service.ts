@@ -26,6 +26,7 @@ export class WebsocketService {
     this.stompClient.connect({}, function (frame) {
       const fromLocation = location.pathname.replace('/rooms', '');
       that.stompClient.subscribe(`/message${fromLocation}`, (msg) => {
+        console.log(msg);
         const newMsg = JSON.parse(msg.body) as ChatMessage;
         const previousMsgs = that.messages.get(fromLocation)
           ? that.messages.get(fromLocation)

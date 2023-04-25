@@ -4,4 +4,5 @@ export interface Room {
   userCount: number;
   roomId: string;
   active: boolean;
+  trackList: string;
 }

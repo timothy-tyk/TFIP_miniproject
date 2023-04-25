@@ -24,4 +24,9 @@ export class RoomService {
       this.httpClient.get(`${SERVER_URL}/rooms/${id}`).pipe()
     );
   }
+  updateRoomAddTrack(id: string, trackListUris: string) {
+    return firstValueFrom(
+      this.httpClient.put(`${SERVER_URL}/rooms/${id}`, { trackListUris }).pipe()
+    );
+  }
 }

@@ -21,6 +21,7 @@ export class AddRoomComponent implements OnInit {
     this.addRoomForm = this.fb.group({
       name: this.fb.control('', [Validators.required]),
       description: this.fb.control('', [Validators.required]),
+      startingTrack: this.fb.control('', [Validators.required]),
     });
   }
 
@@ -31,6 +32,8 @@ export class AddRoomComponent implements OnInit {
       userCount: 0,
       roomId: '',
       active: true,
+      // replace with spotify API
+      trackList: this.addRoomForm.get('startingTrack')?.value + ',',
     };
     this.roomSvc
       .addRoom(newRoom)
@@ -41,3 +44,5 @@ export class AddRoomComponent implements OnInit {
       .then(() => this.router.navigate([`/rooms/${this.newRoomId}`]));
   }
 }
+
+// 1SCXzqKZdif5b33POmzwI4?si=a7ae6c8a78414b68
