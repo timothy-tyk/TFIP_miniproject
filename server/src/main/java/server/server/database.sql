@@ -7,6 +7,14 @@ id int not null auto_increment,
 name varchar(50) not null,
 email varchar(50) not null,
 picture varchar(150) not null,
+access_token text,
+primary key(id)
+)
+
+create table tokens(
+id int not null auto_increment,
+email varchar(50) not null,
+access_token text,
 primary key(id)
 )
 

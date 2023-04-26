@@ -18,6 +18,8 @@ export class RoomListComponent {
   }
 
   enterRoom(id: string) {
-    this.router.navigate([`/rooms/${id}`]);
+    this.router.navigate([`/rooms/${id}`]).then(() => {
+      window.location.reload();
+    });
   }
 }

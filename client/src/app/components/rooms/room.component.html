@@ -4,10 +4,12 @@
   <p>{{ room.name }}</p>
   <p>{{ room.description }}</p>
 </div>
-<app-player
-  (onTrackEnded)="updatePlayerTrack($event)"
-  [trackList]="trackList"
-></app-player>
+<div *ngIf="trackList.length > 0">
+  <app-player
+    (onTrackEnded)="updatePlayerTrack($event)"
+    [trackList]="trackList"
+  ></app-player>
+</div>
 <app-search-add-track
   [roomId]="id"
   [trackList]="trackList"

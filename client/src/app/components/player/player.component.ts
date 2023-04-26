@@ -1,11 +1,11 @@
 import {
+  AfterViewChecked,
   Component,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -22,7 +22,6 @@ import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-pla
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements OnInit {
-  // @Input() trackUri!: string;
   @Input() trackList!: string[];
   trackIndex: number = 0;
   @Output() onTrackEnded: Subject<number> = new Subject<number>();
@@ -42,8 +41,11 @@ export class PlayerComponent implements OnInit {
     // this.spotifyAuth
     //   .getSpotifyToken()
     //   .then((token: any) => this.spotifyWebSDK.createWebPlayer(token['token']));
+    console.log(this.trackList);
     this.createIFrame();
     this.websocketPlayerSvc.initializeConnection();
+
+    // Subscribe to clicks on the Play/Pause Button
     this.command$ = this.websocketPlayerSvc.newCommand.subscribe((e: any) => {
       console.log(e);
       this.playerStatus = e;
@@ -51,7 +53,13 @@ export class PlayerComponent implements OnInit {
     });
   }
 
+  refresh() {
+    window.location.reload();
+  }
+
   createIFrame() {
+    console.log('creatign iframe');
+    console.log(this.trackList[this.trackIndex]);
     const iFrameScript = document.createElement('script');
     iFrameScript.src = 'https://open.spotify.com/embed-podcast/iframe-api/v1';
     iFrameScript.addEventListener('load', (e) => {
@@ -68,16 +76,14 @@ export class PlayerComponent implements OnInit {
       // @ts-ignore
       const callback = (EmbedController) => {
         EmbedController.addListener('playback_update', (e: any) => {
-          // Proceed to Next Track
+          // Proceed to Next Track on Completion
           if (e.data.duration == e.data.position && e.data.duration > 0) {
             this.trackIndex++;
             this.onTrackEnded.next(this.trackIndex);
             this.changeTrack();
           }
-          // if (e.data.isPaused) this.onClickPause();
-          // if(e.data.isPaused && e.data)
         });
-        EmbedController.play();
+        // EmbedController.play();
 
         EmbedController.addListener('play', () => console.log('play'));
         this.IFrameController = EmbedController;

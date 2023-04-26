@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -6,6 +12,7 @@ import { ChatMessage } from 'src/app/models/chatmessage-model';
 import { Room } from 'src/app/models/room-model';
 import { RoomService } from 'src/app/services/room/room.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
+import { PlayerComponent } from '../player/player.component';
 
 @Component({
   selector: 'app-room',
@@ -15,7 +22,7 @@ import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 export class RoomComponent implements OnInit {
   id!: string;
   room!: Room;
-  trackList!: string[];
+  trackList: string[] = [];
   trackIndex: number = 0;
   nextTrack!: Subscription;
 
