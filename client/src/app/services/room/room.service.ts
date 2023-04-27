@@ -1,12 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { Room } from 'src/app/models/room-model';
+import { Track } from 'src/app/models/track-model';
 const SERVER_URL = '/api';
 @Injectable({
   providedIn: 'root',
 })
 export class RoomService {
+  public trackAdded = new Subject<string>();
+
   constructor(private httpClient: HttpClient) {}
 
   getListOfRooms() {
@@ -24,9 +27,14 @@ export class RoomService {
       this.httpClient.get(`${SERVER_URL}/rooms/${id}`).pipe()
     );
   }
-  updateRoomAddTrack(id: string, trackListUris: string) {
+  updateRoomAddTrack(id: string, trackId: string) {
     return firstValueFrom(
-      this.httpClient.put(`${SERVER_URL}/rooms/${id}`, { trackListUris }).pipe()
+      this.httpClient.put(`${SERVER_URL}/rooms/${id}?add=${trackId}`, {}).pipe()
+    ).then(() => this.trackAdded.next(id));
+  }
+  getRoomTracks(id: string) {
+    return firstValueFrom(
+      this.httpClient.get(`${SERVER_URL}/rooms/${id}/tracks`).pipe()
     );
   }
 }

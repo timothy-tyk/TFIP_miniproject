@@ -8,6 +8,7 @@
   <app-player
     (onTrackEnded)="updatePlayerTrack($event)"
     [trackList]="trackList"
+    [trackIndex]="trackIndex"
   ></app-player>
 </div>
 <app-search-add-track
@@ -15,4 +16,9 @@
   [trackList]="trackList"
 ></app-search-add-track>
 <app-room-chat [roomId]="id"></app-room-chat>
+<app-playlist
+  [trackList]="trackList"
+  [trackIndex]="trackIndex"
+  (trackIndexChange)="onTrackIndexChange($event)"
+></app-playlist>
 <button type="button" (click)="backToLobby()">Back</button>

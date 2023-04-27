@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -24,19 +25,23 @@ export class RoomComponent implements OnInit {
   room!: Room;
   trackList: string[] = [];
   trackIndex: number = 0;
-  nextTrack!: Subscription;
+  onAddTrack!: Subscription;
 
   constructor(
     private roomSvc: RoomService,
-    private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {}
   ngOnInit(): void {
     this.fetchRoomData();
+    this.onAddTrack = this.roomSvc.trackAdded.subscribe((id) => {
+      const newList = [...this.trackList, id];
+      this.trackList = newList;
+    });
   }
 
   fetchRoomData() {
+    console.log('room data');
     this.activatedRoute.paramMap.subscribe(
       (data: any) => (this.id = data['params']['id'])
     );
@@ -46,6 +51,11 @@ export class RoomComponent implements OnInit {
         .split(',')
         .filter((track) => track.length > 0);
     });
+  }
+
+  onTrackIndexChange(e: any) {
+    console.log(e);
+    this.trackIndex = e;
   }
 
   updatePlayerTrack(e: any) {

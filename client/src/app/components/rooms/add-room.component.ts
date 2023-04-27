@@ -33,7 +33,7 @@ export class AddRoomComponent implements OnInit {
       roomId: '',
       active: true,
       // replace with spotify API
-      trackList: this.addRoomForm.get('startingTrack')?.value + ',',
+      trackList: this.addRoomForm.get('startingTrack')?.value,
     };
     this.roomSvc
       .addRoom(newRoom)
@@ -41,7 +41,11 @@ export class AddRoomComponent implements OnInit {
         console.log(res);
         this.newRoomId = res.roomId;
       })
-      .then(() => this.router.navigate([`/rooms/${this.newRoomId}`]));
+      .then(() =>
+        this.router
+          .navigate([`/rooms/${this.newRoomId}`])
+          .then(() => window.location.reload())
+      );
   }
 }
 

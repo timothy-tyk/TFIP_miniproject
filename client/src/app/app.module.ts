@@ -33,6 +33,7 @@ import { PlayerComponent } from './components/player/player.component';
 import { SpotifyAuthService } from './services/auth/spotify-auth.service';
 import { LandingPageComponent } from './components/landing/landing-page.component';
 import { SearchAddTrackComponent } from './components/player/search-add-track.component';
+import { PlaylistComponent } from './components/playlist/playlist.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { SearchAddTrackComponent } from './components/player/search-add-track.co
     PlayerComponent,
     LandingPageComponent,
     SearchAddTrackComponent,
+    PlaylistComponent,
   ],
   imports: [
     BrowserModule,

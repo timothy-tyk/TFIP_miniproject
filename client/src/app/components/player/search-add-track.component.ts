@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { Track } from 'src/app/models/track-model';
 import { RoomService } from 'src/app/services/room/room.service';
 import { SpotifyService } from 'src/app/services/spotify/spotify.service';
@@ -30,12 +31,14 @@ export class SearchAddTrackComponent implements OnInit {
     });
   }
   addTrack(id: string) {
-    this.trackList.push(id);
-    const trackListUris = this.trackList.join(',');
-    this.roomSvc.updateRoomAddTrack(this.roomId, trackListUris);
+    // this.trackList.push(id);
+    // const trackListUris = this.trackList.join(',');
+    this.roomSvc.updateRoomAddTrack(this.roomId, id);
     this.createSearchForm();
     this.searchResults = [];
   }
+  // addTrackItem() {}
+
   createSearchForm() {
     this.searchForm = this.fb.group({
       query: this.fb.control('', [

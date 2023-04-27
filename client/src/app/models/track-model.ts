@@ -9,4 +9,5 @@ export interface Track {
   name: string;
   popularity: number;
   uri: string;
+  searchTimestamp: number;
 }

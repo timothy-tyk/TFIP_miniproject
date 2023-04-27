@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -21,9 +22,9 @@ import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-pla
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css'],
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements OnInit, OnChanges {
   @Input() trackList!: string[];
-  trackIndex: number = 0;
+  @Input() trackIndex: number = 0;
   @Output() onTrackEnded: Subject<number> = new Subject<number>();
   playerStatus: string = 'Play';
   command$!: Subscription;
@@ -51,6 +52,11 @@ export class PlayerComponent implements OnInit {
       this.playerStatus = e;
       this.IFrameController.togglePlay();
     });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['trackIndex']) {
+      this.changeTrack(this.trackIndex);
+    }
   }
 
   refresh() {
@@ -80,7 +86,7 @@ export class PlayerComponent implements OnInit {
           if (e.data.duration == e.data.position && e.data.duration > 0) {
             this.trackIndex++;
             this.onTrackEnded.next(this.trackIndex);
-            this.changeTrack();
+            this.changeTrack(this.trackIndex);
           }
         });
         // EmbedController.play();
@@ -91,10 +97,8 @@ export class PlayerComponent implements OnInit {
       IFrameAPI.createController(element, options, callback);
     };
   }
-  changeTrack() {
-    this.IFrameController.loadUri(
-      `spotify:track:${this.trackList[this.trackIndex]}`
-    );
+  changeTrack(idx: number) {
+    this.IFrameController.loadUri(`spotify:track:${this.trackList[idx]}`);
     this.IFrameController.play();
   }
 

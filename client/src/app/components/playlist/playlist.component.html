@@ -1,0 +1,9 @@
+<h3>Playlist</h3>
+<table *ngIf="playList != null">
+  <tr *ngFor="let track of playList; index as i" (click)="selectTrack(i)">
+    <td>{{ i + 1 }}</td>
+    <td><img [src]="track.album.images[0].url" height="100" /></td>
+    <td>{{ track.name }}</td>
+    <td>{{ track.artists[0].name }}</td>
+  </tr>
+</table>
