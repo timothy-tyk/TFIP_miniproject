@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Room } from 'src/app/models/room-model';
 import { RoomService } from 'src/app/services/room/room.service';
+import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 
 @Component({
   selector: 'app-add-room',
@@ -11,11 +12,12 @@ import { RoomService } from 'src/app/services/room/room.service';
 })
 export class AddRoomComponent implements OnInit {
   addRoomForm!: FormGroup;
-  newRoomId!: string;
+  roomInfo!: Room;
   constructor(
     private fb: FormBuilder,
     private roomSvc: RoomService,
-    private router: Router
+    private router: Router,
+    private websocketSvc: WebsocketService
   ) {}
   ngOnInit(): void {
     this.addRoomForm = this.fb.group({
@@ -39,14 +41,18 @@ export class AddRoomComponent implements OnInit {
       .addRoom(newRoom)
       .then((res: any) => {
         console.log(res);
-        this.newRoomId = res.roomId;
+        this.roomInfo = res as Room;
+      })
+      .then(() => {
+        // CREATE THE CHATROOM HERE POST TO /CHATROOM
+        this.websocketSvc.createChatRoom(this.roomInfo);
       })
       .then(() =>
         this.router
-          .navigate([`/rooms/${this.newRoomId}`])
+          .navigate([`/rooms/${this.roomInfo.roomId}`])
           .then(() => window.location.reload())
       );
   }
 }
 
-// 1SCXzqKZdif5b33POmzwI4?si=a7ae6c8a78414b68
+// 1SCXzqKZdif5b33POmzwI4

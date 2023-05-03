@@ -21,10 +21,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
+		</dependency> -->
+		<dependency>
+  <groupId>com.rabbitmq</groupId>
+  <artifactId>http-client</artifactId>
+  <version>5.0.0</version>
+</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -40,6 +45,26 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-amqp</artifactId>
+    <version>3.0.6</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit -->
+<dependency>
+    <groupId>org.springframework.amqp</groupId>
+    <artifactId>spring-rabbit</artifactId>
+    <version>3.0.4</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-reactor-netty -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-reactor-netty</artifactId>
+    <version>3.0.6</version>
+</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket -->
 <dependency>
     <groupId>org.springframework.boot</groupId>

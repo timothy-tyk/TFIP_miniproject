@@ -36,7 +36,10 @@ public class RoomRepository {
     return jdbcTemplate.queryForObject(QUERY_ROOM_BY_ROOM_ID, BeanPropertyRowMapper.newInstance(Room.class),id);
   }
 
-  public Room updateRoomAddTrack(String id, String trackList){
+  public Room updateRoomAddTrack(String id, String trackId){
+    Room room = jdbcTemplate.queryForObject(QUERY_ROOM_BY_ROOM_ID, BeanPropertyRowMapper.newInstance(Room.class),id);
+    String trackList = room.getTrackList();
+    trackList = trackList+","+trackId;
     Integer updated = jdbcTemplate.update(UPDATE_ROOM_TRACKLIST_BY_ID, trackList, id);
     if(updated>0){
       return jdbcTemplate.queryForObject(QUERY_ROOM_BY_ROOM_ID, BeanPropertyRowMapper.newInstance(Room.class),id);

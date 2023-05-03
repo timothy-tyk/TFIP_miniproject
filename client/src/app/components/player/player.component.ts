@@ -46,15 +46,17 @@ export class PlayerComponent implements OnInit, OnChanges {
     this.createIFrame();
     this.websocketPlayerSvc.initializeConnection();
 
-    // Subscribe to clicks on the Play/Pause Button
+    // Subscribe to clicks on the Play/Pause Button or Track Change
     this.command$ = this.websocketPlayerSvc.newCommand.subscribe((e: any) => {
-      console.log(e);
-      this.playerStatus = e;
-      this.IFrameController.togglePlay();
+      if (e == 'Play' || e == 'Pause') {
+        this.playerStatus = e;
+        this.IFrameController.togglePlay();
+      }
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['trackIndex']) {
+    if (changes['trackIndex'] && !changes['trackIndex'].firstChange) {
+      console.log('changing track');
       this.changeTrack(this.trackIndex);
     }
   }
@@ -64,8 +66,6 @@ export class PlayerComponent implements OnInit, OnChanges {
   }
 
   createIFrame() {
-    console.log('creatign iframe');
-    console.log(this.trackList[this.trackIndex]);
     const iFrameScript = document.createElement('script');
     iFrameScript.src = 'https://open.spotify.com/embed-podcast/iframe-api/v1';
     iFrameScript.addEventListener('load', (e) => {
@@ -100,6 +100,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   changeTrack(idx: number) {
     this.IFrameController.loadUri(`spotify:track:${this.trackList[idx]}`);
     this.IFrameController.play();
+    this.websocketPlayerSvc.sendCommand(idx);
   }
 
   onTogglePlay() {

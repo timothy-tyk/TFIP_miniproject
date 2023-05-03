@@ -50,14 +50,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
   onSubmitMessage() {
     // const msg = this.chatForm.get('message')?.value;
-    const msg = {
+    const msg: ChatMessage = {
       email: this.userInfo.email,
       message: this.chatForm.get('message')?.value,
       location: 'lobby',
       timestamp: new Date().getTime(),
+      type: 'CHAT',
     };
 
-    this.websocketSvc.sendMessage(JSON.stringify(msg));
+    this.websocketSvc.sendMessage(msg);
     this.initializeChatForm();
   }
 

@@ -1,8 +1,13 @@
 package server.server.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
+import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +18,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.gson.Gson;
+
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import server.server.model.Room;
-import server.server.model.TrackList;
+import server.server.model.TrackModel;
 import server.server.service.RoomService;
+import server.server.service.TrackService;
 
 @Controller
 @RequestMapping(path = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,10 +43,13 @@ public class RoomController {
     return roomSvc.getAllRooms();
   }
 
+  @Autowired
+  TrackService trackSvc;
   @PostMapping()
-  public ResponseEntity<Room> createRoom(@RequestBody Room room){
-    System.out.println(room);
-    room.setRoomId(UUID.randomUUID().toString().substring(0,8));
+  public ResponseEntity<Room> createRoom(@RequestBody Room room) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
+    String roomId = UUID.randomUUID().toString().substring(0,8);
+    room.setRoomId(roomId);
+    trackSvc.storeTrackDetails(room.getTrackList(), roomId);
     return roomSvc.addRoom(room);
   }
 
@@ -42,9 +59,14 @@ public class RoomController {
   }
 
   @PutMapping("/{roomId}")
-  public ResponseEntity<Room> updateRoomAddTrack(@PathVariable String roomId,@RequestBody TrackList trackListUris){
-    String trackList = trackListUris.getTrackListUris();
-    System.out.println(trackList);
-    return roomSvc.updateRoomAddTrack(roomId, trackList);
+  public ResponseEntity<Room> updateRoomAddTrack(@PathVariable String roomId,@RequestParam("add") String trackId) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
+    trackSvc.storeTrackDetails(trackId, roomId);
+    return roomSvc.updateRoomAddTrack(roomId, trackId);
+  }
+
+  @GetMapping("/{roomId}/tracks")
+  public ResponseEntity<String> getRoomTracks(@PathVariable String roomId) throws InterruptedException, ExecutionException{
+    JsonObject response = trackSvc.getTrackDetails(roomId);
+    return ResponseEntity.ok().body(response.toString());
   }
 }

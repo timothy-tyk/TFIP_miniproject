@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { ChatMessage } from 'src/app/models/chatmessage-model';
 import { Room } from 'src/app/models/room-model';
 import { RoomService } from 'src/app/services/room/room.service';
+import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-player.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 import { PlayerComponent } from '../player/player.component';
 
@@ -26,11 +27,13 @@ export class RoomComponent implements OnInit {
   trackList: string[] = [];
   trackIndex: number = 0;
   onAddTrack!: Subscription;
+  command$!: Subscription;
 
   constructor(
     private roomSvc: RoomService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private webSocketPlayerSvc: WebsocketPlayerService
   ) {}
   ngOnInit(): void {
     this.fetchRoomData();
@@ -38,10 +41,14 @@ export class RoomComponent implements OnInit {
       const newList = [...this.trackList, id];
       this.trackList = newList;
     });
+    this.command$ = this.webSocketPlayerSvc.newCommand.subscribe((e: any) => {
+      if (e != 'Play' && e != 'Pause') {
+        this.trackIndex = Number.parseInt(e);
+      }
+    });
   }
 
   fetchRoomData() {
-    console.log('room data');
     this.activatedRoute.paramMap.subscribe(
       (data: any) => (this.id = data['params']['id'])
     );
@@ -54,7 +61,6 @@ export class RoomComponent implements OnInit {
   }
 
   onTrackIndexChange(e: any) {
-    console.log(e);
     this.trackIndex = e;
   }
 

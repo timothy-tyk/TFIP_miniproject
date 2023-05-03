@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -20,7 +19,7 @@ import server.server.model.ChatMessage;
 public class ChatService {
   public String storeChatMessage(ChatMessage msg) throws InterruptedException, ExecutionException{
     Firestore dbFirestore = FirestoreClient.getFirestore();
-    ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection(msg.getLocation()).document().set(msg);
+    ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("locations/"+msg.getLocation()+"/chatlog").document().set(msg);
     return collectionsApiFuture.get().getUpdateTime().toString();
   }
   public List<ChatMessage> getChatMessages(String location) throws InterruptedException, ExecutionException{

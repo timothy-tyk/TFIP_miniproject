@@ -4,14 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Date;
 
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.neovisionaries.i18n.CountryCode;
 
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
@@ -22,13 +23,13 @@ import se.michaelthelin.spotify.enums.ModelObjectType;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.special.SearchResult;
-import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.data.search.SearchItemRequest;
+import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 
 @Service
 public class SpotifyService {
@@ -67,7 +68,6 @@ public class SpotifyService {
 
   public JsonObject searchSpotifyCatalog(String query) throws ParseException, SpotifyWebApiException, IOException{
     String types = ModelObjectType.TRACK.getType() + ","+ ModelObjectType.ARTIST.getType();
-    System.out.println(spotifyApi.getAccessToken());
     SearchItemRequest request = spotifyApi.searchItem(query, types)
                                 .limit(10)
                                 .offset(0)
@@ -102,5 +102,25 @@ public class SpotifyService {
     // response.add("artists", jArrBd.build());
 
     return response.build();
+  }
+
+  public JsonObject getTrackDetailsById(String id) throws ParseException, SpotifyWebApiException, IOException{
+    GetTrackRequest trackRequest = spotifyApi.getTrack(id).market(CountryCode.SG).build();
+    Track result = trackRequest.execute(); 
+    Gson gson = new Gson();
+    String jsonStr = gson.toJson(result);
+    InputStream is = new ByteArrayInputStream(jsonStr.getBytes());
+    JsonReader jReader = Json.createReader(is);
+    JsonObject obj = jReader.readObject();
+    JsonObjectBuilder jObjB = Json.createObjectBuilder(obj);
+    long timeStamp = new Date().getTime();
+    jObjB.add("searchTimestamp", timeStamp);
+    return jObjB.build();
+  }
+
+  public Track getTrackById(String id) throws ParseException, SpotifyWebApiException, IOException{
+    GetTrackRequest req = spotifyApi.getTrack(id).market(CountryCode.SG).build();
+    Track result = req.execute();
+    return result;
   }
 }

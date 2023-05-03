@@ -14,18 +14,18 @@ export class WebsocketPlayerService {
   constructor() {}
 
   initializeConnection() {
-    const serverUrl = 'http://localhost:8080/chat';
-    this.ws = new SockJS(serverUrl);
-    this.stompClient = Stomp.over(this.ws);
-    const that = this;
-    this.stompClient.connect({}, function (frame) {
-      const fromLocation = location.pathname.replace('/rooms', '');
-      that.stompClient.subscribe(`/message/control${fromLocation}`, (msg) => {
-        console.log(msg.body);
-        // how to toggle play/pause in player?
-        that.newCommand.next(msg.body);
-      });
-    });
+    // const serverUrl = 'http://localhost:8080/chat';
+    // this.ws = new SockJS(serverUrl);
+    // this.stompClient = Stomp.over(this.ws);
+    // const that = this;
+    // this.stompClient.connect({}, function (frame) {
+    //   const fromLocation = location.pathname.replace('/rooms', '');
+    //   that.stompClient.subscribe(`/topic/message/control`, (msg) => {
+    //     console.log(msg.body);
+    //     // how to toggle play/pause in player?
+    //     that.newCommand.next(msg.body);
+    //   });
+    // });
   }
   sendCommand(message: any) {
     // console.log(location.pathname);

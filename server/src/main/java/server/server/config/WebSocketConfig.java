@@ -14,10 +14,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
   public void registerStompEndpoints(StompEndpointRegistry reg){
     reg.addEndpoint("/chat").setAllowedOrigins("http://localhost:4200").withSockJS();
   }
-  @Override
-  public void configureMessageBroker(MessageBrokerRegistry msgReg){
-    msgReg.setApplicationDestinationPrefixes("/app").enableSimpleBroker("/message");
-  }
+  // @Override
+  // public void configureMessageBroker(MessageBrokerRegistry msgReg){
+  //   msgReg.setApplicationDestinationPrefixes("/app");
+  //   // .enableSimpleBroker("/message");
+  //   msgReg.enableStompBrokerRelay("/topic")
+  //         .setRelayHost("localhost")
+  //         .setRelayPort(61613)
+  //         .setClientLogin("guest")
+  //         .setClientPasscode("guest");
+  // }
   @Override
     public void configureWebSocketTransport( WebSocketTransportRegistration registration )
     {

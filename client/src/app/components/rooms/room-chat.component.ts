@@ -8,7 +8,9 @@ import {
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ChatMessage } from 'src/app/models/chatmessage-model';
+import { Room } from 'src/app/models/room-model';
 import { User } from 'src/app/models/user-model';
+import { RoomService } from 'src/app/services/room/room.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 
 @Component({
@@ -29,6 +31,7 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
+    private roomSvc: RoomService,
     private websocketSvc: WebsocketService
   ) {}
   ngOnInit(): void {
@@ -52,19 +55,29 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {}
 
   onSubmitMessage() {
-    const msg = {
+    const msg: ChatMessage = {
       email: this.userInfo.email,
       message: this.chatForm.get('message')?.value,
       location: this.roomId,
       timestamp: new Date().getTime(),
+      type: 'CHAT',
     };
-
-    this.websocketSvc.sendMessage(JSON.stringify(msg));
+    this.websocketSvc
+      .sendMessage(msg)
+      .then(() => console.log('message sent'))
+      .catch((e) => console.log(e));
     this.initializeChatForm();
   }
 
   ngOnDestroy(): void {
     console.log('disconnecting from room');
     this.websocketSvc.disconnect(location.pathname);
+  }
+
+  tryCreateRoom() {
+    this.roomSvc
+      .getRoom(this.roomId)
+      .then((res) => this.websocketSvc.createChatRoom(res as Room));
+    // this.websocketSvc.createChatRoom(this.roomId);
   }
 }

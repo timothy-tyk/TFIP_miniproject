@@ -1,20 +1,25 @@
 package server.server.model;
 
+import java.util.Date;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
-import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
+import server.server.model.track.Album;
+import server.server.model.track.Artist;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class TrackModel {
+public class TrackModel{
   private String id;
   private String name;
   private Integer popularity;
   private String uri;
-  private AlbumSimplified album;
-  private ArtistSimplified[] artists;
+  private Album album;
+  private List<Artist> artists;
+  private long searchTimestamp;
 
+  public TrackModel(){
+    this.searchTimestamp = new Date().getTime();
+  }
 }

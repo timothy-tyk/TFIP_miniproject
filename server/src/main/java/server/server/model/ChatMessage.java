@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class ChatMessage {
+  // email = sender
   private String email;
   private Long timestamp;
   private String message;
   private String location;
+  private String type;
 
   // public ChatMessage(){
   //   this.timestamp = new Date().getTime();
@@ -27,6 +29,7 @@ public class ChatMessage {
     cm.setMessage(json.get("message").getAsString());
     cm.setLocation(json.get("location").getAsString());
     cm.setTimestamp(json.get("timestamp").getAsLong());
+    cm.setType(json.get("type").getAsString());
     return cm;
   }
 }

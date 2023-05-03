@@ -29,8 +29,8 @@ public class RoomService {
     return ResponseEntity.ok().body(fromDb);
   }
 
-  public ResponseEntity<Room> updateRoomAddTrack(String id, String trackList){
-    Room updatedRoom = roomRepo.updateRoomAddTrack(id, trackList);
+  public ResponseEntity<Room> updateRoomAddTrack(String id, String trackId){
+    Room updatedRoom = roomRepo.updateRoomAddTrack(id, trackId);
     return ResponseEntity.ok().body(updatedRoom);
   }
 }

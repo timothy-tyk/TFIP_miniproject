@@ -27,8 +27,11 @@ export class PlaylistComponent implements OnInit, OnChanges {
     this.loadPlayList();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changing');
-    if (this.playList.length < this.trackList.length) {
+    if (
+      this.playList &&
+      this.trackList &&
+      this.playList.length < this.trackList.length
+    ) {
       this.loadPlayList();
     }
   }
@@ -41,7 +44,6 @@ export class PlaylistComponent implements OnInit, OnChanges {
       });
   }
   selectTrack(idx: number) {
-    console.log(idx);
     this.trackIndexChange.next(idx);
   }
 }
