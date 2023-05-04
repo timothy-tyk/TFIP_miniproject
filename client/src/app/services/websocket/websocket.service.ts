@@ -30,7 +30,8 @@ export class WebsocketService {
       function (frame) {
         const fromLocation = location.pathname.replace('/rooms', '');
         that.onJoin();
-        that.stompClient.subscribe(`/topic/message`, (msg) => {
+        console.log(`subscribing to /topic/message${fromLocation}`);
+        that.stompClient.subscribe(`/topic/message${fromLocation}`, (msg) => {
           console.log('received this shit');
           console.log(msg);
           const newMsg = JSON.parse(msg.body) as ChatMessage;
@@ -49,6 +50,12 @@ export class WebsocketService {
   sendMessage(message: ChatMessage) {
     // const fromLocation = location.pathname.replace('/rooms', '');
     // this.stompClient.send(`/app/chat`, {}, message);
+    // const location = message.location;
+    // this.stompClient.send(
+    //   `${SERVER_URL}/chat/${location}`,
+    //   {},
+    //   JSON.stringify(message)
+    // );
     const location = message.location;
     return firstValueFrom(
       this.httpClient.post(`${SERVER_URL}/chat/${location}`, message).pipe()
@@ -74,8 +81,7 @@ export class WebsocketService {
     this.stompClient.send(`/app/chat`, {}, JSON.stringify(message));
   }
 
-  createChatRoom(room: Room) {
-    console.log('creating the chatroom');
+  initializeChatRoom(room: Room) {
     return firstValueFrom(
       this.httpClient.post(`${SERVER_URL}/chat`, room).pipe()
     );

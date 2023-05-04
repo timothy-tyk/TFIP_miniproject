@@ -1,6 +1,6 @@
 package server.server.model;
 
-
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import lombok.AllArgsConstructor;
@@ -32,4 +32,16 @@ public class ChatMessage {
     cm.setType(json.get("type").getAsString());
     return cm;
   }
+  
+  public static String toJsonString(ChatMessage cm){
+    Gson gson = new Gson();
+    return gson.toJson(cm);
+  }
+
+  public static JsonObject fromString(String msg){
+    Gson gson = new Gson();
+    return gson.fromJson(msg, JsonObject.class);
+  }
+
+  
 }

@@ -1,5 +1,6 @@
 package server.server.config;
 
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -38,9 +39,16 @@ public class RabbitMQConfig implements RabbitListenerConfigurer{
     return new RabbitAdmin(connectionFactory);
   }
   @Bean
-  public RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry(){
-    return new RabbitListenerEndpointRegistry();
+  public TopicExchange topicExchange(){
+    return new TopicExchange("chat-exchange");
   }
+  @Bean
+  public RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry(){
+    RabbitListenerEndpointRegistry newRegistry =  new RabbitListenerEndpointRegistry();
+    // startListening();
+    return newRegistry;
+  }
+  
   @Bean
   public DefaultMessageHandlerMethodFactory messageHandlerMethodFactory() {
       DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();
@@ -60,5 +68,12 @@ public class RabbitMQConfig implements RabbitListenerConfigurer{
     registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());
   }
 
+  
+  public void startListening(){
+    this.rabbitListenerEndpointRegistry().getListenerContainer("chat-exchange").start();
+  }
+
 
 }
+
+

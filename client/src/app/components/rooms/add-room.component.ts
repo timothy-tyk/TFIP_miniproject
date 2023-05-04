@@ -44,8 +44,7 @@ export class AddRoomComponent implements OnInit {
         this.roomInfo = res as Room;
       })
       .then(() => {
-        // CREATE THE CHATROOM HERE POST TO /CHATROOM
-        this.websocketSvc.createChatRoom(this.roomInfo);
+        this.websocketSvc.initializeChatRoom(this.roomInfo);
       })
       .then(() =>
         this.router

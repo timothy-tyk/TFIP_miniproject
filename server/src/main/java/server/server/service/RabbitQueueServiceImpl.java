@@ -26,9 +26,12 @@ public class RabbitQueueServiceImpl implements RabbitQueueService{
 
   @Override
   public void addQueueToListener(String listenerId, String queueName){
-    // if(!checkQueueExistsOnListener(listenerId, queueName)){
+    if(!checkQueueExistsOnListener(listenerId, queueName)){
       this.getMessageListenerContainerById(listenerId).addQueueNames(queueName);
-    // }
+    }
+    else{
+      return;
+    }
   }
   @Override
   public void removeQueueFromListener(String listenerId, String queueName){
@@ -40,7 +43,6 @@ public class RabbitQueueServiceImpl implements RabbitQueueService{
 
   @Override
   public Boolean checkQueueExistsOnListener(String listenerId, String queueName){
-    System.out.println(listenerId);
     String[] queueNames = this.getMessageListenerContainerById(listenerId).getQueueNames();
     if(queueNames !=null){
       for(String name:queueNames){
@@ -57,3 +59,5 @@ public class RabbitQueueServiceImpl implements RabbitQueueService{
     return ((AbstractMessageListenerContainer)this.rabbitListenerEndpointRegistry.getListenerContainer(listenerId));
   }
 }
+
+
