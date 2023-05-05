@@ -11,10 +11,18 @@
         <textarea rows="5" cols="30" formControlName="description"></textarea>
       </td>
     </tr>
-    <tr>
+    <tr hidden>
       <td>Starting Track:</td>
       <td><input type="text" size="40" formControlName="startingTrack" /></td>
+
+      <!-- <app-search-add-track></app-search-add-track> -->
     </tr>
+    <td>Search:</td>
+    <td>
+      <app-add-room-search-track
+        (selectedTrackId)="onSelectTrack($event)"
+      ></app-add-room-search-track>
+    </td>
     <tr>
       <td>
         <button type="submit" [disabled]="addRoomForm.invalid">Submit</button>

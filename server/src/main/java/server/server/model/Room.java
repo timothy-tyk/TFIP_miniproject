@@ -12,6 +12,7 @@ public class Room {
   private Integer id;
   private String name;
   private String description;
+  private String ownerEmail;
   private Integer userCount;
   private String roomId;
   private boolean active;

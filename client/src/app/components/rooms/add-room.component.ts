@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
 import { Room } from 'src/app/models/room-model';
+import { User } from 'src/app/models/user-model';
 import { RoomService } from 'src/app/services/room/room.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 
 @Component({
@@ -13,13 +16,18 @@ import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 export class AddRoomComponent implements OnInit {
   addRoomForm!: FormGroup;
   roomInfo!: Room;
+  userEmail!: string;
   constructor(
     private fb: FormBuilder,
+    private auth: AuthService,
+    private userSvc: UserService,
+
     private roomSvc: RoomService,
     private router: Router,
     private websocketSvc: WebsocketService
   ) {}
   ngOnInit(): void {
+    this.auth.user$.subscribe((user) => (this.userEmail = user?.email!));
     this.addRoomForm = this.fb.group({
       name: this.fb.control('', [Validators.required]),
       description: this.fb.control('', [Validators.required]),
@@ -31,6 +39,7 @@ export class AddRoomComponent implements OnInit {
     const newRoom: Room = {
       name: this.addRoomForm.get('name')?.value,
       description: this.addRoomForm.get('description')?.value,
+      ownerEmail: this.userEmail,
       userCount: 0,
       roomId: '',
       active: true,
@@ -51,6 +60,10 @@ export class AddRoomComponent implements OnInit {
           .navigate([`/rooms/${this.roomInfo.roomId}`])
           .then(() => window.location.reload())
       );
+  }
+
+  onSelectTrack(e: any) {
+    this.addRoomForm.patchValue({ startingTrack: e });
   }
 }
 

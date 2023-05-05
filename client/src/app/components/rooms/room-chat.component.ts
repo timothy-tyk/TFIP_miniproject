@@ -63,12 +63,7 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
       timestamp: new Date().getTime(),
       type: 'CHAT',
     };
-    this.websocketSvc
-      .sendMessage(msg)
-      .then(() => console.log('message sent'))
-      .catch((e) => {
-        // POST errors, but message is sent through?? Not sure how to handle error
-      });
+    this.websocketSvc.sendMessage(msg);
     this.initializeChatForm();
   }
 
@@ -80,9 +75,6 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
   initChatRoom() {
     this.roomSvc
       .getRoom(this.roomId)
-      .then((res) => this.websocketSvc.initializeChatRoom(res as Room))
-      .then((r) => console.log('r:' + r))
-      .catch((e) => console.log(e));
-    // this.websocketSvc.createChatRoom(this.roomId);
+      .then((res) => this.websocketSvc.initializeChatRoom(res as Room));
   }
 }

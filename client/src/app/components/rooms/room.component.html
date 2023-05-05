@@ -3,12 +3,14 @@
   <p>{{ room.roomId }}</p>
   <p>{{ room.name }}</p>
   <p>{{ room.description }}</p>
+  <p>Started by: {{ room.ownerEmail }}</p>
 </div>
 <div *ngIf="trackList.length > 0">
   <app-player
     (onTrackEnded)="updatePlayerTrack($event)"
     [trackList]="trackList"
     [trackIndex]="trackIndex"
+    [roomInfo]="room"
   ></app-player>
 </div>
 <app-search-add-track

@@ -9,7 +9,9 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService, User } from '@auth0/auth0-angular';
 import { Observable, Subject, Subscription } from 'rxjs';
+import { Room } from 'src/app/models/room-model';
 import { SpotifyAuthService } from 'src/app/services/auth/spotify-auth.service';
 import { SpotifySdkWebPlayerService } from 'src/app/services/spotify/spotify-sdk-web-player.service';
 import { SpotifyService } from 'src/app/services/spotify/spotify.service';
@@ -23,6 +25,8 @@ import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-pla
   styleUrls: ['./player.component.css'],
 })
 export class PlayerComponent implements OnInit, OnChanges {
+  userInfo: User = new User();
+  @Input() roomInfo!: Room;
   @Input() trackList!: string[];
   @Input() trackIndex: number = 0;
   @Output() onTrackEnded: Subject<number> = new Subject<number>();
@@ -32,6 +36,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   // @ts-ignore important!!
   IFrameController!: EmbedController;
   constructor(
+    private auth: AuthService,
     private spotifyAuth: SpotifyAuthService,
     private spotifyWebSDK: SpotifySdkWebPlayerService,
     private fb: FormBuilder,
@@ -42,7 +47,10 @@ export class PlayerComponent implements OnInit, OnChanges {
     // this.spotifyAuth
     //   .getSpotifyToken()
     //   .then((token: any) => this.spotifyWebSDK.createWebPlayer(token['token']));
-    console.log(this.trackList);
+    this.auth.user$.subscribe((user) => {
+      console.log(user);
+      this.userInfo = user as User;
+    });
     this.createIFrame();
     this.websocketPlayerSvc.initializeConnection();
 
@@ -100,8 +108,10 @@ export class PlayerComponent implements OnInit, OnChanges {
   changeTrack(idx: number) {
     this.IFrameController.loadUri(`spotify:track:${this.trackList[idx]}`);
     this.IFrameController.play();
-    this.websocketPlayerSvc.sendCommand(idx);
+    this.websocketPlayerSvc.sendCommand(`index:${idx}`);
   }
+
+  autoplay() {}
 
   onTogglePlay() {
     this.IFrameController.togglePlay();

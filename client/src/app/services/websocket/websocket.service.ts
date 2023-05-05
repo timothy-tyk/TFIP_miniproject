@@ -30,9 +30,8 @@ export class WebsocketService {
       function (frame) {
         const fromLocation = location.pathname.replace('/rooms', '');
         that.onJoin();
-        console.log(`subscribing to /topic/message${fromLocation}`);
+        console.log(`/topic/message${fromLocation}`);
         that.stompClient.subscribe(`/topic/message${fromLocation}`, (msg) => {
-          console.log('received this shit');
           console.log(msg);
           const newMsg = JSON.parse(msg.body) as ChatMessage;
           const previousMsgs = that.messages.get(fromLocation)
@@ -48,14 +47,6 @@ export class WebsocketService {
   }
 
   sendMessage(message: ChatMessage) {
-    // const fromLocation = location.pathname.replace('/rooms', '');
-    // this.stompClient.send(`/app/chat`, {}, message);
-    // const location = message.location;
-    // this.stompClient.send(
-    //   `${SERVER_URL}/chat/${location}`,
-    //   {},
-    //   JSON.stringify(message)
-    // );
     const location = message.location;
     return firstValueFrom(
       this.httpClient.post(`${SERVER_URL}/chat/${location}`, message).pipe()
@@ -66,7 +57,6 @@ export class WebsocketService {
     const fromLocation = url.replace('/rooms', '');
     this.stompClient.unsubscribe(`/message${fromLocation}`);
     this.stompClient.disconnect(() => console.log('disconnecting wsservice'));
-    // this.ws.close();
   }
 
   onJoin() {

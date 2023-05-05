@@ -1,0 +1,15 @@
+<form [formGroup]="searchForm" (submit)="searchSpotifyAPI()">
+  <input type="text" size="40" formControlName="query" />
+  <button type="submit">Search</button>
+</form>
+<table *ngIf="searchResults != null">
+  <tr
+    *ngFor="let res of searchResults; index as i"
+    (click)="selectTrack(res.id)"
+    [hidden]="selectedTrack != res.id && selectedTrack != null"
+  >
+    <td><img [src]="res.album.images[0].url" height="100" /></td>
+    <td>{{ res.name }}</td>
+    <td>{{ res.artists[0].name }}</td>
+  </tr>
+</table>

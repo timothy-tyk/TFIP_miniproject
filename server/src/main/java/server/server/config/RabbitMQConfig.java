@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 
+import server.server.service.RabbitQueueServiceImpl;
+
 @Configuration
 public class RabbitMQConfig implements RabbitListenerConfigurer{
   @Autowired
@@ -45,7 +47,6 @@ public class RabbitMQConfig implements RabbitListenerConfigurer{
   @Bean
   public RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry(){
     RabbitListenerEndpointRegistry newRegistry =  new RabbitListenerEndpointRegistry();
-    // startListening();
     return newRegistry;
   }
   
@@ -68,10 +69,7 @@ public class RabbitMQConfig implements RabbitListenerConfigurer{
     registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());
   }
 
-  
-  public void startListening(){
-    this.rabbitListenerEndpointRegistry().getListenerContainer("chat-exchange").start();
-  }
+
 
 
 }

@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { Track } from 'src/app/models/track-model';
 import { RoomService } from 'src/app/services/room/room.service';
 import { SpotifyService } from 'src/app/services/spotify/spotify.service';
+import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-player.service';
 
 @Component({
   selector: 'app-search-add-track',
@@ -31,13 +32,11 @@ export class SearchAddTrackComponent implements OnInit {
     });
   }
   addTrack(id: string) {
-    // this.trackList.push(id);
-    // const trackListUris = this.trackList.join(',');
     this.roomSvc.updateRoomAddTrack(this.roomId, id);
     this.createSearchForm();
     this.searchResults = [];
+    // this.websocketPlayerSvc.sendCommand(id);
   }
-  // addTrackItem() {}
 
   createSearchForm() {
     this.searchForm = this.fb.group({

@@ -9,6 +9,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ChatMessage } from 'src/app/models/chatmessage-model';
+import { Room } from 'src/app/models/room-model';
 import { User } from 'src/app/models/user-model';
 import { ChatService } from 'src/app/services/chat/chat.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
@@ -31,7 +32,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     private websocketSvc: WebsocketService
   ) {}
   ngOnInit(): void {
-    // this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
     this.websocketSvc.initializeConnection();
     this.initializeChatForm();
     this.msgSubscription = this.websocketSvc.messageAdded.subscribe(
