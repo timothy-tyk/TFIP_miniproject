@@ -71,11 +71,12 @@ export class RoomComponent implements OnInit {
   }
 
   fetchUserInfo() {
-    this.userInfo = localStorage.getItem('userInfo') as unknown as User;
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo') || '') as User;
   }
 
   onTrackIndexChange(e: any) {
     this.trackIndex = e;
+    this.webSocketPlayerSvc.sendCommand(`index:${e}`);
   }
 
   updatePlayerTrack(e: any) {

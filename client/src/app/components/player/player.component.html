@@ -4,14 +4,16 @@
   async
 ></script>
 <div *ngIf="trackList != null">
-  <div id="embed-iframe"></div>
-  <table>
-    <tr *ngIf="userInfo.email == roomInfo.ownerEmail">
-      <td>
-        <button type="button" (click)="onTogglePlay()">
-          {{ playerStatus == "Play" ? "Play" : "Pause" }}
-        </button>
-      </td>
-    </tr>
-  </table>
+  <div [className]="userInfo.email != roomInfo.ownerEmail ? 'unclickable' : ''">
+    <div id="embed-iframe"></div>
+    <table>
+      <tr *ngIf="userInfo.email == roomInfo.ownerEmail">
+        <td>
+          <button type="button" (click)="onTogglePlay()">
+            {{ playerStatus == "Play" ? "Play" : "Pause" }}
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>

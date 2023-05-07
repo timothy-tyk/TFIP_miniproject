@@ -30,7 +30,6 @@ export class WebsocketService {
       function (frame) {
         const fromLocation = location.pathname.replace('/rooms', '');
         that.onJoin();
-        console.log(`/topic/message${fromLocation}`);
         that.stompClient.subscribe(`/topic/message${fromLocation}`, (msg) => {
           console.log(msg);
           const newMsg = JSON.parse(msg.body) as ChatMessage;

@@ -18,6 +18,7 @@ public class TrackModel{
   private Album album;
   private List<Artist> artists;
   private long searchTimestamp;
+  private String userEmail;
 
   public TrackModel(){
     this.searchTimestamp = new Date().getTime();

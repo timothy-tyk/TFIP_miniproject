@@ -27,14 +27,25 @@ export class RoomService {
       this.httpClient.get(`${SERVER_URL}/rooms/${id}`).pipe()
     );
   }
-  updateRoomAddTrack(id: string, trackId: string) {
+  updateRoomAddTrack(id: string, trackId: string, userEmail: string) {
     return firstValueFrom(
-      this.httpClient.put(`${SERVER_URL}/rooms/${id}?add=${trackId}`, {}).pipe()
+      this.httpClient
+        .put(`${SERVER_URL}/rooms/${id}?add=${trackId}`, userEmail, {})
+        .pipe()
     ).then(() => this.trackAdded.next(id));
   }
   getRoomTracks(id: string) {
     return firstValueFrom(
       this.httpClient.get(`${SERVER_URL}/rooms/${id}/tracks`).pipe()
+    );
+  }
+  updateRoomTrackInfo(id: string, trackIndex: number, trackPosition: number) {
+    const trackInfo = {
+      trackIndex: trackIndex,
+      trackPosition: trackPosition,
+    };
+    return firstValueFrom(
+      this.httpClient.put(`${SERVER_URL}/rooms/${id}/trackInfo`, trackInfo)
     );
   }
 }

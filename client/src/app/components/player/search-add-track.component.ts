@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { Track } from 'src/app/models/track-model';
+import { User } from 'src/app/models/user-model';
 import { RoomService } from 'src/app/services/room/room.service';
 import { SpotifyService } from 'src/app/services/spotify/spotify.service';
 import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-player.service';
@@ -17,14 +18,19 @@ export class SearchAddTrackComponent implements OnInit {
   @Input() roomId!: string;
   @Input() trackList!: string[];
   searchResults!: Track[];
+  userInfo!: User;
   constructor(
     private fb: FormBuilder,
     private roomSvc: RoomService,
     private spotifySvc: SpotifyService
   ) {}
   ngOnInit(): void {
+    this.getUserInfo();
     this.createAddForm();
     this.createSearchForm();
+  }
+  getUserInfo() {
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
   }
   createAddForm() {
     this.addTrackForm = this.fb.group({
@@ -32,7 +38,7 @@ export class SearchAddTrackComponent implements OnInit {
     });
   }
   addTrack(id: string) {
-    this.roomSvc.updateRoomAddTrack(this.roomId, id);
+    this.roomSvc.updateRoomAddTrack(this.roomId, id, this.userInfo.email);
     this.createSearchForm();
     this.searchResults = [];
     // this.websocketPlayerSvc.sendCommand(id);

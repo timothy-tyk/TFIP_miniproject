@@ -24,7 +24,6 @@ export class WebsocketPlayerService {
         `/topic/message${fromLocation}/control`,
         (msg) => {
           console.log(msg.body);
-          // how to toggle play/pause in player?
           that.newCommand.next(msg.body);
         }
       );

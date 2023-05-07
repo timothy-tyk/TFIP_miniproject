@@ -28,6 +28,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import server.server.model.Room;
+import server.server.model.TrackIndexPositionInfo;
 import server.server.model.TrackModel;
 import server.server.service.RoomService;
 import server.server.service.TrackService;
@@ -49,7 +50,7 @@ public class RoomController {
   public ResponseEntity<Room> createRoom(@RequestBody Room room) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
     String roomId = UUID.randomUUID().toString().substring(0,8);
     room.setRoomId(roomId);
-    trackSvc.storeTrackDetails(room.getTrackList(), roomId);
+    trackSvc.storeTrackDetails(room.getTrackList(), roomId, room.getOwnerEmail());
     return roomSvc.addRoom(room);
   }
 
@@ -59,8 +60,9 @@ public class RoomController {
   }
 
   @PutMapping("/{roomId}")
-  public ResponseEntity<Room> updateRoomAddTrack(@PathVariable String roomId,@RequestParam("add") String trackId) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
-    trackSvc.storeTrackDetails(trackId, roomId);
+  public ResponseEntity<Room> updateRoomAddTrack(@PathVariable String roomId,@RequestParam("add") String trackId, @RequestBody String userEmail) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
+    System.out.println(userEmail);
+    trackSvc.storeTrackDetails(trackId, roomId, userEmail);
     return roomSvc.updateRoomAddTrack(roomId, trackId);
   }
 
@@ -69,4 +71,10 @@ public class RoomController {
     JsonObject response = trackSvc.getTrackDetails(roomId);
     return ResponseEntity.ok().body(response.toString());
   }
+
+  @PutMapping("/{roomId}/trackInfo")
+  public ResponseEntity<Room> updateRoomTrackInfo(@PathVariable String roomId, @RequestBody TrackIndexPositionInfo trackInfo){
+    return roomSvc.updateRoomTrackInfo(roomId, trackInfo.getTrackIndex(), trackInfo.getTrackPosition());
+  }
+
 }

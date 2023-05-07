@@ -33,4 +33,9 @@ public class RoomService {
     Room updatedRoom = roomRepo.updateRoomAddTrack(id, trackId);
     return ResponseEntity.ok().body(updatedRoom);
   }
+
+  public ResponseEntity<Room> updateRoomTrackInfo(String id, Integer trackIndex, Integer trackPosition){
+    Room updatedRoom = roomRepo.updateRoomTrackInfo(id,trackIndex,trackPosition);
+    return ResponseEntity.ok().body(updatedRoom);
+  }
 }

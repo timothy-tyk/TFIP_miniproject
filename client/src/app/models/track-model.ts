@@ -10,4 +10,5 @@ export interface Track {
   popularity: number;
   uri: string;
   searchTimestamp: number;
+  userEmail: string;
 }

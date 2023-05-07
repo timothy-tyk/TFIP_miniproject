@@ -17,4 +17,6 @@ public class Room {
   private String roomId;
   private boolean active;
   private String trackList;
+  private Integer trackIndex = 0;
+  private Integer trackPosition = 0;
 }
