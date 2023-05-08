@@ -1,8 +1,6 @@
 package server.server.controller;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -20,16 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.google.gson.Gson;
-
-import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import server.server.model.Room;
 import server.server.model.TrackIndexPositionInfo;
-import server.server.model.TrackModel;
 import server.server.service.RoomService;
 import server.server.service.TrackService;
 

@@ -3,7 +3,7 @@
   src="https://open.spotify.com/embed-podcast/iframe-api/v1"
   async
 ></script>
-<div *ngIf="trackList != null">
+<div *ngIf="trackList != null" id="player">
   <div [className]="userInfo.email != roomInfo.ownerEmail ? 'unclickable' : ''">
     <div id="embed-iframe"></div>
     <table>

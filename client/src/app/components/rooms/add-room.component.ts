@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
+import { Subject } from 'rxjs';
 import { Room } from 'src/app/models/room-model';
 import { User } from 'src/app/models/user-model';
 import { RoomService } from 'src/app/services/room/room.service';
@@ -17,6 +18,7 @@ export class AddRoomComponent implements OnInit {
   addRoomForm!: FormGroup;
   roomInfo!: Room;
   userEmail!: string;
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -46,6 +48,7 @@ export class AddRoomComponent implements OnInit {
       // replace with spotify API
       trackList: this.addRoomForm.get('startingTrack')?.value,
     };
+    console.log(newRoom);
     this.roomSvc
       .addRoom(newRoom)
       .then((res: any) => {

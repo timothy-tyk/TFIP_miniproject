@@ -9,7 +9,7 @@ const SERVER_URL = '/api';
 })
 export class RoomService {
   public trackAdded = new Subject<string>();
-
+  roomAdded: Subject<string> = new Subject<string>();
   constructor(private httpClient: HttpClient) {}
 
   getListOfRooms() {
@@ -17,6 +17,7 @@ export class RoomService {
   }
 
   addRoom(room: Room) {
+    this.roomAdded.next('new');
     return firstValueFrom(
       this.httpClient.post(`${SERVER_URL}/rooms`, room).pipe()
     );
