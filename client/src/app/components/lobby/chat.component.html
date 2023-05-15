@@ -1,22 +1,90 @@
 <h3>Lobby Chat</h3>
-<div>
-  <table>
-    <tr *ngFor="let msg of chatlog">
-      <td>{{ msg.timestamp | date : "medium" }}</td>
-      <td>{{ msg.email }}:</td>
-      <td>{{ msg.message }}</td>
+<div class="lobbyChat">
+  <table class="flex flex-column">
+    <tr>
+      <td><p-badge value="testes"></p-badge> &nbsp;this is testing</td>
+    </tr>
+    <tr class="userMessage">
+      <td><p-badge value="yourmessage"></p-badge> &nbsp;this is testing</td>
+    </tr>
+    <tr>
+      <td><p-badge value="testes"></p-badge> &nbsp;this is testing</td>
+    </tr>
+    <tr class="userMessage">
+      <td><p-badge value="yourmessage"></p-badge> &nbsp;this is testing</td>
+    </tr>
+    <tr>
+      <td>
+        <p-badge
+          value="barney@barney.com"
+          (click)="showDialog('barney@barney.com')"
+        ></p-badge>
+        &nbsp;this is testing
+      </td>
+    </tr>
+    <tr
+      *ngFor="let msg of chatlog"
+      [ngClass]="msg.email == userInfo.email ? 'userMessage' : ''"
+    >
+      <!-- <td>{{ msg.timestamp | date : "medium" }}</td> -->
+
+      <div>
+        <td>
+          <p-badge
+            value="{{ msg.email }}"
+            (click)="showDialog(msg.email)"
+          ></p-badge>
+          &nbsp;{{ msg.message }}
+        </td>
+      </div>
     </tr>
   </table>
 </div>
-<div>
+<div class="absolute bottom-0" style="margin-bottom: 60px">
   <form [formGroup]="chatForm" (ngSubmit)="onSubmitMessage()">
     <table>
       <tr>
         <td>
-          <textarea rows="5" cols="40" formControlName="message"></textarea>
+          <div>
+            <textarea
+              pInputTextarea
+              rows="4"
+              cols="42"
+              formControlName="message"
+              style="line-height: 30px; border-radius: 25px"
+            ></textarea>
+            <div class="flex flex-row-reverse">
+              <button
+                pButton
+                class="p-button-outlined p-button-rounded small-button"
+                type="submit"
+                style="margin-top: -40px; margin-right: 5px"
+              >
+                Send
+              </button>
+            </div>
+          </div>
         </td>
-        <td><button type="submit">Send</button></td>
       </tr>
     </table>
   </form>
+</div>
+<!-- User Profile Dialog -->
+<div class="card flex justify-content-center" *ngIf="dialogInfo != null">
+  <p-dialog
+    header="{{ dialogInfo.email }}"
+    [(visible)]="dialogVisible"
+    [style]="{ width: '75vw' }"
+  >
+    <p>Info Here for {{ dialogInfo.email }}</p>
+    <button
+      pButton
+      type="button"
+      (click)="addFriend(dialogInfo.email)"
+      [disabled]=""
+      class="p-button-outlined p-button-rounded small-button"
+    >
+      Add Friend
+    </button>
+  </p-dialog>
 </div>

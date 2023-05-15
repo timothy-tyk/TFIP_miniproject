@@ -35,6 +35,7 @@ export class AddRoomComponent implements OnInit {
       description: this.fb.control('', [Validators.required]),
       startingTrack: this.fb.control('', [Validators.required]),
     });
+    this.websocketSvc.initializeConnection();
   }
 
   submitRoomForm() {
@@ -43,10 +44,12 @@ export class AddRoomComponent implements OnInit {
       description: this.addRoomForm.get('description')?.value,
       ownerEmail: this.userEmail,
       userCount: 0,
+      userList: '',
       roomId: '',
       active: true,
       // replace with spotify API
       trackList: this.addRoomForm.get('startingTrack')?.value,
+      trackIndex: 0,
     };
     console.log(newRoom);
     this.roomSvc
@@ -58,6 +61,7 @@ export class AddRoomComponent implements OnInit {
       .then(() => {
         this.websocketSvc.initializeChatRoom(this.roomInfo);
       })
+      .then(() => this.websocketSvc.onAddNewRoom())
       .then(() =>
         this.router
           .navigate([`/rooms/${this.roomInfo.roomId}`])
@@ -69,5 +73,3 @@ export class AddRoomComponent implements OnInit {
     this.addRoomForm.patchValue({ startingTrack: e });
   }
 }
-
-// 1SCXzqKZdif5b33POmzwI4

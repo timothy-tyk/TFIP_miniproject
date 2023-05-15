@@ -38,4 +38,9 @@ public class RoomService {
     Room updatedRoom = roomRepo.updateRoomTrackInfo(id,trackIndex,trackPosition);
     return ResponseEntity.ok().body(updatedRoom);
   }
+
+  public ResponseEntity<Room> updateRoomUsersOnline(String roomId,String userEmail, String joinOrLeave){
+    Room updatedRoom = roomRepo.updateRoomUsers(roomId, userEmail, joinOrLeave);
+    return ResponseEntity.ok().body(updatedRoom);
+  }
 }

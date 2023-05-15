@@ -9,6 +9,9 @@ import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.google.gson.Gson;
 
 import jakarta.json.JsonObject;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -33,6 +38,7 @@ public class RoomController {
 
   @GetMapping()
   public ResponseEntity<List<Room>> getRoomList(){
+    System.out.println("grabbing all room data");
     return roomSvc.getAllRooms();
   }
 
@@ -68,5 +74,21 @@ public class RoomController {
   public ResponseEntity<Room> updateRoomTrackInfo(@PathVariable String roomId, @RequestBody TrackIndexPositionInfo trackInfo){
     return roomSvc.updateRoomTrackInfo(roomId, trackInfo.getTrackIndex(), trackInfo.getTrackPosition());
   }
+
+  @Autowired
+  SimpMessagingTemplate smTemplate;
+    @MessageMapping("/app/chat/{location}")
+    public void onNewRoomAdded(@DestinationVariable("location") String location,String command){
+      String destination = "/topic/message/lobby";
+      this.smTemplate.convertAndSend(destination, command);
+    }
+
+    @MessageMapping("/app/chat/joinLeaveRoom")
+    public void onUserJoinOrLeave(String message){
+      String destination = "/topic/message";
+      System.out.println(message);
+      this.smTemplate.convertAndSend(destination, message);
+    }
+  
 
 }

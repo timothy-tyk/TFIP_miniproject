@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.hc.core5.http.ParseException;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -26,6 +29,7 @@ import se.michaelthelin.spotify.model_objects.special.SearchResult;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Track;
+import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRefreshRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.data.search.SearchItemRequest;
@@ -59,11 +63,25 @@ public class SpotifyService {
       final AuthorizationCodeCredentials authCodeCred = authCodeReq.execute();
       spotifyApi.setAccessToken(authCodeCred.getAccessToken());
       spotifyApi.setRefreshToken(authCodeCred.getRefreshToken());
+      System.out.println(spotifyApi.getAccessToken());
       System.out.println("Expires in: "+authCodeCred.getExpiresIn());
     } catch (Exception e) {
       System.out.println(e);
     }
     return spotifyApi.getAccessToken();
+  }
+  // @Scheduled(timeUnit = TimeUnit.MINUTES, fixedRate = 1)
+  // public void checkIfTokenValid(){
+  //   String token = spotifyApi.getAccessToken();
+  //   System.out.println("token-check:"+token);
+  // }
+
+   @Scheduled(timeUnit = TimeUnit.MINUTES, fixedRate = 59)
+  public void getRefreshToken() throws ParseException, SpotifyWebApiException, IOException{
+    AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
+    AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
+    spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+    System.out.println(spotifyApi.getAccessToken());
   }
 
   public JsonObject searchSpotifyCatalog(String query) throws ParseException, SpotifyWebApiException, IOException{
@@ -123,4 +141,6 @@ public class SpotifyService {
     Track result = req.execute();
     return result;
   }
-}
+  }
+  
+ 

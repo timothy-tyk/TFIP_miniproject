@@ -1,6 +1,8 @@
 <div *ngIf="userInfo != null">
-  <app-user-info [userInfo]="userInfo"></app-user-info>
+  <h1>Welcome Back, {{ userInfo.name }}</h1>
+  <div>
+    <app-friends [userInfo]="userInfo"></app-friends>
+  </div>
+  <app-chat [userInfo]="userInfo"></app-chat>
 </div>
-
-<app-chat [userInfo]="userInfo"></app-chat>
-<app-room-list></app-room-list>
+<!-- <app-room-list></app-room-list> -->

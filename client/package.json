@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^15.2.0",
+    "@angular/cdk": "^16.0.0",
     "@angular/common": "^15.2.0",
     "@angular/compiler": "^15.2.0",
     "@angular/core": "^15.2.0",
@@ -26,6 +27,9 @@
     "firebase": "^9.19.1",
     "net": "^1.0.2",
     "ngx-context": "^2.0.0",
+    "primeflex": "^3.3.0",
+    "primeicons": "^6.0.1",
+    "primeng": "^15.2.5",
     "rxjs": "~7.8.0",
     "sockjs-client": "^1.6.1",
     "spotify-web-api-node": "^5.0.2",

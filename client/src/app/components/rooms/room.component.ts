@@ -1,22 +1,11 @@
-import {
-  AfterViewChecked,
-  AfterViewInit,
-  Component,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '@auth0/auth0-angular';
 import { Subscription } from 'rxjs';
-import { ChatMessage } from 'src/app/models/chatmessage-model';
 import { Room } from 'src/app/models/room-model';
 import { RoomService } from 'src/app/services/room/room.service';
-import { UserService } from 'src/app/services/user/user.service';
 import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-player.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
-import { PlayerComponent } from '../player/player.component';
 
 @Component({
   selector: 'app-room',
@@ -31,12 +20,14 @@ export class RoomComponent implements OnInit {
   trackIndex: number = 0;
   onAddTrack!: Subscription;
   command$!: Subscription;
+  userJoin$!: Subscription;
 
   constructor(
     private roomSvc: RoomService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private webSocketPlayerSvc: WebsocketPlayerService
+    private webSocketPlayerSvc: WebsocketPlayerService,
+    private webSocketSvc: WebsocketService
   ) {}
   ngOnInit(): void {
     this.fetchRoomData();
@@ -55,6 +46,10 @@ export class RoomComponent implements OnInit {
         const newList = [...this.trackList, e];
         this.trackList = newList;
       }
+    });
+    this.userJoin$ = this.webSocketSvc.userJoinedOrLeft.subscribe((e: any) => {
+      console.log('fetching room data');
+      this.fetchRoomData();
     });
   }
 

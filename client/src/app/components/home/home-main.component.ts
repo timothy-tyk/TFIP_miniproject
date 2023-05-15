@@ -1,25 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
-import { Subscription } from 'rxjs';
-import { Friends } from 'src/app/models/friends-model';
 import { User } from 'src/app/models/user-model';
-import { SpotifyAuthService } from 'src/app/services/auth/spotify-auth.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
-  selector: 'app-lobby-main',
-  templateUrl: './lobby-main.component.html',
-  styleUrls: ['./lobby-main.component.css'],
+  selector: 'app-home-main',
+  templateUrl: './home-main.component.html',
+  styleUrls: ['./home-main.component.css'],
 })
-export class LobbyMainComponent implements OnInit {
+export class HomeMainComponent implements OnInit {
   userInfo!: User;
-
-  constructor(
-    private auth: AuthService,
-    private userSvc: UserService,
-    private spotifyAuth: SpotifyAuthService
-  ) {}
+  constructor(private auth: AuthService, private userSvc: UserService) {}
   ngOnInit(): void {
     this.getUserDetails();
     // this.getSpotifyLogin();
@@ -40,12 +31,5 @@ export class LobbyMainComponent implements OnInit {
         });
       }
     );
-  }
-
-  getSpotifyLogin() {
-    this.spotifyAuth
-      .getSpotifyUserLogin()
-      .then((res: any) => window.location.replace(res.link))
-      .catch((err) => console.log(err));
   }
 }

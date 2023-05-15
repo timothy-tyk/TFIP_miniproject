@@ -51,7 +51,7 @@ export class UserEditComponent implements OnInit {
   }
   initialiseEditForm() {
     this.userForm = this.fb.group({
-      name: this.fb.control(`${this.userInfo.name}`, []),
+      name: this.fb.control(`${this.userInfo.name}`, [Validators.minLength(3)]),
       picture: this.fb.control(''),
     });
   }
@@ -76,5 +76,8 @@ export class UserEditComponent implements OnInit {
         this.router.navigate(['/']);
       });
     }
+  }
+  backToLobby() {
+    this.router.navigate(['/lobby']);
   }
 }

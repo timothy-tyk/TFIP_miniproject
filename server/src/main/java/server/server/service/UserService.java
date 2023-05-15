@@ -1,9 +1,12 @@
 package server.server.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import server.server.model.Friends;
 import server.server.model.User;
 import server.server.repository.UserRepository;
 
@@ -24,5 +27,15 @@ public class UserService {
   public ResponseEntity<User> updateUserDetails(User user){
     User fromDb = userRepo.updateUserDetails(user);
     return ResponseEntity.ok().body(fromDb);
+  }
+
+  public ResponseEntity<List<Friends>> getFriends(String email){
+    List<Friends> friends = userRepo.getFriendsOfUser(email);
+    return ResponseEntity.ok().body(friends);
+  }
+
+  public ResponseEntity<List<Friends>> addFriendPair(Friends friends){
+    List<Friends> friendResult = userRepo.addFriendPair(friends);
+    return ResponseEntity.ok().body(friendResult);
   }
 }

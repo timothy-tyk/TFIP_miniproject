@@ -18,4 +18,11 @@ export class SpotifyService {
       this.httpClient.get(SPOTIFY_SEARCH_ENDPOINT, { params }).pipe()
     );
   }
+
+  getTrackInfoById(id: string) {
+    const params = new HttpParams().set('id', id);
+    return firstValueFrom(
+      this.httpClient.get(`${SPOTIFY_SEARCH_ENDPOINT}/track`, { params }).pipe()
+    );
+  }
 }

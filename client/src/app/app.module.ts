@@ -35,6 +35,11 @@ import { LandingPageComponent } from './components/landing/landing-page.componen
 import { SearchAddTrackComponent } from './components/player/search-add-track.component';
 import { PlaylistComponent } from './components/playlist/playlist.component';
 import { AddRoomSearchTrackComponent } from './components/rooms/add-room-search-track.component';
+import { PrimeModule } from './prime.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BottomTabMenuComponent } from './menu/bottom-tab-menu.component';
+import { HomeMainComponent } from './components/home/home-main.component';
+import { FriendsComponent } from './components/lobby/friends.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +58,9 @@ import { AddRoomSearchTrackComponent } from './components/rooms/add-room-search-
     SearchAddTrackComponent,
     PlaylistComponent,
     AddRoomSearchTrackComponent,
+    BottomTabMenuComponent,
+    HomeMainComponent,
+    FriendsComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +78,8 @@ import { AddRoomSearchTrackComponent } from './components/rooms/add-room-search-
     NgxContextModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,
+    PrimeModule,
+    BrowserAnimationsModule,
   ],
   providers: [UserService, ChatService, WebsocketService, SpotifyAuthService],
   bootstrap: [AppComponent],

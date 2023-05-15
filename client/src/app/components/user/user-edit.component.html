@@ -6,20 +6,67 @@
 >
   <table>
     <tr>
-      <td>Name:</td>
-      <td><input type="text" formControlName="name" /></td>
-    </tr>
-    <tr>
-      <td>Image:</td>
       <td>
-        <input type="file" #file accept="image/*" formControlName="picture" />
+        <div class="flex flex-column gap-2">
+          <label htmlFor="username">Username</label>
+          <input type="text" pInputText formControlName="name" />
+        </div>
       </td>
     </tr>
+    <br />
     <tr>
-      <td><img [src]="userInfo.picture" /></td>
+      <div class="flex flex-column gap-2">
+        <td>Profile Image</td>
+        <td>
+          <input
+            hidden
+            type="file"
+            #file
+            accept="image/*"
+            formControlName="picture"
+          />
+        </td>
+        <img [src]="userInfo.picture" (click)="file.click()" id="imgupload" />
+      </div>
     </tr>
+    <br />
     <tr>
-      <td><button type="submit">Update</button></td>
+      <td>
+        <div class="flex flex-column gap-2">
+          <label htmlFor="username">Bio</label>
+          <textarea
+            pInputTextarea
+            formControlName="bio"
+            cols="40"
+            rows="6"
+          ></textarea>
+        </div>
+      </td>
+    </tr>
+    <br />
+
+    <tr>
+      <td>
+        <div class="flex flex-row-reverse">
+          <button
+            type="submit"
+            pButton
+            class="p-button-outlined p-button-rounded small-button"
+          >
+            Update
+          </button>
+        </div>
+      </td>
     </tr>
   </table>
 </form>
+<!-- <div class="absolute bottom-0 mb-2">
+  <button
+    type="button"
+    pButton
+    class="p-button-outlined p-button-rounded small-button"
+    (click)="backToLobby()"
+  >
+    Back(replace with << icon)
+  </button>
+</div> -->

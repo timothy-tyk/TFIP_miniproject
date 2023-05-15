@@ -23,9 +23,6 @@ public class WebSocketListener {
   @EventListener
   public void handleWebSocketDisconnectListener(SessionDisconnectEvent event){
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-    System.out.println(headerAccessor);
-    System.out.println("header: "+headerAccessor.getSessionAttributes());
-
     String email = (String)headerAccessor.getSessionAttributes().get("email");
     if(email != null){
       ChatMessage msg = new ChatMessage();

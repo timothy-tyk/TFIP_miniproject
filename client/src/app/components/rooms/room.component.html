@@ -4,6 +4,7 @@
   <p>{{ room.name }}</p>
   <p>{{ room.description }}</p>
   <p>Started by: {{ room.ownerEmail }}</p>
+  <p>Users Online: {{ room.userCount }}</p>
 </div>
 <div *ngIf="trackList.length > 0">
   <app-player

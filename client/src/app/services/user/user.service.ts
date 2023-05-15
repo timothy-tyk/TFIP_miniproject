@@ -2,7 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { getDownloadURL } from '@angular/fire/storage';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
+import { Friends } from 'src/app/models/friends-model';
 import { User } from 'src/app/models/user-model';
 
 const SERVER_URL = '/api';
@@ -11,6 +12,8 @@ const SERVER_URL = '/api';
   providedIn: 'root',
 })
 export class UserService {
+  friendsList!: Friends[];
+  friendsSubject: Subject<Friends[]> = new Subject<Friends[]>();
   constructor(
     private httpClient: HttpClient,
     private storage: AngularFireStorage
@@ -43,5 +46,20 @@ export class UserService {
     return this.storage.upload(filePath, imgFile).then((snapshot) => {
       return getDownloadURL(snapshot.ref);
     });
+  }
+
+  getFriendsList(user: User) {
+    const params = new HttpParams().set('email', user.email);
+    return firstValueFrom(
+      this.httpClient.get(`${SERVER_URL}/user/friends`, { params }).pipe()
+    );
+  }
+
+  addFriend(friends: Friends) {
+    return firstValueFrom(
+      this.httpClient.post(`${SERVER_URL}/user/friends`, friends)
+    )
+      .then((res) => (this.friendsList = res as Friends[]))
+      .then(() => this.friendsSubject.next(this.friendsList));
   }
 }

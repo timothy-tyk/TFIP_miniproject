@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.json.JsonObject;
 import jakarta.servlet.http.HttpServletResponse;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
+import se.michaelthelin.spotify.model_objects.specification.Track;
 import server.server.service.SpotifyService;
 
 @RestController
@@ -48,6 +49,12 @@ public class SpotifyController {
   public ResponseEntity<String> searchSpotifyCatalog(@RequestParam String query) throws ParseException, SpotifyWebApiException, IOException{
     JsonObject response = spotifySvc.searchSpotifyCatalog(query);
     return ResponseEntity.ok().body(response.toString());
+  }
+
+  @GetMapping(path = "/search/track")
+  public ResponseEntity<Track> searchForTrackById(@RequestParam String id) throws ParseException, SpotifyWebApiException, IOException{
+    Track result = spotifySvc.getTrackById(id);
+    return ResponseEntity.ok().body(result);
   }
   
 }

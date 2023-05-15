@@ -1,5 +1,6 @@
 package server.server.repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class RoomRepository {
   public final String QUERY_ROOM_BY_ROOM_ID="SELECT * FROM rooms WHERE room_id=?";
   public final String UPDATE_ROOM_TRACKLIST_BY_ID="UPDATE rooms SET track_list=? WHERE room_id=?";
   public final String UPDATE_ROOM_TRACKINFO_BY_ID="UPDATE rooms SET track_index=?, track_position=? WHERE room_id=?";
+  public final String UPDATE_ROOM_USERCOUNT_USERLIST_BY_ID="UPDATE rooms SET user_count=?, user_list=? WHERE room_id=?";
 
   public List<Room> getAllRooms(){
     List<Room> roomList = jdbcTemplate.query(QUERY_ALL_ROOMS_SQL,BeanPropertyRowMapper.newInstance(Room.class));
@@ -54,5 +56,21 @@ public class RoomRepository {
       return jdbcTemplate.queryForObject(QUERY_ROOM_BY_ROOM_ID, BeanPropertyRowMapper.newInstance(Room.class),id);
     }
     return null;
+  }
+
+  public Room updateRoomUsers(String roomId, String userEmail, String joinOrLeave){
+    Room room = jdbcTemplate.queryForObject(QUERY_ROOM_BY_ROOM_ID, BeanPropertyRowMapper.newInstance(Room.class),roomId);
+    if(joinOrLeave.equals("JOIN")){
+      String userList = room.getUserList()!=null && room.getUserList().length()>0?room.getUserList()+","+userEmail:userEmail;
+      Integer currentUserCount = room.getUserCount()+1;
+      jdbcTemplate.update(UPDATE_ROOM_USERCOUNT_USERLIST_BY_ID,currentUserCount,userList,roomId);
+    }else if(joinOrLeave.equals("LEAVE")){
+      List<String> users =Arrays.asList(room.getUserList().split(","));
+      List<String> currentUsers = users.stream().filter(user->!user.equals(userEmail)).toList();
+      String userList = String.join(",", currentUsers);
+      Integer currentUserCount = currentUsers.size();
+      jdbcTemplate.update(UPDATE_ROOM_USERCOUNT_USERLIST_BY_ID,currentUserCount,userList,roomId);
+    }
+    return getRoomById(roomId);
   }
 }

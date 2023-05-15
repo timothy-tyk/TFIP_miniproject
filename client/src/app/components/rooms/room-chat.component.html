@@ -1,8 +1,11 @@
 <h3>Room Chat</h3>
 <table *ngIf="chatlog != null">
   <tr *ngFor="let msg of chatlog">
-    <td>{{ msg.email }}:</td>
-    <td>{{ msg.message }}</td>
+    <td>{{ msg.type != "JOIN" && msg.type != "LEAVE" ? msg.email : "" }}</td>
+    <td>{{ msg.type != "JOIN" && msg.type != "LEAVE" ? ":" : "" }}</td>
+    <td>
+      {{ msg.message }}
+    </td>
   </tr>
 </table>
 <form [formGroup]="chatForm" (ngSubmit)="onSubmitMessage()">

@@ -3,7 +3,9 @@ export interface Room {
   description: string;
   ownerEmail: string;
   userCount: number;
+  userList: string;
   roomId: string;
   active: boolean;
   trackList: string;
+  trackIndex: number;
 }

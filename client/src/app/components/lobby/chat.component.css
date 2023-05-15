@@ -1,0 +1,9 @@
+.userMessage {
+  align-self: flex-end;
+  direction: rtl;
+}
+
+.lobbyChat {
+  height: 30vh;
+  overflow-y: scroll;
+}

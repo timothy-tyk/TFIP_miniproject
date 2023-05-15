@@ -1,5 +1,27 @@
 <div *ngIf="userInfo != null">
-  <h2>Welcome back {{ userInfo.name }}</h2>
-  <img [src]="userInfo.picture" />
-  <button type="button" (click)="editProfile()">Edit</button>
+  <p-accordion>
+    <p-accordionTab>
+      <ng-template pTemplate="header"
+        >Welcome Back, {{ userInfo.name }}</ng-template
+      >
+      <div class="grid">
+        <div class="col-6"><img [src]="userInfo.picture" /></div>
+        <div class="col-6 relative">
+          <div class="block">{{ userInfo.name }}</div>
+          <div class="block">{{ userInfo.email }}</div>
+
+          <div class="absolute bottom-0 mb-2">
+            <button
+              pButton
+              type="button"
+              (click)="editProfile()"
+              class="p-button-outlined p-button-rounded small-button"
+            >
+              <p class="text-xs">Edit</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
 </div>

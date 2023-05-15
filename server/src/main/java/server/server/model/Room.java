@@ -14,6 +14,7 @@ public class Room {
   private String description;
   private String ownerEmail;
   private Integer userCount;
+  private String userList;
   private String roomId;
   private boolean active;
   private String trackList;

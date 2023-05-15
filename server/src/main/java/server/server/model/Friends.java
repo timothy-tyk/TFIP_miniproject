@@ -7,12 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Friends {
   private Integer id;
-  private String name;
-  private String email;
-  private String picture;
-  private Boolean isOnline;
-  private String accessToken;
-  
+  private String userEmail;
+  private String friendEmail;
 }

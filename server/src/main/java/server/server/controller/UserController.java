@@ -1,6 +1,7 @@
 package server.server.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
+import server.server.model.Friends;
 import server.server.model.User;
 import server.server.service.UserService;
 
@@ -42,8 +44,13 @@ public class UserController {
       return userSvc.updateUserDetails(user);
   }
 
-  // @GetMapping(path = "user/spotify")
-  // public ResponseEntity<String> getSpotifyAccessToken(){
+  @GetMapping(path = "/user/friends")
+  public ResponseEntity<List<Friends>> getFriends(@RequestParam String email){
+    return userSvc.getFriends(email);
+  }
 
-  // }
+  @PostMapping(path = "/user/friends")
+  public ResponseEntity<List<Friends>> addFriend(@RequestBody Friends friends){
+    return userSvc.addFriendPair(friends);
+  }
 }

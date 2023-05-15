@@ -1,0 +1,34 @@
+<p>TODO: Friends</p>
+<div>
+  <table>
+    <tr *ngFor="let friend of friendsList; index as i">
+      <td>
+        <p-badge
+          value="{{
+            friend.friendEmail == userInfo.email
+              ? friend.userEmail
+              : friend.friendEmail
+          }}"
+          (click)="
+            showDialog(
+              friend.friendEmail == userInfo.email
+                ? friend.userEmail
+                : friend.friendEmail
+            )
+          "
+        ></p-badge>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- User Profile Dialog -->
+<div class="card flex justify-content-center" *ngIf="dialogInfo != null">
+  <p-dialog
+    header="{{ dialogInfo.email }}"
+    [(visible)]="dialogVisible"
+    [style]="{ width: '75vw' }"
+  >
+    <p>Info Here for {{ dialogInfo.email }}</p>
+    <button pButton [disabled]="true">Add Friend</button>
+  </p-dialog>
+</div>

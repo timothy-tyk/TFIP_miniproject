@@ -1,2 +1,14 @@
-<h1>Mini Project!!</h1>
+<p-menubar>
+  <ng-template pTemplate="start" styleClass="p-menuitem-text	"
+    ><h3 class="text-xs">listening_room</h3></ng-template
+  >
+  <ng-template pTemplate="end">
+    <button pButton class="p-button-outlined p-button-rounded small-button">
+      <p class="text-xs">Logout</p>
+    </button>
+  </ng-template>
+</p-menubar>
+<div class="fixed bottom-0 mb-2 bottomMenu">
+  <app-bottom-tab-menu></app-bottom-tab-menu>
+</div>
 <router-outlet></router-outlet>
