@@ -48,7 +48,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.websocketSvc.onJoinLobby(this.userInfo);
   }
   ngOnDestroy(): void {
-    console.log('disconnecting');
     this.websocketSvc.disconnect(this.currentLocation);
   }
 
@@ -78,7 +77,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   showDialog(email: string) {
-    console.log('clicked');
     this.userSvc
       .getUserDetails(email)
       .then((res) => (this.dialogInfo = res as User))
@@ -86,7 +84,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   addFriend(email: string) {
-    console.log(email);
     const friends: Friends = {
       id: null,
       userEmail: this.userInfo.email,

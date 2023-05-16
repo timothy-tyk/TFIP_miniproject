@@ -1,23 +1,14 @@
 <p>TODO: Friends</p>
 <div>
   <table>
-    <tr *ngFor="let friend of friendsList; index as i">
+    <tr *ngFor="let friend of friendsInfo | keyvalue">
       <td>
         <p-badge
-          value="{{
-            friend.friendEmail == userInfo.email
-              ? friend.userEmail
-              : friend.friendEmail
-          }}"
-          (click)="
-            showDialog(
-              friend.friendEmail == userInfo.email
-                ? friend.userEmail
-                : friend.friendEmail
-            )
-          "
+          value="{{ friend.key }}"
+          (click)="showDialog(friend.key)"
         ></p-badge>
       </td>
+      <td>Online: {{ friend.value.isOnline }}</td>
     </tr>
   </table>
 </div>
@@ -29,6 +20,8 @@
     [style]="{ width: '75vw' }"
   >
     <p>Info Here for {{ dialogInfo.email }}</p>
+    <p>Online: {{ dialogInfo.isOnline }}</p>
+    <p>Location: {{ dialogInfo.location }}</p>
     <button pButton [disabled]="true">Add Friend</button>
   </p-dialog>
 </div>

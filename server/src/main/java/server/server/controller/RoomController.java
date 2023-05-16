@@ -49,6 +49,8 @@ public class RoomController {
     String roomId = UUID.randomUUID().toString().substring(0,8);
     room.setRoomId(roomId);
     trackSvc.storeTrackDetails(room.getTrackList(), roomId, room.getOwnerEmail());
+    String destination = "/topic/message";
+      this.smTemplate.convertAndSend(destination, "new room added");
     return roomSvc.addRoom(room);
   }
 
@@ -77,12 +79,6 @@ public class RoomController {
 
   @Autowired
   SimpMessagingTemplate smTemplate;
-    @MessageMapping("/app/chat/{location}")
-    public void onNewRoomAdded(@DestinationVariable("location") String location,String command){
-      String destination = "/topic/message/lobby";
-      this.smTemplate.convertAndSend(destination, command);
-    }
-
     @MessageMapping("/app/chat/joinLeaveRoom")
     public void onUserJoinOrLeave(String message){
       String destination = "/topic/message";

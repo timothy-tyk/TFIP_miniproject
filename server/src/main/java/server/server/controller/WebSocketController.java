@@ -6,6 +6,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,13 +48,13 @@ public class WebSocketController {
     String queueName = room.getRoomId();
     rabbitQueueServiceImpl.addNewQueue(queueName, chatExchange, queueName);
   }
+  
 
   
   @PostMapping("/chat/{location}")
   public void sendMessageToChatRoom(@PathVariable String location, @RequestBody ChatMessage msg) throws InterruptedException, ExecutionException{
     amqpTemplate.convertAndSend(chatExchange, location, ChatMessage.toJsonString(msg));
     chatSvc.storeChatMessage(msg);
-  
   }
   @Autowired
   RoomService roomSvc;
@@ -62,14 +63,11 @@ public class WebSocketController {
     // Send messages to Client
     JsonObject msg = ChatMessage.fromString(message);
     ChatMessage cm = ChatMessage.fromJson(msg);
-    System.out.println(cm);
     if(cm.getType().equals("JOIN") && !cm.getLocation().equals("lobby")){
       roomSvc.updateRoomUsersOnline(cm.getLocation(), cm.getEmail(), "JOIN");
     }
     if(cm.getType().equals("LEAVE") && !cm.getLocation().equals("lobby")){
-      System.out.println("some user left room");
       roomSvc.updateRoomUsersOnline(cm.getLocation(), cm.getEmail(), "LEAVE");
-      System.out.println("room count updated");
     }
     String location = cm.getLocation();
     this.smTemplate.convertAndSend("/topic/message/"+location, message);

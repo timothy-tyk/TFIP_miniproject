@@ -38,4 +38,8 @@ public class UserService {
     List<Friends> friendResult = userRepo.addFriendPair(friends);
     return ResponseEntity.ok().body(friendResult);
   }
+
+  public void updateUserLogin(String email, Boolean onlineStatus){
+    userRepo.updateUserLogin(email, onlineStatus);
+  }
 }

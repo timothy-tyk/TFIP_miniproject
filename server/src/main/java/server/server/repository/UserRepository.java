@@ -22,6 +22,7 @@ public class UserRepository {
   private final String UPDATE_USER_ACCESS_TOKEN="UPDATE users SET access_token=? WHERE email=?";
   private final String GET_FRIENDS_BY_EMAIL="SELECT * FROM friends WHERE user_email=? OR friend_email=?";
   private final String INSERT_FRIEND_PAIR="INSERT INTO friends (user_email, friend_email) VALUES(?,?)";
+  private final String UPDATE_USER_IS_ONLINE="UPDATE users SET is_online=? WHERE email=?";
 
   public User getUserDetails(String email){
     try {
@@ -53,6 +54,17 @@ public class UserRepository {
   public List<Friends> addFriendPair(Friends friends){
     jdbcTemplate.update(INSERT_FRIEND_PAIR, friends.getUserEmail(), friends.getFriendEmail());
     return getFriendsOfUser(friends.getUserEmail());
+  }
+
+  public void updateUserLogin(String email, Boolean onlineStatus){
+    Integer online;
+    if(onlineStatus){
+      online=1;
+    }else{
+      online=0;
+    }
+    jdbcTemplate.update(UPDATE_USER_IS_ONLINE, onlineStatus, email);
+    
   }
 
 }

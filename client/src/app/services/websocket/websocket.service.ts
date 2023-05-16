@@ -20,7 +20,8 @@ export class WebsocketService {
   >();
   messageAdded = new Subject();
   newRoomAdded = new Subject();
-  userJoinedOrLeft: Subject<string> = new Subject<string>();
+  userJoinedOrLeft = new Subject();
+  userLoggedInOrOut = new Subject();
   constructor(private httpClient: HttpClient) {}
 
   initializeConnection() {
@@ -37,8 +38,14 @@ export class WebsocketService {
           (msg: any) => {
             // If User Joins or Leaves room, send to Room List
             if (msg.body == 'userJoinedOrLeft') {
-              console.log('userJorL');
               that.userJoinedOrLeft.next(msg.body);
+            }
+            if (msg.body == 'new room added') {
+              that.newRoomAdded.next(msg.body);
+            }
+            if (msg.body.includes('login:') || msg.body.includes('logout:')) {
+              console.log('here');
+              that.userLoggedInOrOut.next(msg.body.split(':')[1]);
             } else {
               const newMsg = JSON.parse(msg.body) as ChatMessage;
               const previousMsgs = that.messages.get(fromLocation)
@@ -77,6 +84,7 @@ export class WebsocketService {
       type: 'JOIN',
     };
     const fromLocation = 'lobby';
+
     return firstValueFrom(
       this.httpClient.post(`${SERVER_URL}/chat/${fromLocation}`, message).pipe()
     );
@@ -122,6 +130,14 @@ export class WebsocketService {
   initializeChatRoom(room: Room) {
     return firstValueFrom(
       this.httpClient.post(`${SERVER_URL}/chat`, room).pipe()
+    );
+  }
+
+  onUserLoginLogout(userInfo: User, loginOrLogout: string) {
+    this.stompClient.send(
+      `/app/chat/loginlogout`,
+      {},
+      `${loginOrLogout}:${userInfo.email}`
     );
   }
 }

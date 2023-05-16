@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
+import server.server.model.ChatMessage;
 import server.server.model.Friends;
 import server.server.model.User;
 import server.server.service.UserService;
@@ -53,4 +57,19 @@ public class UserController {
   public ResponseEntity<List<Friends>> addFriend(@RequestBody Friends friends){
     return userSvc.addFriendPair(friends);
   }
+
+  @Autowired
+  SimpMessagingTemplate smTemplate;
+    @MessageMapping("/app/chat/loginlogout")
+    public void onUserJoinOrLeave(String message, SimpMessageHeaderAccessor headerAccessor){
+      if(message.contains("login:")){
+        String email = message.replace("login:", "");
+      headerAccessor.getSessionAttributes().put("User email", email);
+      userSvc.updateUserLogin(email, true);
+    }
+    System.out.println("from user controller: "+headerAccessor);
+      String destination = "/topic/message/lobby";
+      this.smTemplate.convertAndSend(destination, message);
+    }
+
 }
