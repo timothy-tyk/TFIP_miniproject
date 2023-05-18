@@ -67,7 +67,6 @@ public class UserController {
       headerAccessor.getSessionAttributes().put("User email", email);
       userSvc.updateUserLogin(email, true);
     }
-    System.out.println("from user controller: "+headerAccessor);
       String destination = "/topic/message/lobby";
       this.smTemplate.convertAndSend(destination, message);
     }

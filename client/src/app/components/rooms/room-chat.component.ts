@@ -62,6 +62,7 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
       location: this.roomId,
       timestamp: new Date().getTime(),
       type: 'CHAT',
+      display: true,
     };
     this.websocketSvc.sendMessage(msg);
     this.initializeChatForm();
@@ -71,7 +72,6 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
     this.websocketSvc.onLeaveRoom(this.userInfo, this.roomId).then(() => {
       this.websocketSvc.disconnect(`/rooms/${this.roomId}`);
     });
-    // this.websocketSvc.sendMessage(msg);
   }
 
   initChatRoom() {

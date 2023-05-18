@@ -1,8 +1,11 @@
 <div *ngIf="userInfo != null">
-  <h1>Welcome Back, {{ userInfo.name }}</h1>
+  <p class="font-24" style="text-align: left">
+    Welcome Back, {{ userInfo.name }}
+  </p>
   <div>
     <app-friends [userInfo]="userInfo"></app-friends>
   </div>
+
   <app-chat [userInfo]="userInfo"></app-chat>
 </div>
 <!-- <app-room-list></app-room-list> -->

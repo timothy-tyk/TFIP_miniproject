@@ -64,6 +64,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       location: 'lobby',
       timestamp: new Date().getTime(),
       type: 'CHAT',
+      display: true,
     };
 
     this.websocketSvc.sendMessage(msg);

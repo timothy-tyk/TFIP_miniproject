@@ -30,10 +30,12 @@ export class FriendsComponent implements OnInit {
       this.friendsList = result as Friends[];
     });
 
-    this.friendsUpdated$ = this.webSocketSvc.userLoggedInOrOut.subscribe(
+    this.friendsUpdated$ = this.webSocketSvc.updateUserOnlineLocation.subscribe(
       (e: any) => {
         if (this.friendsInfo.has(e)) {
-          this.getFriendsListInfo();
+          setTimeout(() => {
+            this.getFriendsListInfo();
+          }, 500);
         }
       }
     );

@@ -1,14 +1,23 @@
-<p-menubar>
-  <ng-template pTemplate="start" styleClass="p-menuitem-text	"
-    ><h3 class="text-xs">listening_room</h3></ng-template
+<p-menubar styleClass="top-menu">
+  <ng-template pTemplate="start" styleClass=""
+    ><p class="font-24" style="color: #ffffff">listening_room</p></ng-template
   >
   <ng-template pTemplate="end">
-    <button pButton class="p-button-outlined p-button-rounded small-button">
-      <p class="text-xs">Logout</p>
+    <button
+      pButton
+      class="p-button-rounded small-button"
+      style="background-color: #d9d9d9; border: 0; color: #474747"
+    >
+      <p class="font-12">Logout</p>
     </button>
+    <!-- <p-button
+      styleClass=""
+      label="Logout"
+      styleClass="logout-button"
+    ></p-button> -->
   </ng-template>
 </p-menubar>
-<div class="fixed bottom-0 mb-2 bottomMenu">
+<div class="fixed bottom-0 bottomMenu">
   <app-bottom-tab-menu></app-bottom-tab-menu>
 </div>
 <router-outlet></router-outlet>

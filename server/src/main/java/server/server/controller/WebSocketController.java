@@ -23,6 +23,7 @@ import server.server.model.Room;
 import server.server.service.ChatService;
 import server.server.service.RabbitQueueServiceImpl;
 import server.server.service.RoomService;
+import server.server.service.UserService;
 import server.server.service.WebSocketListener;
 
 @RestController
@@ -48,13 +49,24 @@ public class WebSocketController {
     String queueName = room.getRoomId();
     rabbitQueueServiceImpl.addNewQueue(queueName, chatExchange, queueName);
   }
-  
-
+  @Autowired
+  UserService userSvc;
   
   @PostMapping("/chat/{location}")
   public void sendMessageToChatRoom(@PathVariable String location, @RequestBody ChatMessage msg) throws InterruptedException, ExecutionException{
     amqpTemplate.convertAndSend(chatExchange, location, ChatMessage.toJsonString(msg));
     chatSvc.storeChatMessage(msg);
+    if(msg.getType().equals("JOIN") || msg.getType().equals("LEAVE")){
+      if(msg.getType().equals("LEAVE")){
+        location = "room list";
+      }
+      userSvc.updateUserLocation(msg.getEmail(), location);
+      msg.setDisplay(false);
+      // Update Room List but don't display in Chat
+      this.smTemplate.convertAndSend("/topic/message", msg);
+      // Update Lobby (Friends List) but don't display in Chat
+      this.smTemplate.convertAndSend("/topic/message/lobby", msg);
+    }
   }
   @Autowired
   RoomService roomSvc;

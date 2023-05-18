@@ -38,12 +38,15 @@ public class RoomController {
 
   @GetMapping()
   public ResponseEntity<List<Room>> getRoomList(){
-    System.out.println("grabbing all room data");
+    // System.out.println("grabbing all room data");
     return roomSvc.getAllRooms();
   }
 
   @Autowired
   TrackService trackSvc;
+  @Autowired
+  SimpMessagingTemplate smTemplate;
+
   @PostMapping()
   public ResponseEntity<Room> createRoom(@RequestBody Room room) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
     String roomId = UUID.randomUUID().toString().substring(0,8);
@@ -77,14 +80,15 @@ public class RoomController {
     return roomSvc.updateRoomTrackInfo(roomId, trackInfo.getTrackIndex(), trackInfo.getTrackPosition());
   }
 
-  @Autowired
-  SimpMessagingTemplate smTemplate;
-    @MessageMapping("/app/chat/joinLeaveRoom")
-    public void onUserJoinOrLeave(String message){
-      String destination = "/topic/message";
-      System.out.println(message);
-      this.smTemplate.convertAndSend(destination, message);
-    }
+  //   @MessageMapping("/app/chat/joinLeaveRoom")
+  //   public void onUserJoinOrLeave(String message){
+  //     String destination = "/topic/message";
+  //     System.out.println(message);
+  //     // Update Room List Info
+  //     this.smTemplate.convertAndSend(destination, message);
+  //     // Update Lobby Friends List Info
+  //     this.smTemplate.convertAndSend(destination+"/lobby", message);
+  //   }
   
 
 }

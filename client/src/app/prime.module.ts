@@ -15,6 +15,7 @@ import { BadgeModule } from 'primeng/badge';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TreeTableModule } from 'primeng/treetable';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
@@ -32,6 +33,7 @@ import { TreeTableModule } from 'primeng/treetable';
     DialogModule,
     TableModule,
     TreeTableModule,
+    CardModule,
   ],
   exports: [
     MenubarModule,
@@ -45,6 +47,7 @@ import { TreeTableModule } from 'primeng/treetable';
     DialogModule,
     TableModule,
     TreeTableModule,
+    CardModule,
   ],
 })
 export class PrimeModule {}

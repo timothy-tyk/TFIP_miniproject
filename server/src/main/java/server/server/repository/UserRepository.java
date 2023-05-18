@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Repository;
 
 import server.server.model.Friends;
@@ -23,6 +24,7 @@ public class UserRepository {
   private final String GET_FRIENDS_BY_EMAIL="SELECT * FROM friends WHERE user_email=? OR friend_email=?";
   private final String INSERT_FRIEND_PAIR="INSERT INTO friends (user_email, friend_email) VALUES(?,?)";
   private final String UPDATE_USER_IS_ONLINE="UPDATE users SET is_online=? WHERE email=?";
+  private final String UPDATE_USER_LOCATION="UPDATE users SET location=? WHERE email=?";
 
   public User getUserDetails(String email){
     try {
@@ -64,7 +66,12 @@ public class UserRepository {
       online=0;
     }
     jdbcTemplate.update(UPDATE_USER_IS_ONLINE, onlineStatus, email);
-    
+  }
+
+  public Integer updateUserLocation(String email, String location){
+    return jdbcTemplate.update(UPDATE_USER_LOCATION, location, email);
+
+  
   }
 
 }

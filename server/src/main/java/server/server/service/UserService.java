@@ -42,4 +42,8 @@ public class UserService {
   public void updateUserLogin(String email, Boolean onlineStatus){
     userRepo.updateUserLogin(email, onlineStatus);
   }
+
+  public Integer updateUserLocation(String email, String location){
+    return userRepo.updateUserLocation(email, location);
+  }
 }

@@ -18,6 +18,7 @@ public class ChatMessage {
   private String message;
   private String location;
   private String type;
+  private Boolean display;
 
   // public ChatMessage(){
   //   this.timestamp = new Date().getTime();

@@ -145,6 +145,8 @@ export class PlayerComponent implements OnInit, OnChanges {
 
       const options = {
         uri: `spotify:track:${this.trackList[this.trackIndex]}`,
+        height: 100,
+        width: '100%',
       };
 
       // @ts-ignore

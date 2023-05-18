@@ -11,8 +11,10 @@ public class User {
   private Integer id;
   private String name;
   private String email;
+  private String bio;
   private String picture;
   private Boolean isOnline;
+  private String location;
   private String accessToken;
   
 }

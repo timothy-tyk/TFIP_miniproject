@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { MenuItem } from 'primeng/api';
 import { TabMenuModule } from 'primeng/tabmenu';
@@ -15,6 +15,7 @@ import { WebsocketService } from '../services/websocket/websocket.service';
 export class BottomTabMenuComponent implements OnInit {
   items!: MenuItem[];
   userInfo!: User;
+  activeItem!: MenuItem;
   constructor(
     private router: Router,
     private webSocketSvc: WebsocketService,
@@ -23,24 +24,31 @@ export class BottomTabMenuComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.webSocketSvc.initializeConnection();
+
     this.items = [
       {
         label: 'Lobby',
-        icon: 'pi pi-fw pi-calendar',
-        command: () => this.onLobbyClick(),
+        styleClass: 'col-4',
+        command: () => {
+          this.onLobbyClick();
+        },
       },
       {
         label: 'Rooms',
-        icon: 'pi pi-fw pi-pencil',
-        command: () => this.onRoomsClick(),
+        styleClass: 'col-4',
+        command: () => {
+          this.onRoomsClick();
+        },
       },
       {
         label: 'Home',
-        icon: 'pi pi-fw pi-home',
-        command: () => this.onHomeClick(),
+        styleClass: 'col-4',
+        command: () => {
+          this.onHomeClick();
+        },
       },
     ];
-
+    this.activatedLocation();
     this.getUserInfoAndLogin();
   }
 
@@ -73,14 +81,15 @@ export class BottomTabMenuComponent implements OnInit {
     );
   }
 
-  // @HostListener('window:unload', ['$event'])
-  // windowUnloadListener() {
-  //   this.webSocketSvc.onUserLoginLogout(this.userInfo, 'logout');
-  // }
-  // @HostListener('window:beforeunload', ['$event'])
-  // beforeUnloadHandler(event) {
-  //   // ...
-  // }
+  activatedLocation() {
+    const currentLocation = location.pathname.replace('/', '');
+    console.log(currentLocation);
+    for (let item of this.items) {
+      if (currentLocation.includes(item.label?.toLowerCase()!)) {
+        this.activeItem = item;
+      }
+    }
+  }
 
   onUserLoginLogout(loginLogout: string) {
     this.webSocketSvc.onUserLoginLogout(this.userInfo, loginLogout);

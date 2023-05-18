@@ -44,7 +44,6 @@ export class RoomListComponent implements OnInit {
     );
     this.userJoinOrLeft$ = this.webSocketSvc.userJoinedOrLeft.subscribe(
       (e: any) => {
-        console.log('getting room list');
         setTimeout(() => {
           this.getRoomList();
         }, 500);
@@ -65,7 +64,6 @@ export class RoomListComponent implements OnInit {
     this.roomSvc
       .getListOfRooms()
       .then((res) => {
-        console.log('roomlist gotten');
         this.roomList = res as Room[];
       })
       .then(() => {

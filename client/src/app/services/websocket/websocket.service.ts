@@ -21,7 +21,7 @@ export class WebsocketService {
   messageAdded = new Subject();
   newRoomAdded = new Subject();
   userJoinedOrLeft = new Subject();
-  userLoggedInOrOut = new Subject();
+  updateUserOnlineLocation = new Subject();
   constructor(private httpClient: HttpClient) {}
 
   initializeConnection() {
@@ -37,23 +37,30 @@ export class WebsocketService {
           `/topic/message${fromLocation}`,
           (msg: any) => {
             // If User Joins or Leaves room, send to Room List
-            if (msg.body == 'userJoinedOrLeft') {
-              that.userJoinedOrLeft.next(msg.body);
-            }
+            // if (msg.body.includes('userJoinedOrLeft')) {
+            //   that.userJoinedOrLeft.next(msg.body);
+            //   that.updateUserOnlineLocation.next(msg.body.split(':')[1]);
+            // }
             if (msg.body == 'new room added') {
               that.newRoomAdded.next(msg.body);
-            }
-            if (msg.body.includes('login:') || msg.body.includes('logout:')) {
-              console.log('here');
-              that.userLoggedInOrOut.next(msg.body.split(':')[1]);
+            } else if (
+              msg.body.includes('login:') ||
+              msg.body.includes('logout:')
+            ) {
+              that.updateUserOnlineLocation.next(msg.body.split(':')[1]);
             } else {
               const newMsg = JSON.parse(msg.body) as ChatMessage;
-              const previousMsgs = that.messages.get(fromLocation)
-                ? that.messages.get(fromLocation)
-                : [];
-              that.messages.set(fromLocation, [...previousMsgs!, newMsg]);
-              that.messageAdded.next(that.messages);
-              console.log(that.messages);
+              if (newMsg.type == 'JOIN' || newMsg.type == 'LEAVE') {
+                that.userJoinedOrLeft.next(newMsg.email);
+                that.updateUserOnlineLocation.next(newMsg.email);
+              }
+              if (newMsg.display) {
+                const previousMsgs = that.messages.get(fromLocation)
+                  ? that.messages.get(fromLocation)
+                  : [];
+                that.messages.set(fromLocation, [...previousMsgs!, newMsg]);
+                that.messageAdded.next(that.messages);
+              }
             }
           }
         );
@@ -78,10 +85,11 @@ export class WebsocketService {
   onJoinLobby(userInfo: User) {
     const message: ChatMessage = {
       email: userInfo.email,
-      message: `${userInfo.email} has joined the room.`,
+      message: `${userInfo.email} has joined the room`,
       location: 'lobby',
       timestamp: 0,
       type: 'JOIN',
+      display: true,
     };
     const fromLocation = 'lobby';
 
@@ -97,13 +105,18 @@ export class WebsocketService {
       location: location.pathname.replace('/rooms/', ''),
       timestamp: 0,
       type: 'JOIN',
+      display: true,
     };
     const fromLocation = location.pathname.replace('/rooms', '');
     return firstValueFrom(
       this.httpClient.post(`${SERVER_URL}/chat/${fromLocation}`, message).pipe()
     ).then(() => {
-      this.userJoinedOrLeft.next(message.type);
-      this.stompClient.send(`/app/chat/joinLeaveRoom`, {}, 'userJoinedOrLeft');
+      this.userJoinedOrLeft.next(userInfo.email);
+      // this.stompClient.send(
+      //   `/app/chat/joinLeaveRoom`,
+      //   {},
+      //   `userJoinedOrLeft:${message.email}`
+      // );
     });
   }
 
@@ -114,10 +127,13 @@ export class WebsocketService {
       location: location,
       timestamp: 0,
       type: 'LEAVE',
+      display: true,
     };
-    console.log('leaving' + message.location);
-
-    this.stompClient.send(`/app/chat/joinLeaveRoom`, {}, 'userJoinedOrLeft');
+    // this.stompClient.send(
+    //   `/app/chat/joinLeaveRoom`,
+    //   {},
+    //   `userJoinedOrLeft:${message.email}`
+    // );
     return firstValueFrom(
       this.httpClient.post(`${SERVER_URL}/chat/${location}`, message).pipe()
     );

@@ -1,27 +1,74 @@
-<p>TODO: Friends</p>
-<div>
-  <table>
-    <tr *ngFor="let friend of friendsInfo | keyvalue">
-      <td>
-        <p-badge
-          value="{{ friend.key }}"
-          (click)="showDialog(friend.key)"
-        ></p-badge>
-      </td>
-      <td>Online: {{ friend.value.isOnline }}</td>
-    </tr>
-  </table>
-</div>
-<!-- User Profile Dialog -->
-<div class="card flex justify-content-center" *ngIf="dialogInfo != null">
-  <p-dialog
-    header="{{ dialogInfo.email }}"
-    [(visible)]="dialogVisible"
-    [style]="{ width: '75vw' }"
-  >
-    <p>Info Here for {{ dialogInfo.email }}</p>
-    <p>Online: {{ dialogInfo.isOnline }}</p>
-    <p>Location: {{ dialogInfo.location }}</p>
-    <button pButton [disabled]="true">Add Friend</button>
-  </p-dialog>
+<div class="friends-div">
+  <p-card style="height: 15vh">
+    <div>
+      <div class="grid">
+        <p
+          style="margin-top: 0; padding-right: 6vw"
+          class="text-xl col-5 font-24"
+        >
+          Friends
+        </p>
+        <div class="col-7" style="padding: 0">
+          <button
+            pButton
+            class="p-button-rounded small-button"
+            type="submit"
+            style="height: 40px; margin: 0 auto; display: flex"
+          >
+            <p class="font-20">Invite +</p>
+          </button>
+        </div>
+      </div>
+      <table>
+        <tr *ngFor="let friend of friendsInfo | keyvalue">
+          <td>
+            <p-badge
+              value="{{ friend.key }}"
+              (click)="showDialog(friend.key)"
+            ></p-badge>
+          </td>
+          <td>
+            <p-badge
+              styleClass="{{
+                friend.value.isOnline ? 'orange-badge' : 'gray-badge'
+              }}"
+            ></p-badge>
+          </td>
+          <!-- <td>
+            <p style="margin-left: 2vw">
+              {{ friend.value.isOnline ? "Online" : "Offline" }}
+            </p>
+          </td> -->
+          <td *ngIf="friend.value.isOnline">
+            <p style="margin-left: 2vw">
+              {{ friend.value.location != "lobby" ? "In Room" : "Lobby" }}
+            </p>
+          </td>
+          <td *ngIf="friend.value.isOnline && friend.value.location != 'lobby'">
+            <button
+              pButton
+              class="p-button-rounded small-button"
+              type="submit"
+              style="margin-left: 2vw"
+            >
+              Join
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!-- User Profile Dialog -->
+    <div class="card flex justify-content-center" *ngIf="dialogInfo != null">
+      <p-dialog
+        header="{{ dialogInfo.email }}"
+        [(visible)]="dialogVisible"
+        [style]="{ width: '75vw' }"
+      >
+        <p>Info Here for {{ dialogInfo.email }}</p>
+        <p>Online: {{ dialogInfo.isOnline }}</p>
+        <p>Location: {{ dialogInfo.location }}</p>
+        <button pButton [disabled]="true">Add Friend</button>
+      </p-dialog>
+    </div>
+  </p-card>
 </div>
