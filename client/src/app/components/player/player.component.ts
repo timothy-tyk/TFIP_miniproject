@@ -11,13 +11,16 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService, User } from '@auth0/auth0-angular';
+import { FastAverageColor } from 'fast-average-color';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { Room } from 'src/app/models/room-model';
+import { Track } from 'src/app/models/track-model';
 import { SpotifyAuthService } from 'src/app/services/auth/spotify-auth.service';
 import { RoomService } from 'src/app/services/room/room.service';
 import { SpotifySdkWebPlayerService } from 'src/app/services/spotify/spotify-sdk-web-player.service';
 import { SpotifyService } from 'src/app/services/spotify/spotify.service';
 import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-player.service';
+import anime from 'animejs/lib/anime.es';
 
 /// <reference path="../node_modules/@types/spotify-web-playback-sdk/index.d.ts"/>
 
@@ -38,7 +41,10 @@ export class PlayerComponent implements OnInit, OnChanges {
   @Output() onTrackEnded: Subject<number> = new Subject<number>();
   playerStatus: string = 'Play';
   command$!: Subscription;
-
+  albumImageUrl!: string;
+  @Output() addTrackClick: Subject<string> = new Subject<string>();
+  spinning!: boolean;
+  spinEffect!: any;
   // @ts-ignore important!!
   IFrameController!: EmbedController;
   constructor(
@@ -50,24 +56,20 @@ export class PlayerComponent implements OnInit, OnChanges {
     private roomSvc: RoomService
   ) {}
   ngOnInit(): void {
-    // this.spotifyAuth
-    //   .getSpotifyToken()
-    //   .then((token: any) => this.spotifyWebSDK.createWebPlayer(token['token']));
+    // this.spotifyWebSDK.createWebPlayer(localStorage.getItem('access_token')!);
     this.auth.user$.subscribe((user) => {
       // console.log(user);
       this.userInfo = user as User;
       this.userInfoSubject.next(this.userInfo);
     });
-    this.createIFrame();
-    this.onUserInfo$ = this.userInfoSubject.subscribe((user) => {
-      // initialize only after userInfo is collected
-      console.log(user);
-      this.getTrackIndexPosition();
-      this.onStartingGetTrackIndexPosition();
-      this.websocketPlayerSvc.initializeConnection();
-      // var iframe = document.getElementById('player');
-      // console.log(iframe);
-      // iframe?.click();
+    this.createIFrame().then(() => {
+      this.onUserInfo$ = this.userInfoSubject.subscribe((user) => {
+        // initialize only after userInfo is collected
+        console.log(user);
+        this.getTrackIndexPosition();
+        this.onStartingGetTrackIndexPosition();
+        this.websocketPlayerSvc.initializeConnection();
+      });
     });
 
     // Subscribe to clicks on the Play/Pause Button, Track Change, Track Seek Position change
@@ -76,11 +78,15 @@ export class PlayerComponent implements OnInit, OnChanges {
       if (e == 'Play' || e == 'Pause') {
         this.playerStatus = e;
         this.IFrameController.togglePlay();
+        this.playerStatus == 'Pause'
+          ? this.spinEffect.pause()
+          : this.spinEffect.play();
       } else if (e.startsWith('index')) {
         console.log('track change');
         const idx = Number.parseInt(e.replace('index:', ''));
         this.trackIndex = idx;
         this.IFrameController.loadUri(`spotify:track:${this.trackList[idx]}`);
+        this.getImageAvgColour(this.trackList[idx]);
         this.IFrameController.play();
         this.updateTrackIndexPosition(idx, 0);
       }
@@ -102,9 +108,10 @@ export class PlayerComponent implements OnInit, OnChanges {
       console.log('changing track');
       console.log(changes['trackIndex']);
       this.changeTrack(this.trackIndex, true);
+      this.spinEffect.play();
     }
   }
-  onStartingGetTrackIndexPosition() {
+  async onStartingGetTrackIndexPosition() {
     // called only on start
     setTimeout(() => {
       this.roomSvc
@@ -130,8 +137,7 @@ export class PlayerComponent implements OnInit, OnChanges {
     window.location.reload();
   }
 
-  createIFrame() {
-    console.log('createIframe: trackIndex:' + this.trackIndex);
+  async createIFrame() {
     console.log(this.trackList[this.trackIndex]);
     const iFrameScript = document.createElement('script');
     iFrameScript.src = 'https://open.spotify.com/embed-podcast/iframe-api/v1';
@@ -142,12 +148,12 @@ export class PlayerComponent implements OnInit, OnChanges {
     // @ts-ignore
     window.onSpotifyIframeApiReady = (IFrameAPI) => {
       const element = document.getElementById('embed-iframe');
-
       const options = {
         uri: `spotify:track:${this.trackList[this.trackIndex]}`,
         height: 100,
-        width: '100%',
+        width: '90%',
       };
+      this.getImageAvgColour(this.trackList[this.trackIndex]);
 
       // @ts-ignore
       const callback = (EmbedController) => {
@@ -190,12 +196,13 @@ export class PlayerComponent implements OnInit, OnChanges {
       };
       IFrameAPI.createController(element, options, callback);
       console.log('controller created');
+      this.spinImage();
     };
   }
 
   changeTrack(idx: number, autoplay: boolean) {
     console.log(`changetrack, autoplay ${autoplay}`);
-    console.log('iFrameController=', this.IFrameController);
+    this.getImageAvgColour(this.trackList[idx]);
     this.IFrameController.loadUri(`spotify:track:${this.trackList[idx]}`);
     if (autoplay) {
       this.IFrameController.play();
@@ -242,10 +249,50 @@ export class PlayerComponent implements OnInit, OnChanges {
     this.IFrameController.togglePlay();
     if (this.playerStatus == 'Play') {
       this.playerStatus = 'Pause';
+      this.spinEffect.pause();
       this.websocketPlayerSvc.sendCommand('Pause');
     } else {
       this.playerStatus = 'Play';
+      this.spinEffect.play();
       this.websocketPlayerSvc.sendCommand('Play');
     }
+  }
+
+  getImageAvgColour(trackId: string) {
+    const fac = new FastAverageColor();
+    this.spotifySvc
+      .getTrackInfoById(trackId)
+      .then((res: any) => {
+        this.albumImageUrl = res['album']['images'][0]['url'];
+        return fac.getColorAsync(res['album']['images'][0]['url']);
+      })
+      .then((color) => {
+        let svg = document.getElementById('player-div');
+        let compStyles = window.getComputedStyle(svg!);
+        let backgroundUrl = compStyles.getPropertyValue('background');
+        let backgroundUrl2 = backgroundUrl.replace(
+          /%23[a-zA-Z0-9]{6}/,
+          `%23${color.hex.replace('#', '')}`
+        );
+        svg!.style.background = backgroundUrl2;
+      });
+  }
+
+  onAddTrackClick() {
+    this.addTrackClick.next('click');
+  }
+
+  spinImage() {
+    this.spinEffect = anime({
+      targets: '.spinning-album',
+      rotate: {
+        value: '+=1turn',
+        duration: 5000,
+        easing: 'linear',
+      },
+      loop: true,
+      autoplay: true,
+    });
+    this.spinning = true;
   }
 }

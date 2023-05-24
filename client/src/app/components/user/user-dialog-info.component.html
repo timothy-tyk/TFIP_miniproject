@@ -1,0 +1,67 @@
+<div class="card flex justify-content-center" *ngIf="dialogInfo != null">
+  <p-dialog
+    header="{{ dialogInfo.name }}"
+    [(visible)]="dialogVisible"
+    (onHide)="cancel()"
+    [style]="{ width: '90vw' }"
+  >
+    <div class="grid">
+      <div class="col-5">
+        <img
+          class="profile-pic-div"
+          [src]="dialogInfo.picture"
+          style="width: 100px; height: 100px; border-radius: 50px"
+        />
+      </div>
+      <div class="col-7 relative user-info-div">
+        <p class="font-20">{{ dialogInfo.email }}</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-5">
+        <p class="font-12">Username</p>
+      </div>
+      <div class="col-7">
+        <p class="font-12">{{ dialogInfo.name }}</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-5">
+        <p class="font-12">Bio</p>
+      </div>
+      <div class="col-7">
+        <p class="font-12">{{ dialogInfo.bio }}</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-5">
+        <p class="font-12">Online?</p>
+      </div>
+      <div class="col-7" style="display: contents">
+        <p-badge
+          styleClass="{{ dialogInfo.isOnline ? 'orange-badge' : 'gray-badge' }}"
+        ></p-badge>
+        <p class="font-12" style="margin-left: 5%">
+          {{
+            dialogInfo.isOnline ? (dialogInfo.location | titlecase) : "Offline"
+          }}
+        </p>
+      </div>
+    </div>
+    <button pButton [disabled]="true" class="p-button-rounded small-button">
+      <p class="font-15">Add Friend</p>
+    </button>
+    <button
+      pButton
+      [disabled]="
+        !dialogInfo.isOnline ||
+        dialogInfo.location == 'lobby' ||
+        dialogInfo.location == currentLocation
+      "
+      (click)="followToRoom(dialogInfo.location)"
+      class="p-button-rounded small-button"
+    >
+      <p class="font-15">Follow to room</p>
+    </button>
+  </p-dialog>
+</div>

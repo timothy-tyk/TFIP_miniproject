@@ -1,26 +1,97 @@
-<p>room works!</p>
-<div *ngIf="room != null">
-  <p>{{ room.roomId }}</p>
-  <p>{{ room.name }}</p>
-  <p>{{ room.description }}</p>
-  <p>Started by: {{ room.ownerEmail }}</p>
-  <p>Users Online: {{ room.userCount }}</p>
+<div class="room-info-div" *ngIf="room != null">
+  <div class="grid">
+    <div class="col-6"><p class="font-24">Listening To</p></div>
+    <div class="col-6 invite-button">
+      <button
+        pButton
+        class="p-button-rounded small-button"
+        style="height: 40px"
+      >
+        <p class="font-20">Invite +</p>
+      </button>
+    </div>
+  </div>
+  <table>
+    <tr>
+      <td colspan="2">
+        <p class="font-36" style="margin-left: 2vw">{{ room.name }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <p class="font-12" style="margin-left: 2vw">{{ room.description }}</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="width: 100px">
+        <p class="font-12" style="margin-left: 2vw">
+          {{ roomListeners.size }} Listeners
+        </p>
+      </td>
+      <td>
+        <p-avatarGroup
+          *ngIf="roomListeners != null"
+          [style]="{ 'margin-left': '2vw' }"
+        >
+          <p-avatar
+            size="large"
+            *ngFor="let user of roomListeners | keyvalue"
+            image="{{ user.value.picture }}"
+            shape="circle"
+            [ngStyle]="{ border: 0 }"
+            (click)="showListenerDialog(user.key)"
+          ></p-avatar>
+        </p-avatarGroup>
+      </td>
+    </tr>
+  </table>
+  <app-user-dialog-info
+    [email]="selectedUserEmail"
+    (closeDialog)="closeListenerDialog()"
+  ></app-user-dialog-info>
+
+  <!-- <p>Started by: {{ room.ownerEmail }}</p> -->
 </div>
 <div *ngIf="trackList.length > 0">
   <app-player
     (onTrackEnded)="updatePlayerTrack($event)"
     [trackList]="trackList"
     [roomInfo]="room"
+    (addTrackClick)="showAddTrackDialog($event)"
   ></app-player>
+  <!-- <app-new-player></app-new-player> -->
 </div>
-<app-search-add-track
+
+<app-room-chat
   [roomId]="id"
-  [trackList]="trackList"
-></app-search-add-track>
-<app-room-chat [roomId]="id"></app-room-chat>
-<app-playlist
-  [trackList]="trackList"
-  [trackIndex]="trackIndex"
-  (trackIndexChange)="onTrackIndexChange($event)"
-></app-playlist>
-<button type="button" (click)="backToLobby()">Back</button>
+  (showPlaylist)="showPlaylistDialog($event)"
+></app-room-chat>
+
+<!-- Add Track Dialog -->
+<div class="card flex justify-content-center">
+  <p-dialog
+    header="Add Track"
+    [(visible)]="addTrackDialogVisible"
+    [style]="{ width: '90vw' }"
+  >
+    <app-search-add-track
+      [roomId]="id"
+      [trackList]="trackList"
+    ></app-search-add-track>
+  </p-dialog>
+</div>
+
+<!-- Playlist Dialog -->
+<div class="card flex justify-content-center">
+  <p-dialog
+    header="Playlist"
+    [(visible)]="playlistDialogVisible"
+    [style]="{ width: '90vw' }"
+  >
+    <app-playlist
+      [trackList]="trackList"
+      [trackIndex]="trackIndex"
+      (trackIndexChange)="onTrackIndexChange($event)"
+    ></app-playlist>
+  </p-dialog>
+</div>

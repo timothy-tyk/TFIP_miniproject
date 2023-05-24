@@ -3,7 +3,7 @@
     <div>
       <div class="grid">
         <p
-          style="margin-top: 0; padding-right: 6vw"
+          style="margin-top: 0; padding-right: 6vw; margin-bottom: 2vh"
           class="text-xl col-5 font-24"
         >
           Friends
@@ -12,8 +12,9 @@
           <button
             pButton
             class="p-button-rounded small-button"
-            type="submit"
+            type="button"
             style="height: 40px; margin: 0 auto; display: flex"
+            (click)="showInviteDialog()"
           >
             <p class="font-20">Invite +</p>
           </button>
@@ -24,7 +25,7 @@
           <td>
             <p-badge
               value="{{ friend.key }}"
-              (click)="showDialog(friend.key)"
+              (click)="showUserDialog(friend.key)"
             ></p-badge>
           </td>
           <td>
@@ -39,8 +40,11 @@
               {{ friend.value.isOnline ? "Online" : "Offline" }}
             </p>
           </td> -->
+          <td *ngIf="!friend.value.isOnline">
+            <p class="font-12" style="margin-left: 2vw">Offline</p>
+          </td>
           <td *ngIf="friend.value.isOnline">
-            <p style="margin-left: 2vw">
+            <p class="font-12" style="margin-left: 2vw">
               {{ friend.value.location != "lobby" ? "In Room" : "Lobby" }}
             </p>
           </td>
@@ -50,6 +54,7 @@
               class="p-button-rounded small-button"
               type="submit"
               style="margin-left: 2vw"
+              (click)="followToRoom(friend.value.location)"
             >
               Join
             </button>
@@ -58,17 +63,15 @@
       </table>
     </div>
     <!-- User Profile Dialog -->
-    <div class="card flex justify-content-center" *ngIf="dialogInfo != null">
-      <p-dialog
-        header="{{ dialogInfo.email }}"
-        [(visible)]="dialogVisible"
-        [style]="{ width: '75vw' }"
-      >
-        <p>Info Here for {{ dialogInfo.email }}</p>
-        <p>Online: {{ dialogInfo.isOnline }}</p>
-        <p>Location: {{ dialogInfo.location }}</p>
-        <button pButton [disabled]="true">Add Friend</button>
-      </p-dialog>
-    </div>
+    <app-user-dialog-info
+      [email]="selectedUserEmail"
+      (closeDialog)="closeUserDialog()"
+    ></app-user-dialog-info>
+    <!-- Invite Friend Dialog -->
+    <app-invite
+      [userInfo]="userInfo"
+      [dialogVisible]="inviteDialogVisible"
+      (onDialogClose)="closeInviteDialog($event)"
+    ></app-invite>
   </p-card>
 </div>

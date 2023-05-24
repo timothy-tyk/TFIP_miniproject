@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
-import server.server.model.ChatMessage;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import server.server.model.Friends;
+import server.server.model.InviteEmail;
 import server.server.model.User;
+import server.server.service.EmailService;
 import server.server.service.UserService;
 
 @Controller
@@ -40,11 +44,13 @@ public class UserController {
   }
 
   @PutMapping(path = "/user")
-  public ResponseEntity<User> updateUserData(@RequestPart String picture, @RequestPart String email, @RequestPart String name ) throws IOException{
+  public ResponseEntity<User> updateUserData(@RequestPart String picture, @RequestPart String email, @RequestPart String name, @RequestPart String bio ) throws IOException{
       User user = new User();
       user.setEmail(email);
       user.setName(name);
       user.setPicture(picture);
+      user.setBio(bio);
+      System.out.println(user);
       return userSvc.updateUserDetails(user);
   }
 
@@ -56,6 +62,18 @@ public class UserController {
   @PostMapping(path = "/user/friends")
   public ResponseEntity<List<Friends>> addFriend(@RequestBody Friends friends){
     return userSvc.addFriendPair(friends);
+  }
+
+  @Autowired
+  EmailService emailSvc;
+
+  @PostMapping(path = "/user/invite")
+  public ResponseEntity<String> sendInvite(@RequestBody InviteEmail email){
+    String sent = emailSvc.sendInviteEmail(email);
+    JsonObjectBuilder jObjB = Json.createObjectBuilder();
+    jObjB.add("message", sent);
+    JsonObject json = jObjB.build();
+    return ResponseEntity.ok().body(json.toString());
   }
 
   @Autowired

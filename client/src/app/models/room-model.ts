@@ -1,3 +1,5 @@
+import { Track } from './track-model';
+
 export interface Room {
   name: string;
   description: string;
@@ -8,4 +10,5 @@ export interface Room {
   active: boolean;
   trackList: string;
   trackIndex: number;
+  startingTrack: Track;
 }

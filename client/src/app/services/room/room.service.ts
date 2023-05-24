@@ -28,11 +28,9 @@ export class RoomService {
       this.httpClient.get(`${SERVER_URL}/rooms/${id}`).pipe()
     );
   }
-  updateRoomAddTrack(id: string, trackId: string, userEmail: string) {
+  updateRoomAddTrack(id: string, track: Track) {
     return firstValueFrom(
-      this.httpClient
-        .put(`${SERVER_URL}/rooms/${id}?add=${trackId}`, userEmail, {})
-        .pipe()
+      this.httpClient.put(`${SERVER_URL}/rooms/${id}/add`, track, {}).pipe()
     ).then(() => this.trackAdded.next(id));
   }
   getRoomTracks(id: string) {

@@ -1,101 +1,132 @@
-<h3>Room List</h3>
-<p-table
-  *ngIf="roomList != null"
-  class="flex flex-column"
-  [value]="roomList"
-  dataKey="name"
-  rowExpandMode="single"
-  styleClass="p-datatable-striped"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <td>Room Name</td>
-      <td>By:</td>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-room let-rowIndex="rowIndex">
-    <tr [pSelectableRow]="room" [ngStyle]="{ border: '1px solid gray' }">
-      <td (click)="onRoomDescriptionClick(rowIndex)" [pRowToggler]="room">
-        {{ room.name }}
-      </td>
-      <td>
-        <p-badge
-          value="{{ room.ownerEmail }}"
-          (click)="showUserDialog(room.ownerEmail)"
-        ></p-badge>
+<div class="room-list-div">
+  <div class="grid">
+    <div class="col-5">
+      <p class="font-24">Room List</p>
+    </div>
+    <div class="col-7 add-room-button">
+      <button
+        pButton
+        type="button"
+        [routerLink]="['/rooms/add']"
+        class="p-button-rounded small-button"
+        style="height: 40px"
+      >
+        <p class="font-20">+ Add Room</p>
+      </button>
+    </div>
+  </div>
+  <p-table
+    *ngIf="roomList != null"
+    class="flex flex-column"
+    [value]="roomList"
+    dataKey="name"
+    rowExpandMode="single"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <td><p class="font-12" style="margin-left: 3vw">Room Name</p></td>
+        <td><p class="font-12" style="margin-left: 3vw">By:</p></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-room let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="room">
+        <td (click)="onRoomDescriptionClick(rowIndex)" [pRowToggler]="room">
+          <p class="font-15"></p>
+          {{ room.name }}
+        </td>
+        <td>
+          <p-badge
+            value="{{ room.ownerEmail }}"
+            (click)="showUserDialog(room.ownerEmail)"
+          ></p-badge>
+        </td>
+        <td>
+          <button
+            type="button"
+            pButton
+            class="p-button-rounded small-button"
+            (click)="enterRoom(room.roomId)"
+            style="background-color: #d9d9d9; border: 0"
+          >
+            <p class="font-12" style="color: #474747">Enter</p>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-rowData id="expandedtable">
+      <tr id="expandedtable">
+        <td style="border-top: solid 1px #d9d9d9">
+          <p class="font-12">Description:</p>
+        </td>
+        <td style="border-top: solid 1px #d9d9d9" colspan="2">
+          <p class="font-12">{{ rowData.description }}</p>
+        </td>
+      </tr>
+      <tr *ngIf="selectedRoomCurrentTrack != null" id="expandedtable">
+        <td><p class="font-12">Current Track:</p></td>
+        <td colspan="2">
+          <div class="grid">
+            <div class="col-4">
+              <p class="font-12">
+                {{ selectedRoomCurrentTrack.name }} <br />
+                by
+                {{ selectedRoomCurrentTrack.artists[0].name }}
+              </p>
+            </div>
+            <div class="col-8">
+              <img
+                class="descriptionimg"
+                [src]="selectedRoomCurrentTrack.album.images[1].url"
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
 
-        <button
-          type="button"
-          pButton
-          class="p-button-outlined p-button-rounded small-button"
-          (click)="enterRoom(room.roomId)"
-          style="float: right"
-        >
-          Enter
-        </button>
-      </td>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="rowexpansion" let-rowData id="expandedtable">
-    <tr id="expandedtable" [ngStyle]="{ 'background-color': 'aqua' }">
-      <td>Description:</td>
-      <td>{{ rowData.description }}</td>
-    </tr>
-    <tr
-      *ngIf="selectedRoomCurrentTrack != null"
-      id="expandedtable"
-      [ngStyle]="{ 'background-color': 'aqua' }"
+      <tr id="expandedtable">
+        <td style="border-bottom: solid 1px #d9d9d9">
+          <p-badge
+            styleClass="{{
+              rowData.userCount > 0 ? 'orange-badge' : 'gray-badge'
+            }}"
+            [value]="rowData.userCount"
+          ></p-badge>
+          <p class="font-12">Listeners</p>
+        </td>
+        <td colspan="2" style="border-bottom: solid 1px #d9d9d9">
+          <table
+            *ngIf="
+              selectedRoomUserList != null && selectedRoomUserList.length > 0
+            "
+          >
+            <tr *ngFor="let user of selectedRoomUserList">
+              <div *ngIf="user.length > 0">
+                <p-badge
+                  value="{{ user }}"
+                  (click)="showUserDialog(user)"
+                ></p-badge>
+              </div>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- <div class="flex flex-row-reverse">
+    <button
+      pButton
+      type="button"
+      [routerLink]="['/rooms/add']"
+      class="p-button-outlined p-button-rounded small-button absolute bottom-0 addRoom"
     >
-      <td>Current Track:</td>
-      <td>
-        {{ selectedRoomCurrentTrack.name }}
-        by
-        {{ selectedRoomCurrentTrack.artists[0].name }}
-      </td>
-    </tr>
-    <tr
-      *ngIf="selectedRoomCurrentTrack != null"
-      id="expandedtable"
-      [ngStyle]="{ 'background-color': 'aqua' }"
-    >
-      <td>
-        <img [src]="selectedRoomCurrentTrack.album.images[2].url" />
-      </td>
-      <td></td>
-    </tr>
-    <tr id="expandedtable" [ngStyle]="{ 'background-color': 'aqua' }">
-      <td>Users Inside: {{ rowData.userCount }}</td>
-      <td>
-        <table *ngIf="selectedRoomUserList != null">
-          <tr *ngFor="let user of selectedRoomUserList">
-            {{
-              user
-            }}
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
-<div class="flex flex-row-reverse">
-  <button
-    pButton
-    type="button"
-    [routerLink]="['/rooms/add']"
-    class="p-button-outlined p-button-rounded small-button absolute bottom-0 addRoom"
-  >
-    + Add Room
-  </button>
-</div>
-<div>room description shows on click, usercount, users inside...?</div>
-<!-- User Profile Dialog -->
-<div class="card flex justify-content-center" *ngIf="dialogInfo != null">
-  <p-dialog
-    header="{{ dialogInfo.email }}"
-    [(visible)]="dialogVisible"
-    [style]="{ width: '75vw' }"
-  >
-    <p>Info Here for {{ dialogInfo.email }}</p>
-    <button pButton [disabled]="true">Add Friend</button>
-  </p-dialog>
+      + Add Room
+    </button>
+  </div> -->
+  <!-- User Profile Dialog -->
+
+  <app-user-dialog-info
+    [email]="selectedUserEmail"
+    (closeDialog)="closeUserDialog()"
+  ></app-user-dialog-info>
 </div>

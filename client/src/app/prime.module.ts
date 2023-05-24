@@ -16,6 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TreeTableModule } from 'primeng/treetable';
 import { CardModule } from 'primeng/card';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
@@ -26,6 +27,7 @@ import { CardModule } from 'primeng/card';
     ButtonModule,
     AccordionModule,
     AvatarModule,
+    AvatarGroupModule,
     InputTextModule,
     InputTextareaModule,
     TabMenuModule,
@@ -40,6 +42,7 @@ import { CardModule } from 'primeng/card';
     ButtonModule,
     AccordionModule,
     AvatarModule,
+    AvatarGroupModule,
     InputTextModule,
     InputTextareaModule,
     TabMenuModule,

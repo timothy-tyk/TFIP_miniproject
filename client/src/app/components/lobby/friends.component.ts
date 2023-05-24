@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Friends } from 'src/app/models/friends-model';
 import { User } from 'src/app/models/user-model';
@@ -17,11 +18,13 @@ export class FriendsComponent implements OnInit {
   friends$: Subscription = new Subscription();
   friendsUpdated$: Subscription = new Subscription();
   // Dialog
-  dialogVisible: boolean = false;
-  dialogInfo!: User;
+  selectedUserEmail!: string;
+  inviteDialogVisible!: boolean;
+
   constructor(
     private userSvc: UserService,
-    private webSocketSvc: WebsocketService
+    private webSocketSvc: WebsocketService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.webSocketSvc.initializeConnection();
@@ -58,8 +61,20 @@ export class FriendsComponent implements OnInit {
         )
       );
   }
-  showDialog(email: string) {
-    this.dialogInfo = this.friendsInfo.get(email)!;
-    this.dialogVisible = true;
+  showUserDialog(email: string) {
+    this.selectedUserEmail = email;
+  }
+  closeUserDialog() {
+    this.selectedUserEmail = null!;
+  }
+  followToRoom(location: string) {
+    this.router.navigate([`/rooms/${location}`]);
+  }
+  showInviteDialog() {
+    this.inviteDialogVisible = true;
+  }
+  closeInviteDialog(e: any) {
+    console.log(e);
+    this.inviteDialogVisible = false;
   }
 }

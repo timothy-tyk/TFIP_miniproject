@@ -37,54 +37,55 @@ import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 
 @Service
 public class SpotifyService {
-  private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/spotify/getusercode");
-  private String code = "";
-  private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-              .setClientId("bf828884d19840dcafa60811d407887c")
-              .setClientSecret("763c40ff86a9462497afc7da0f1a5ef9")
-              .setRedirectUri(redirectUri)
-              .build();
-  private String spotifyToken = "";
+  // private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/spotify/getusercode");
+  // private String code = "";
+  // private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
+  //             .setClientId("bf828884d19840dcafa60811d407887c")
+  //             .setClientSecret("763c40ff86a9462497afc7da0f1a5ef9")
+  //             .setRedirectUri(redirectUri)
+  //             .build();
+  // private String spotifyToken = "";
 
-  public String spotifyLoginAuth(){
-    AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
-    .scope("user-read-private, user-read-email, user-top-read, ugc-image-upload, user-read-playback-state, user-modify-playback-state, user-read-currently-playing, app-remote-control, streaming, playlist-read-private, playlist-read-collaborative, playlist-modify-private, playlist-modify-public, user-read-playback-position, user-read-recently-played")
-    .show_dialog(true)
-    .build();
-  final URI uri = authorizationCodeUriRequest.execute();
-  JsonObject json = Json.createObjectBuilder().add("link", uri.toString()).build();
-  return json.toString() ;
-  }
-
-  public String getSpotifyUserCode(String userCode){
-    String code = userCode;
-    AuthorizationCodeRequest authCodeReq = spotifyApi.authorizationCode(code).build();
-     try {
-      final AuthorizationCodeCredentials authCodeCred = authCodeReq.execute();
-      spotifyApi.setAccessToken(authCodeCred.getAccessToken());
-      spotifyApi.setRefreshToken(authCodeCred.getRefreshToken());
-      System.out.println(spotifyApi.getAccessToken());
-      System.out.println("Expires in: "+authCodeCred.getExpiresIn());
-    } catch (Exception e) {
-      System.out.println(e);
-    }
-    return spotifyApi.getAccessToken();
-  }
-  // @Scheduled(timeUnit = TimeUnit.MINUTES, fixedRate = 1)
-  // public void checkIfTokenValid(){
-  //   String token = spotifyApi.getAccessToken();
-  //   System.out.println("token-check:"+token);
+  // public String spotifyLoginAuth(String email){
+  //   AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi.authorizationCodeUri()
+  //   .scope("user-read-private, user-read-email, user-top-read, ugc-image-upload, user-read-playback-state, user-modify-playback-state, user-read-currently-playing, app-remote-control, streaming, playlist-read-private, playlist-read-collaborative, playlist-modify-private, playlist-modify-public, user-read-playback-position, user-read-recently-played")
+  //   .show_dialog(true)
+  //   .build();
+  // final URI uri = authorizationCodeUriRequest.execute();
+  // JsonObject json = Json.createObjectBuilder().add("link", uri.toString())
+  // .add("userEmail", email)
+  // .build();
+  // System.out.println(json);
+  // return json.toString() ;
   // }
 
-   @Scheduled(timeUnit = TimeUnit.MINUTES, fixedRate = 59)
-  public void getRefreshToken() throws ParseException, SpotifyWebApiException, IOException{
-    AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
-    AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
-    spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-    System.out.println(spotifyApi.getAccessToken());
-  }
+  // public String getSpotifyUserCode(String userCode){
+  //   String code = userCode;
+  //   AuthorizationCodeRequest authCodeReq = spotifyApi.authorizationCode(code).build();
+  //    try {
+  //     final AuthorizationCodeCredentials authCodeCred = authCodeReq.execute();
+  //     spotifyApi.setAccessToken(authCodeCred.getAccessToken());
+  //     spotifyApi.setRefreshToken(authCodeCred.getRefreshToken());
+  //     System.out.println(spotifyApi.getAccessToken());
+  //     System.out.println("Expires in: "+authCodeCred.getExpiresIn());
+  //   } catch (Exception e) {
+  //     System.out.println(e);
+  //   }
+  //   return spotifyApi.getAccessToken();
+  // }
 
-  public JsonObject searchSpotifyCatalog(String query) throws ParseException, SpotifyWebApiException, IOException{
+  //  @Scheduled(timeUnit = TimeUnit.MINUTES, fixedRate = 59)
+  // public void getRefreshToken() throws ParseException, SpotifyWebApiException, IOException{
+  //   AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
+  //   AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
+  //   spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+  //   System.out.println(spotifyApi.getAccessToken());
+  // }
+
+
+
+  public JsonObject searchSpotifyCatalog(String query, String userAccessToken) throws ParseException, SpotifyWebApiException, IOException{
+    SpotifyApi spotifyApi = new SpotifyApi.Builder().setAccessToken(userAccessToken).build();
     String types = ModelObjectType.TRACK.getType() + ","+ ModelObjectType.ARTIST.getType();
     SearchItemRequest request = spotifyApi.searchItem(query, types)
                                 .limit(10)

@@ -1,27 +1,32 @@
 <div *ngIf="userInfo != null">
-  <p-accordion>
-    <p-accordionTab>
-      <ng-template pTemplate="header"
+  <!-- <p-accordion>
+    <p-accordionTab> -->
+  <!-- <ng-template pTemplate="header"
         >Welcome Back, {{ userInfo.name }}</ng-template
-      >
-      <div class="grid">
-        <div class="col-6"><img [src]="userInfo.picture" /></div>
-        <div class="col-6 relative">
-          <div class="block">{{ userInfo.name }}</div>
-          <div class="block">{{ userInfo.email }}</div>
-
-          <div class="absolute bottom-0 mb-2">
-            <button
-              pButton
-              type="button"
-              (click)="editProfile()"
-              class="p-button-outlined p-button-rounded small-button"
-            >
-              <p class="text-xs">Edit</p>
-            </button>
-          </div>
-        </div>
-      </div>
-    </p-accordionTab>
-  </p-accordion>
+      > -->
+  <div class="grid">
+    <div class="col-5">
+      <img class="profile-pic-div" [src]="userInfo.picture" />
+    </div>
+    <div class="col-7 relative user-info-div">
+      <p class="font-20">{{ userInfo.email }}</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="col-5">
+      <p class="font-12" style="margin-left: 10vw">Username</p>
+    </div>
+    <div class="col-7">
+      <p class="font-12">{{ userInfo.name }}</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="col-5">
+      <p class="font-12" style="margin-left: 10vw">Bio</p>
+    </div>
+    <div class="col-7">
+      <p class="font-12">{{ userInfo.bio }}</p>
+    </div>
+  </div>
+  <hr style="width: 80%" />
 </div>

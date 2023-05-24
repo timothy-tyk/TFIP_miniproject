@@ -19,7 +19,7 @@ public class UserRepository {
 
   private final String QUERY_USER_SQL="SELECT * FROM users WHERE email = ?";
   private final String INSERT_USER_SQL="INSERT INTO users (name, email, picture) VALUES (?,?,?)";
-  private final String UPDATE_USER_SQL="UPDATE users SET name=?,picture=? WHERE email=?";
+  private final String UPDATE_USER_SQL="UPDATE users SET name=?,picture=?, bio=? WHERE email=?";
   private final String UPDATE_USER_ACCESS_TOKEN="UPDATE users SET access_token=? WHERE email=?";
   private final String GET_FRIENDS_BY_EMAIL="SELECT * FROM friends WHERE user_email=? OR friend_email=?";
   private final String INSERT_FRIEND_PAIR="INSERT INTO friends (user_email, friend_email) VALUES(?,?)";
@@ -41,7 +41,7 @@ public class UserRepository {
   }
 
   public User updateUserDetails(User user){
-    jdbcTemplate.update(UPDATE_USER_SQL, user.getName(), user.getPicture(), user.getEmail());
+    jdbcTemplate.update(UPDATE_USER_SQL, user.getName(), user.getPicture(), user.getBio(),user.getEmail());
     return getUserDetails(user.getEmail());
   }
 

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { Subject } from 'rxjs';
 import { Room } from 'src/app/models/room-model';
+import { Track } from 'src/app/models/track-model';
 import { User } from 'src/app/models/user-model';
 import { RoomService } from 'src/app/services/room/room.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -18,6 +19,7 @@ export class AddRoomComponent implements OnInit {
   addRoomForm!: FormGroup;
   roomInfo!: Room;
   userEmail!: string;
+  selectedTrack!: Track;
 
   constructor(
     private fb: FormBuilder,
@@ -33,7 +35,7 @@ export class AddRoomComponent implements OnInit {
     this.addRoomForm = this.fb.group({
       name: this.fb.control('', [Validators.required]),
       description: this.fb.control('', [Validators.required]),
-      startingTrack: this.fb.control('', [Validators.required]),
+      startingTrackId: this.fb.control('', [Validators.required]),
     });
     this.websocketSvc.initializeConnection();
   }
@@ -48,8 +50,9 @@ export class AddRoomComponent implements OnInit {
       roomId: '',
       active: true,
       // replace with spotify API
-      trackList: this.addRoomForm.get('startingTrack')?.value,
+      trackList: this.addRoomForm.get('startingTrackId')?.value,
       trackIndex: 0,
+      startingTrack: this.selectedTrack,
     };
     console.log(newRoom);
     this.roomSvc
@@ -70,6 +73,8 @@ export class AddRoomComponent implements OnInit {
   }
 
   onSelectTrack(e: any) {
-    this.addRoomForm.patchValue({ startingTrack: e });
+    this.selectedTrack = e;
+    this.selectedTrack.userEmail = this.userEmail;
+    this.addRoomForm.patchValue({ startingTrackId: this.selectedTrack.id });
   }
 }

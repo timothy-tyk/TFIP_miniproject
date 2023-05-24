@@ -1,19 +1,47 @@
-<h2>Player</h2>
-<script
-  src="https://open.spotify.com/embed-podcast/iframe-api/v1"
-  async
-></script>
-<div *ngIf="trackList != null" id="player">
-  <div [className]="userInfo.email != roomInfo.ownerEmail ? 'unclickable' : ''">
-    <div id="embed-iframe"></div>
-    <table>
-      <tr *ngIf="userInfo.email == roomInfo.ownerEmail">
-        <td>
-          <button type="button" (click)="onTogglePlay()">
-            {{ playerStatus == "Play" ? "Play" : "Pause" }}
-          </button>
-        </td>
-      </tr>
-    </table>
+<div id="player-div">
+  <div class="grid">
+    <div class="col-5">
+      <button
+        pButton
+        class="p-button-rounded small-button"
+        style="height: 40px"
+        (click)="onAddTrackClick()"
+      >
+        <p class="font-20">Add Track +</p>
+      </button>
+    </div>
+    <div class="col-7">
+      <p class="font-24">Now Playing</p>
+      <app-play-control-button
+        [hidden]="userInfo.email != roomInfo.ownerEmail"
+        (click)="onTogglePlay()"
+      ></app-play-control-button>
+    </div>
+  </div>
+  <div>
+    <img [src]="albumImageUrl" class="spinning-album" />
+  </div>
+
+  <div
+    *ngIf="trackList != null"
+    id="player"
+    style="margin-top: 2vh; margin-left: 8vw"
+  >
+    <div
+      [className]="userInfo.email != roomInfo.ownerEmail ? 'unclickable' : ''"
+    >
+      <div id="embed-iframe"></div>
+
+      <!-- remember to uncomment this -->
+      <!-- <table>
+        <tr *ngIf="userInfo.email == roomInfo.ownerEmail">
+          <td>
+            <button type="button" (click)="onTogglePlay()">
+              {{ playerStatus == "Play" ? "Play" : "Pause" }}
+            </button>
+          </td>
+        </tr>
+      </table> -->
+    </div>
   </div>
 </div>

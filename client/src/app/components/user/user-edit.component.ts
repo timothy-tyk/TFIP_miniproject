@@ -53,12 +53,15 @@ export class UserEditComponent implements OnInit {
     this.userForm = this.fb.group({
       name: this.fb.control(`${this.userInfo.name}`, [Validators.minLength(3)]),
       picture: this.fb.control(''),
+      bio: this.fb.control(`${this.userInfo.bio}`),
     });
   }
   async updateProfile() {
     const formData = new FormData();
     formData.set('email', this.userInfo.email);
     formData.set('name', this.userForm.get('name')?.value);
+    formData.set('bio', this.userForm.get('bio')?.value);
+
     if (this.userForm.get('picture')?.value != '') {
       console.log(this.imageFile.nativeElement.files[0]);
       const url = await this.userSvc.uploadUpdatedImage(

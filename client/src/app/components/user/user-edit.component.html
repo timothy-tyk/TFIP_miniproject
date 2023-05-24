@@ -1,4 +1,4 @@
-<h2>Edit User {{ email }}</h2>
+<p class="font-24" style="display: flex">Edit User</p>
 <form
   [formGroup]="userForm"
   *ngIf="userInfo != null"
@@ -9,7 +9,12 @@
       <td>
         <div class="flex flex-column gap-2">
           <label htmlFor="username">Username</label>
-          <input type="text" pInputText formControlName="name" />
+          <input
+            type="text"
+            pInputText
+            formControlName="name"
+            style="border-radius: 25px"
+          />
         </div>
       </td>
     </tr>
@@ -26,7 +31,12 @@
             formControlName="picture"
           />
         </td>
-        <img [src]="userInfo.picture" (click)="file.click()" id="imgupload" />
+        <img
+          [src]="userInfo.picture"
+          (click)="file.click()"
+          id="imgupload"
+          style="border-radius: 50%; width: 50%; height: 50%"
+        />
       </div>
     </tr>
     <br />
@@ -48,12 +58,8 @@
     <tr>
       <td>
         <div class="flex flex-row-reverse">
-          <button
-            type="submit"
-            pButton
-            class="p-button-outlined p-button-rounded small-button"
-          >
-            Update
+          <button type="submit" pButton class="p-button-rounded small-button">
+            <p class="font-20">Update</p>
           </button>
         </div>
       </td>

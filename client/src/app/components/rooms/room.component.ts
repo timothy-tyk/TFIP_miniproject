@@ -4,6 +4,7 @@ import { User } from '@auth0/auth0-angular';
 import { Subscription } from 'rxjs';
 import { Room } from 'src/app/models/room-model';
 import { RoomService } from 'src/app/services/room/room.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-player.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 
@@ -21,13 +22,20 @@ export class RoomComponent implements OnInit {
   onAddTrack!: Subscription;
   command$!: Subscription;
   userJoin$!: Subscription;
+  roomListeners!: Map<string, User>;
+  // Dialog
+  selectedUserEmail!: string;
+  addTrackDialogVisible: boolean = false;
+  playlistDialogVisible: boolean = false;
+  // dialogInfo!: Track[];
 
   constructor(
     private roomSvc: RoomService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private webSocketPlayerSvc: WebsocketPlayerService,
-    private webSocketSvc: WebsocketService
+    private webSocketSvc: WebsocketService,
+    private userSvc: UserService
   ) {}
   ngOnInit(): void {
     this.fetchRoomData();
@@ -62,11 +70,21 @@ export class RoomComponent implements OnInit {
       this.trackList = this.room['trackList']
         .split(',')
         .filter((track) => track.length > 0);
+      this.fetchRoomListeners();
     });
   }
 
   fetchUserInfo() {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo') || '') as User;
+  }
+  fetchRoomListeners() {
+    const userList = this.room.userList.split(',');
+    this.roomListeners = new Map<string, User>();
+    for (let user of userList) {
+      this.userSvc
+        .getUserDetails(user)
+        .then((user: any) => this.roomListeners.set(user['email'], user));
+    }
   }
 
   onTrackIndexChange(e: any) {
@@ -85,6 +103,20 @@ export class RoomComponent implements OnInit {
   backToLobby() {
     this.router.navigate(['/lobby']);
   }
-}
 
-// 5w3CRkbTWXfbYepIdFpGUN?si=b9e1670581ca46eb
+  showAddTrackDialog(e: any) {
+    console.log('click');
+    this.addTrackDialogVisible = true;
+  }
+  showPlaylistDialog(e: any) {
+    console.log('clicked');
+    this.playlistDialogVisible = true;
+  }
+  showListenerDialog(email: string) {
+    console.log(email);
+    this.selectedUserEmail = email;
+  }
+  closeListenerDialog() {
+    this.selectedUserEmail = null!;
+  }
+}

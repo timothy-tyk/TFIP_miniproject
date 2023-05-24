@@ -20,4 +20,5 @@ public class Room {
   private String trackList;
   private Integer trackIndex = 0;
   private Integer trackPosition = 0;
+  private TrackModel startingTrack;
 }

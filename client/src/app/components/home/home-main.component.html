@@ -1,3 +1,19 @@
-<div *ngIf="userInfo != null">
+<div *ngIf="userInfo != null" class="profile-div">
+  <div class="grid">
+    <div class="col-4">
+      <p class="font-24">Profile</p>
+    </div>
+    <div class="col-8">
+      <button
+        pButton
+        class="p-button-rounded small-button"
+        type="submit"
+        style="height: 40px; margin: 0 auto; display: flex"
+        (click)="editProfile()"
+      >
+        <p class="font-20">Edit</p>
+      </button>
+    </div>
+  </div>
   <app-user-info [userInfo]="userInfo"></app-user-info>
 </div>

@@ -1,11 +1,9 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { TabMenuModule } from 'primeng/tabmenu';
-import { User } from '../models/user-model';
-import { UserService } from '../services/user/user.service';
-import { WebsocketService } from '../services/websocket/websocket.service';
+import { User } from '../../models/user-model';
+import { UserService } from '../../services/user/user.service';
+import { WebsocketService } from '../../services/websocket/websocket.service';
 
 @Component({
   selector: 'app-bottom-tab-menu',
@@ -19,12 +17,10 @@ export class BottomTabMenuComponent implements OnInit {
   constructor(
     private router: Router,
     private webSocketSvc: WebsocketService,
-    private auth: AuthService,
+    // private auth: AuthService,
     private userSvc: UserService
   ) {}
   ngOnInit() {
-    this.webSocketSvc.initializeConnection();
-
     this.items = [
       {
         label: 'Lobby',
@@ -68,22 +64,28 @@ export class BottomTabMenuComponent implements OnInit {
     });
   }
 
+  // getUserInfoAndLogin() {
+  //   this.auth.user$.subscribe(
+  //     // get user data from db
+  //     (user) => {
+  //       this.userSvc.getUserDetails(user?.email!).then((res) => {
+  //         this.userInfo = res as User;
+  //         this.onUserLoginLogout('login');
+  //       });
+  //     }
+  //   );
+  // }
   getUserInfoAndLogin() {
-    this.auth.user$.subscribe(
-      // get user data from db
-      (user) => {
-        console.log(user);
-        this.userSvc.getUserDetails(user?.email!).then((res) => {
-          this.userInfo = res as User;
-          this.onUserLoginLogout('login');
-        });
-      }
-    );
+    this.webSocketSvc.initializeConnection();
+    setTimeout(() => {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
+
+      this.onUserLoginLogout('login');
+    }, 1000);
   }
 
   activatedLocation() {
     const currentLocation = location.pathname.replace('/', '');
-    console.log(currentLocation);
     for (let item of this.items) {
       if (currentLocation.includes(item.label?.toLowerCase()!)) {
         this.activeItem = item;

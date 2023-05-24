@@ -14,7 +14,7 @@
       <div class="col-7" style="padding-bottom: 0px">
         <p
           class="font-24"
-          style="margin-top: 0px; margin-bottom: 5px; text-align: center"
+          style="margin-top: 0px; margin-bottom: 2vh; text-align: center"
         >
           Lobby Chat
         </p>
@@ -46,7 +46,11 @@
     </div>
 
     <!-- User Profile Dialog -->
-    <div class="card flex justify-content-center" *ngIf="dialogInfo != null">
+    <app-user-dialog-info
+      [email]="selectedUserEmail"
+      (closeDialog)="closeDialog()"
+    ></app-user-dialog-info>
+    <!-- <div class="card flex justify-content-center" *ngIf="dialogInfo != null">
       <p-dialog
         header="{{ dialogInfo.email }}"
         [(visible)]="dialogVisible"
@@ -63,7 +67,7 @@
           Add Friend
         </button>
       </p-dialog>
-    </div>
+    </div> -->
   </p-card>
 </div>
 <div class="absolute bottom-0" style="margin-bottom: 60px; margin-top: 2vh">

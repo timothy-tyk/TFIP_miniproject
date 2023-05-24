@@ -37,9 +37,17 @@ import { PlaylistComponent } from './components/playlist/playlist.component';
 import { AddRoomSearchTrackComponent } from './components/rooms/add-room-search-track.component';
 import { PrimeModule } from './prime.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BottomTabMenuComponent } from './menu/bottom-tab-menu.component';
+import { BottomTabMenuComponent } from './components/menu/bottom-tab-menu.component';
 import { HomeMainComponent } from './components/home/home-main.component';
 import { FriendsComponent } from './components/lobby/friends.component';
+import { PlayControlButtonComponent } from './components/player/play-control-button.component';
+import { UserDialogInfoComponent } from './components/user/user-dialog-info.component';
+import { SpotifyCodeComponent } from './components/landing/spotify-code.component';
+import { InviteComponent } from './components/lobby/invite.component';
+import { LogoutComponent } from './components/auth/logout.component';
+import { TopMenuComponent } from './components/menu/top-menu.component';
+// import { StoreModule } from '@ngrx/store';
+// import { userReducer } from './user-state-store/user.reducer';
 
 @NgModule({
   declarations: [
@@ -58,9 +66,15 @@ import { FriendsComponent } from './components/lobby/friends.component';
     SearchAddTrackComponent,
     PlaylistComponent,
     AddRoomSearchTrackComponent,
+    TopMenuComponent,
     BottomTabMenuComponent,
     HomeMainComponent,
     FriendsComponent,
+    PlayControlButtonComponent,
+    UserDialogInfoComponent,
+    SpotifyCodeComponent,
+    InviteComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,6 +94,7 @@ import { FriendsComponent } from './components/lobby/friends.component';
     AngularFireStorageModule,
     PrimeModule,
     BrowserAnimationsModule,
+    // StoreModule.forRoot({ userInfo: userReducer }),
   ],
   providers: [UserService, ChatService, WebsocketService, SpotifyAuthService],
   bootstrap: [AppComponent],

@@ -13,12 +13,15 @@ export class AddRoomSearchTrackComponent implements OnInit {
   addTrackForm!: FormGroup;
   searchForm!: FormGroup;
   searchResults!: Track[];
-  selectedTrack!: string;
-  @Output() selectedTrackId: Subject<string> = new Subject<string>();
+  selectedTrack!: Track;
+  @Output() selectedTrackId: Subject<Track> = new Subject<Track>();
+  userAccessToken!: string;
 
   constructor(private fb: FormBuilder, private spotifySvc: SpotifyService) {}
   ngOnInit(): void {
     this.createSearchForm();
+    console.log(this.selectedTrack);
+    this.userAccessToken = localStorage.getItem('access_token')!;
   }
   createSearchForm() {
     this.searchForm = this.fb.group({
@@ -30,13 +33,14 @@ export class AddRoomSearchTrackComponent implements OnInit {
   }
   searchSpotifyAPI() {
     const query = this.searchForm.get('query')?.value;
-    this.spotifySvc
-      .searchSpotifyCatalog(query)
-      .then((res: any) => (this.searchResults = res['tracks'] as Track[]));
+    this.spotifySvc.searchSpotifyCatalog(query).then((res: any) => {
+      console.log(res);
+      this.searchResults = res as Track[];
+    });
   }
 
-  selectTrack(id: string) {
-    this.selectedTrack = id;
-    this.selectedTrackId.next(id);
+  selectTrack(track: Track) {
+    this.selectedTrack = track;
+    this.selectedTrackId.next(track);
   }
 }

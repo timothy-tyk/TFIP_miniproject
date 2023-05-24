@@ -10,7 +10,4 @@ import { User } from 'src/app/models/user-model';
 export class UserInfoComponent {
   @Input() userInfo!: User;
   constructor(private router: Router) {}
-  editProfile() {
-    this.router.navigate(['/user/edit']);
-  }
 }

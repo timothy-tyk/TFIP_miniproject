@@ -25,8 +25,8 @@ export class RoomListComponent implements OnInit {
   selectedRoomCurrentTrack!: Track;
   selectedRoomUserList!: string[];
   // Dialog
-  dialogVisible: boolean = false;
-  dialogInfo!: User;
+  selectedUserEmail!: string;
+
   constructor(
     private roomSvc: RoomService,
     private router: Router,
@@ -84,10 +84,11 @@ export class RoomListComponent implements OnInit {
     });
     this.selectedRoomUserList = this.roomList[i].userList.split(',');
   }
+
   showUserDialog(email: string) {
-    this.userSvc
-      .getUserDetails(email)
-      .then((res) => (this.dialogInfo = res as User))
-      .then(() => (this.dialogVisible = true));
+    this.selectedUserEmail = email;
+  }
+  closeUserDialog() {
+    this.selectedUserEmail = null!;
   }
 }

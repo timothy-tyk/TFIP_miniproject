@@ -33,12 +33,7 @@ public class TrackService {
   @Autowired
   SpotifyService spotifySvc;
 
-  public String storeTrackDetails(String id, String roomId, String userEmail) throws InterruptedException, ExecutionException, ParseException, SpotifyWebApiException, IOException{
-    Track track = spotifySvc.getTrackById(id);
-    Gson gson = new Gson();
-    String jsonStr = gson.toJson(track).toString();
-    TrackModel trackModel = gson.fromJson(jsonStr, TrackModel.class);
-    trackModel.setUserEmail(userEmail);
+  public String storeTrackDetails(TrackModel trackModel, String roomId) throws InterruptedException, ExecutionException, ParseException, SpotifyWebApiException, IOException{
     Firestore dbFirestore = FirestoreClient.getFirestore();
     ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("locations/"+roomId+"/tracks").document(trackModel.getId()).set(trackModel);
     return collectionsApiFuture.get().getUpdateTime().toString();

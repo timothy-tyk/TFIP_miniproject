@@ -28,6 +28,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   chatlog: ChatMessage[] = this.websocketSvc.messages.get('/lobby')!;
   msgSubscription!: Subscription;
   friendsList!: Friends[];
+  selectedUserEmail!: string;
 
   // Dialog
   dialogVisible: boolean = false;
@@ -35,12 +36,13 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private chatSvc: ChatService,
+    // private chatSvc: ChatService,
     private websocketSvc: WebsocketService,
     private userSvc: UserService
   ) {}
   ngOnInit(): void {
     this.websocketSvc.initializeConnection();
+    // this.initializeConnectionAndUserLogin();
     this.initializeChatForm();
     this.msgSubscription = this.websocketSvc.messageAdded.subscribe(
       () => (this.chatlog = this.websocketSvc.messages.get('/lobby')!)
@@ -50,6 +52,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.websocketSvc.disconnect(this.currentLocation);
   }
+
+  // async initializeConnectionAndUserLogin() {
+  //   await this.websocketSvc.initializeConnection();
+  //   setTimeout(() => {
+  //     this.websocketSvc.onUserLoginLogout(this.userInfo, 'login');
+  //   }, 500);
+  // }
 
   initializeChatForm() {
     this.chatForm = this.fb.group({
@@ -71,17 +80,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.initializeChatForm();
   }
 
-  retrieveChatMessages() {
-    this.chatSvc.getChatMessages('lobby').then((res) => {
-      this.chatlog = res as ChatMessage[];
-    });
-  }
+  // retrieveChatMessages() {
+  //   this.chatSvc.getChatMessages('lobby').then((res) => {
+  //     this.chatlog = res as ChatMessage[];
+  //   });
+  // }
 
   showDialog(email: string) {
-    this.userSvc
-      .getUserDetails(email)
-      .then((res) => (this.dialogInfo = res as User))
-      .then(() => (this.dialogVisible = true));
+    this.selectedUserEmail = email;
+  }
+  closeDialog() {
+    this.selectedUserEmail = null!;
   }
 
   addFriend(email: string) {

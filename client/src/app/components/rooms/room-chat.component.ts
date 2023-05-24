@@ -4,13 +4,16 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  Output,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { ChatMessage } from 'src/app/models/chatmessage-model';
+import { Friends } from 'src/app/models/friends-model';
 import { Room } from 'src/app/models/room-model';
 import { User } from 'src/app/models/user-model';
 import { RoomService } from 'src/app/services/room/room.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 
 @Component({
@@ -26,13 +29,20 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
   chatlog: ChatMessage[] = this.websocketSvc.messages.get(
     this.currentLocation
   )!;
+  @Output() showPlaylist: Subject<string> = new Subject<string>();
+  selectedUserEmail!: string;
 
   msgSubscription!: Subscription;
+
+  // Dialog
+  userDialogVisible: boolean = false;
+  userDialogInfo!: User;
 
   constructor(
     private fb: FormBuilder,
     private roomSvc: RoomService,
-    private websocketSvc: WebsocketService
+    private websocketSvc: WebsocketService,
+    private userSvc: UserService
   ) {}
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
@@ -79,5 +89,25 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
       .getRoom(this.roomId)
       .then((res) => this.websocketSvc.initializeChatRoom(res as Room))
       .then(() => this.websocketSvc.onJoinRoom(this.userInfo));
+  }
+
+  onShowPlaylistClick() {
+    this.showPlaylist.next('');
+  }
+
+  showUserDialog(email: string) {
+    this.selectedUserEmail = email;
+  }
+  closeUserDialog() {
+    this.selectedUserEmail = null!;
+  }
+
+  addFriend(email: string) {
+    const friends: Friends = {
+      id: null,
+      userEmail: this.userInfo.email,
+      friendEmail: email,
+    };
+    this.userSvc.addFriend(friends).then((res: any) => console.log(res));
   }
 }

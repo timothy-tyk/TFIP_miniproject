@@ -10,14 +10,29 @@
 <form [formGroup]="searchForm" (submit)="searchSpotifyAPI()">
   <table>
     <tr>
-      <td>Query:</td>
-      <td><input type="text" formControlName="query" size="40" /></td>
-      <td><button type="submit">Search</button></td>
+      <td>
+        <input
+          type="text"
+          pInputText
+          formControlName="query"
+          class="input-query"
+          placeholder="Search Query"
+        />
+      </td>
+      <td>
+        <button
+          pButton
+          class="p-button-rounded small-button"
+          style="height: 30px"
+        >
+          <p class="font-20">Search</p>
+        </button>
+      </td>
     </tr>
   </table>
 </form>
 <table *ngIf="searchResults != null">
-  <tr *ngFor="let res of searchResults; index as i" (click)="addTrack(res.id)">
+  <tr *ngFor="let res of searchResults; index as i" (click)="addTrack(res)">
     <td><img [src]="res.album.images[0].url" height="100" /></td>
     <td>{{ res.name }}</td>
     <td>{{ res.artists[0].name }}</td>

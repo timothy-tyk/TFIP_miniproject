@@ -27,6 +27,7 @@ import jakarta.json.JsonObject;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import server.server.model.Room;
 import server.server.model.TrackIndexPositionInfo;
+import server.server.model.TrackModel;
 import server.server.service.RoomService;
 import server.server.service.TrackService;
 
@@ -51,7 +52,8 @@ public class RoomController {
   public ResponseEntity<Room> createRoom(@RequestBody Room room) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
     String roomId = UUID.randomUUID().toString().substring(0,8);
     room.setRoomId(roomId);
-    trackSvc.storeTrackDetails(room.getTrackList(), roomId, room.getOwnerEmail());
+    System.out.println(room);
+    trackSvc.storeTrackDetails(room.getStartingTrack(), roomId);
     String destination = "/topic/message";
       this.smTemplate.convertAndSend(destination, "new room added");
     return roomSvc.addRoom(room);
@@ -62,11 +64,10 @@ public class RoomController {
     return roomSvc.getRoomById(roomId);
   }
 
-  @PutMapping("/{roomId}")
-  public ResponseEntity<Room> updateRoomAddTrack(@PathVariable String roomId,@RequestParam("add") String trackId, @RequestBody String userEmail) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
-    System.out.println(userEmail);
-    trackSvc.storeTrackDetails(trackId, roomId, userEmail);
-    return roomSvc.updateRoomAddTrack(roomId, trackId);
+  @PutMapping("/{roomId}/add")
+  public ResponseEntity<Room> updateRoomAddTrack(@PathVariable String roomId, @RequestBody TrackModel track) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
+    trackSvc.storeTrackDetails(track, roomId);
+    return roomSvc.updateRoomAddTrack(roomId, track.getId());
   }
 
   @GetMapping("/{roomId}/tracks")

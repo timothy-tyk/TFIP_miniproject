@@ -4,6 +4,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { getDownloadURL } from '@angular/fire/storage';
 import { firstValueFrom, Subject } from 'rxjs';
 import { Friends } from 'src/app/models/friends-model';
+import { InviteEmail } from 'src/app/models/invite-email.model';
 import { User } from 'src/app/models/user-model';
 
 const SERVER_URL = '/api';
@@ -61,5 +62,12 @@ export class UserService {
     )
       .then((res) => (this.friendsList = res as Friends[]))
       .then(() => this.friendsSubject.next(this.friendsList));
+  }
+
+  // Invite User Service
+  sendInviteEmail(email: InviteEmail) {
+    return firstValueFrom(
+      this.httpClient.post(`${SERVER_URL}/user/invite`, email, {}).pipe()
+    );
   }
 }

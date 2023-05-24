@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
+import { Subject } from 'rxjs';
 import { User } from 'src/app/models/user-model';
+import { SpotifyService } from 'src/app/services/spotify/spotify.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -10,7 +13,12 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class HomeMainComponent implements OnInit {
   userInfo!: User;
-  constructor(private auth: AuthService, private userSvc: UserService) {}
+  constructor(
+    private auth: AuthService,
+    private userSvc: UserService,
+    private router: Router,
+    private spotifySvc: SpotifyService
+  ) {}
   ngOnInit(): void {
     this.getUserDetails();
     // this.getSpotifyLogin();
@@ -31,5 +39,9 @@ export class HomeMainComponent implements OnInit {
         });
       }
     );
+  }
+
+  editProfile() {
+    this.router.navigate(['/user/edit']);
   }
 }

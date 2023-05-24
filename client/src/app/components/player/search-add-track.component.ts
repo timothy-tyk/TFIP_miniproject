@@ -19,6 +19,7 @@ export class SearchAddTrackComponent implements OnInit {
   @Input() trackList!: string[];
   searchResults!: Track[];
   userInfo!: User;
+  userAccessToken!: string;
   constructor(
     private fb: FormBuilder,
     private roomSvc: RoomService,
@@ -28,6 +29,7 @@ export class SearchAddTrackComponent implements OnInit {
     this.getUserInfo();
     this.createAddForm();
     this.createSearchForm();
+    this.userAccessToken = localStorage.getItem('access_token')!;
   }
   getUserInfo() {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
@@ -37,8 +39,9 @@ export class SearchAddTrackComponent implements OnInit {
       trackUri: this.fb.control('', [Validators.required]),
     });
   }
-  addTrack(id: string) {
-    this.roomSvc.updateRoomAddTrack(this.roomId, id, this.userInfo.email);
+  addTrack(track: Track) {
+    track.userEmail = this.userInfo.email;
+    this.roomSvc.updateRoomAddTrack(this.roomId, track);
     this.createSearchForm();
     this.searchResults = [];
     // this.websocketPlayerSvc.sendCommand(id);
@@ -55,9 +58,10 @@ export class SearchAddTrackComponent implements OnInit {
 
   searchSpotifyAPI() {
     const query = this.searchForm.get('query')?.value;
-    this.spotifySvc
-      .searchSpotifyCatalog(query)
-      .then((res: any) => (this.searchResults = res['tracks'] as Track[]));
+    this.spotifySvc.searchSpotifyCatalog(query).then((res: any) => {
+      console.log(res);
+      this.searchResults = res as Track[];
+    });
   }
 }
 

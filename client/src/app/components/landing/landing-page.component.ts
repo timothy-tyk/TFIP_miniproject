@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
-  // userInfo!: User;
+  userInfo!: User;
   constructor(
     private auth: AuthService,
     private userSvc: UserService,
@@ -17,7 +17,14 @@ export class LandingPageComponent implements OnInit {
   ) {}
   ngOnInit() {
     // this.loginProcess();
-    this.getSpotifyLogin();
+    // this.auth.user$.subscribe((u) => {
+    //   this.userInfo = u as User;
+    //   this.getSpotifyLogin(this.userInfo['email']!);
+    // });
+    // this.getSpotifyLogin();
+
+    // this.spotifyAuth.spotifyPKCELogin();
+    this.spotifyAuth.redirectToSpotifyAuthorizeEndpoint();
   }
 
   // loginProcess() {
@@ -27,12 +34,12 @@ export class LandingPageComponent implements OnInit {
   //   });
   // }
 
-  getSpotifyLogin() {
-    this.spotifyAuth
-      .getSpotifyUserLogin()
-      .then((res: any) => {
-        window.location.replace(`${res.link}`);
-      })
-      .catch((err) => console.log(err));
-  }
+  // getSpotifyLogin(email: string) {
+  //   this.spotifyAuth
+  //     .getSpotifyUserLogin(email)
+  //     .then((res: any) => {
+  //       window.location.replace(`${res.link}`);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
 }
