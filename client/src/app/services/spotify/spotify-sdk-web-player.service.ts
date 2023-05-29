@@ -12,7 +12,6 @@ declare global {
 })
 export class SpotifySdkWebPlayerService {
   spotifyPlayer!: Spotify.Player;
-  // private spotifyToken!: string;
   constructor(private spotifyAuth: SpotifyAuthService) {}
 
   createWebPlayer(spotifyToken: string) {
@@ -56,8 +55,6 @@ export class SpotifySdkWebPlayerService {
       });
 
       this.spotifyPlayer.connect();
-      // this.spotifyPlayer.activateElement();
-      // this.spotifyPlayer.
       console.log(window.Spotify.Player);
     };
   }

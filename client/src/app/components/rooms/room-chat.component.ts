@@ -46,16 +46,18 @@ export class RoomChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
-    this.initializeChat();
+    this.websocketSvc.initializeConnection().subscribe((connected) => {
+      if (connected) {
+        this.initChatRoom();
+        this.msgSubscription = this.websocketSvc.messageAdded.subscribe(
+          () =>
+            (this.chatlog = this.websocketSvc.messages.get(
+              this.currentLocation
+            )!)
+        );
+      }
+    });
     this.initializeChatForm();
-    this.msgSubscription = this.websocketSvc.messageAdded.subscribe(
-      () =>
-        (this.chatlog = this.websocketSvc.messages.get(this.currentLocation)!)
-    );
-    this.initChatRoom();
-  }
-  initializeChat() {
-    this.websocketSvc.initializeConnection();
   }
 
   initializeChatForm() {

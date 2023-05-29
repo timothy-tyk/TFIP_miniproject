@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
@@ -45,7 +38,6 @@ export class UserEditComponent implements OnInit {
         this.userInfo = res as User;
       })
       .then(() => {
-        console.log(this.userInfo);
         this.initialiseEditForm();
       });
   }
@@ -63,24 +55,23 @@ export class UserEditComponent implements OnInit {
     formData.set('bio', this.userForm.get('bio')?.value);
 
     if (this.userForm.get('picture')?.value != '') {
-      console.log(this.imageFile.nativeElement.files[0]);
       const url = await this.userSvc.uploadUpdatedImage(
         this.imageFile.nativeElement.files[0],
         this.userInfo.email
       );
-      console.log(url);
       formData.set('picture', url);
+      console.log(url);
       this.userSvc.updateUserDetails(formData).then(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       });
     } else {
       formData.set('picture', this.userInfo.picture);
       this.userSvc.updateUserDetails(formData).then(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       });
     }
   }
   backToLobby() {
-    this.router.navigate(['/lobby']);
+    this.router.navigate(['/home']);
   }
 }

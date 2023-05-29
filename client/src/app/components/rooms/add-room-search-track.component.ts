@@ -20,7 +20,6 @@ export class AddRoomSearchTrackComponent implements OnInit {
   constructor(private fb: FormBuilder, private spotifySvc: SpotifyService) {}
   ngOnInit(): void {
     this.createSearchForm();
-    console.log(this.selectedTrack);
     this.userAccessToken = localStorage.getItem('access_token')!;
   }
   createSearchForm() {
@@ -34,7 +33,6 @@ export class AddRoomSearchTrackComponent implements OnInit {
   searchSpotifyAPI() {
     const query = this.searchForm.get('query')?.value;
     this.spotifySvc.searchSpotifyCatalog(query).then((res: any) => {
-      console.log(res);
       this.searchResults = res as Track[];
     });
   }

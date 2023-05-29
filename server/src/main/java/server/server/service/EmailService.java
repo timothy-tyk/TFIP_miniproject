@@ -15,7 +15,7 @@ public class EmailService {
   @Value("${spring.mail.username}") private String sender;
 
   public String sendInviteEmail(InviteEmail email){
-    String greeting = String.format("Hello there %s, your friend %s has invited you to join us at Listening Room! Click on the invite link and sign up today! \n www.http://localhost:4200/ \nP.S. %s", email.getName(), email.getSenderName(), email.getMessage());
+    String greeting = String.format("Hello there %s, your friend %s has invited you to join us at Listening Room! Click on the invite link and sign up today! \n www.https://listening-room-production-24f9.up.railway.app/ \nP.S. %s", email.getName(), email.getSenderName(), email.getMessage());
   
     try {
       

@@ -14,25 +14,17 @@ public class WebSocketListener {
   @Autowired
   private SimpMessageSendingOperations messagingTemplate;
   @Autowired
-  private UserService userSvc;
-  @Autowired
   SimpMessagingTemplate smTemplate;
 
   @EventListener
   public void handleWebSocketConnectListener(SessionConnectedEvent event){
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-    // System.out.println("New Websocket Connection");
   }
 
   @EventListener
   public void handleWebSocketDisconnectListener(SessionDisconnectEvent event){
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
     String email = (String)headerAccessor.getSessionAttributes().get("User email");
-    if(email != null){
-      userSvc.updateUserLogin(email, false);
-      String destination = "/topic/message/lobby";
-      this.smTemplate.convertAndSend(destination, "logout:"+email);
-    }
   }
   
 }

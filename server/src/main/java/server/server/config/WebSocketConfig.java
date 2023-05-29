@@ -12,9 +12,10 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @EnableWebSocketMessageBroker
 @EnableScheduling
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
+  private static final String WEBSOCKET_ALLOWED_ORIGIN = "https://listening-room-production-24f9.up.railway.app";
   @Override
   public void registerStompEndpoints(StompEndpointRegistry reg){
-    reg.addEndpoint("/chat").setAllowedOrigins("http://localhost:4200").withSockJS();
+    reg.addEndpoint("/chat").setAllowedOrigins(WEBSOCKET_ALLOWED_ORIGIN).withSockJS();
   }
   
   @Override

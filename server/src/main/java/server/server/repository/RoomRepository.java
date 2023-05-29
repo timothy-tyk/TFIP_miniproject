@@ -21,6 +21,7 @@ public class RoomRepository {
   public final String UPDATE_ROOM_TRACKLIST_BY_ID="UPDATE rooms SET track_list=? WHERE room_id=?";
   public final String UPDATE_ROOM_TRACKINFO_BY_ID="UPDATE rooms SET track_index=?, track_position=? WHERE room_id=?";
   public final String UPDATE_ROOM_USERCOUNT_USERLIST_BY_ID="UPDATE rooms SET user_count=?, user_list=? WHERE room_id=?";
+  public final String UPDATE_ROOM_PLAYERSTATUS_ISACTIVE_BY_ID="UPDATE rooms SET active=? WHERE room_id=?";
 
   public List<Room> getAllRooms(){
     List<Room> roomList = jdbcTemplate.query(QUERY_ALL_ROOMS_SQL,BeanPropertyRowMapper.newInstance(Room.class));
@@ -72,5 +73,14 @@ public class RoomRepository {
       jdbcTemplate.update(UPDATE_ROOM_USERCOUNT_USERLIST_BY_ID,currentUserCount,userList,roomId);
     }
     return getRoomById(roomId);
+  }
+
+  public Room updateRoomPlayerStatus(String roomId, Boolean isActive){
+    Integer updated = jdbcTemplate.update(UPDATE_ROOM_PLAYERSTATUS_ISACTIVE_BY_ID, isActive, roomId);
+    if(updated>0){
+      Room room = jdbcTemplate.queryForObject(QUERY_ROOM_BY_ROOM_ID, BeanPropertyRowMapper.newInstance(Room.class),roomId);
+      return room;
+    }
+    return null;
   }
 }

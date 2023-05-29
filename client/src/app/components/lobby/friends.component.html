@@ -1,9 +1,9 @@
 <div class="friends-div">
-  <p-card style="height: 15vh">
+  <p-card>
     <div>
       <div class="grid">
         <p
-          style="margin-top: 0; padding-right: 6vw; margin-bottom: 2vh"
+          style="margin-top: 0; margin-bottom: 2vh"
           class="text-xl col-5 font-24"
         >
           Friends
@@ -35,11 +35,6 @@
               }}"
             ></p-badge>
           </td>
-          <!-- <td>
-            <p style="margin-left: 2vw">
-              {{ friend.value.isOnline ? "Online" : "Offline" }}
-            </p>
-          </td> -->
           <td *ngIf="!friend.value.isOnline">
             <p class="font-12" style="margin-left: 2vw">Offline</p>
           </td>

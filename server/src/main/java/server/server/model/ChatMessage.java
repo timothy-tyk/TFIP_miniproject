@@ -20,10 +20,6 @@ public class ChatMessage {
   private String type;
   private Boolean display;
 
-  // public ChatMessage(){
-  //   this.timestamp = new Date().getTime();
-  // }
-
   public static ChatMessage fromJson(JsonObject json){
     ChatMessage cm = new ChatMessage();
     cm.setEmail(json.get("email").getAsString());

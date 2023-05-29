@@ -1,61 +1,65 @@
-<div class="card flex justify-content-center">
+<div class="card flex justify-content-center invite-form-div">
   <p-dialog
     header="Invite a friend"
     [(visible)]="dialogVisible"
     (onHide)="cancel()"
-    [style]="{ width: '90vw' }"
+    class="invite-form-div"
   >
     <form [formGroup]="inviteForm" (ngSubmit)="submitInviteForm()">
       <p class="font-24">Invite your friends to join you in Listening Room!</p>
-      <table>
-        <tr>
-          <td>Name</td>
-          <td>
-            <input
-              pInputText
-              type="text"
-              formControlName="name"
-              class="radius-25"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>Email</td>
-          <td>
-            <input
-              pInputText
-              type="email"
-              formControlName="email"
-              class="radius-25"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>Message</td>
-          <td>
-            <textarea
-              rows="5"
-              cols="20"
-              pInputText
-              formControlName="message"
-              class="radius-25"
-            ></textarea>
-          </td>
-        </tr>
-        <br />
-        <tr style="direction: rtl">
-          <td colspan="2">
-            <button
-              type="submit"
-              pButton
-              class="p-button-rounded large-button absolute bottom-0"
-              [disabled]="inviteForm.invalid"
-            >
-              <p class="font-15" style="margin: 0 auto">Send</p>
-            </button>
-          </td>
-        </tr>
-      </table>
+      <div class="grid">
+        <div class="col-3">
+          <p class="font-15">Name</p>
+        </div>
+        <div class="col-9">
+          <input
+            pInputText
+            type="text"
+            formControlName="name"
+            class="radius-25 width100"
+          />
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col-3">
+          <p class="font-15">Email</p>
+        </div>
+        <div class="col-9">
+          <input
+            pInputText
+            type="email"
+            formControlName="email"
+            class="radius-25 width100"
+          />
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col-3">
+          <p class="font-15">Message</p>
+        </div>
+        <div class="col-9">
+          <textarea
+            rows="5"
+            cols="20"
+            pInputText
+            formControlName="message"
+            class="radius-25 width100"
+          ></textarea>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col-9"></div>
+        <div class="col-3">
+          <button
+            type="submit"
+            pButton
+            class="p-button-rounded large-button absolute bottom-0"
+            [disabled]="inviteForm.invalid"
+          >
+            <p class="font-15" style="margin: 0 auto">Send</p>
+          </button>
+        </div>
+      </div>
     </form>
   </p-dialog>
 </div>

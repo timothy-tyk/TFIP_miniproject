@@ -16,6 +16,7 @@ public class Room {
   private Integer userCount;
   private String userList;
   private String roomId;
+  // active - whether the player is currently playing or not
   private boolean active;
   private String trackList;
   private Integer trackIndex = 0;

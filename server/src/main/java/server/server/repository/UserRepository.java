@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Repository;
 
 import server.server.model.Friends;
@@ -21,10 +20,11 @@ public class UserRepository {
   private final String INSERT_USER_SQL="INSERT INTO users (name, email, picture) VALUES (?,?,?)";
   private final String UPDATE_USER_SQL="UPDATE users SET name=?,picture=?, bio=? WHERE email=?";
   private final String UPDATE_USER_ACCESS_TOKEN="UPDATE users SET access_token=? WHERE email=?";
-  private final String GET_FRIENDS_BY_EMAIL="SELECT * FROM friends WHERE user_email=? OR friend_email=?";
+  private final String QUERY_FRIENDS_BY_EMAIL="SELECT * FROM friends WHERE user_email=? OR friend_email=?";
   private final String INSERT_FRIEND_PAIR="INSERT INTO friends (user_email, friend_email) VALUES(?,?)";
   private final String UPDATE_USER_IS_ONLINE="UPDATE users SET is_online=? WHERE email=?";
   private final String UPDATE_USER_LOCATION="UPDATE users SET location=? WHERE email=?";
+  private final String UPDATE_USER_SAVED_TRACKS="UPDATE users SET saved_tracks=? WHERE email=?";
 
   public User getUserDetails(String email){
     try {
@@ -50,7 +50,7 @@ public class UserRepository {
   }
 
   public List<Friends> getFriendsOfUser(String userEmail){
-    return jdbcTemplate.query(GET_FRIENDS_BY_EMAIL, BeanPropertyRowMapper.newInstance(Friends.class),userEmail, userEmail);
+    return jdbcTemplate.query(QUERY_FRIENDS_BY_EMAIL, BeanPropertyRowMapper.newInstance(Friends.class),userEmail, userEmail);
   }
 
   public List<Friends> addFriendPair(Friends friends){
@@ -70,8 +70,17 @@ public class UserRepository {
 
   public Integer updateUserLocation(String email, String location){
     return jdbcTemplate.update(UPDATE_USER_LOCATION, location, email);
+  }
 
-  
+  public Integer addUserSavedTracks(String trackId, String email){
+    User user = getUserDetails(email);
+    String savedTracks;
+    if(user.getSavedTracks()==null){
+       savedTracks = trackId;
+    }else{
+       savedTracks = user.getSavedTracks()+","+trackId;
+    }
+    return jdbcTemplate.update(UPDATE_USER_SAVED_TRACKS, savedTracks, email);
   }
 
 }

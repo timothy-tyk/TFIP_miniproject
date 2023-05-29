@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '@auth0/auth0-angular';
 import { Subscription } from 'rxjs';
 import { Room } from 'src/app/models/room-model';
+import { User } from 'src/app/models/user-model';
 import { RoomService } from 'src/app/services/room/room.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-player.service';
@@ -27,7 +27,6 @@ export class RoomComponent implements OnInit {
   selectedUserEmail!: string;
   addTrackDialogVisible: boolean = false;
   playlistDialogVisible: boolean = false;
-  // dialogInfo!: Track[];
 
   constructor(
     private roomSvc: RoomService,
@@ -38,26 +37,31 @@ export class RoomComponent implements OnInit {
     private userSvc: UserService
   ) {}
   ngOnInit(): void {
-    this.fetchRoomData();
-    this.onAddTrack = this.roomSvc.trackAdded.subscribe((id) => {
-      const newList = [...this.trackList, id];
-      this.trackList = newList;
-      this.webSocketPlayerSvc.sendCommand(id);
-    });
-    this.command$ = this.webSocketPlayerSvc.newCommand.subscribe((e: any) => {
-      if (e.toString().startsWith('index:')) {
-        this.trackIndex = Number.parseInt(e.toString().replace('index:', ''));
-      } else if (e == 'Play' || e == 'Pause') {
-        // do something
-      } else {
-        this.fetchRoomData();
-        const newList = [...this.trackList, e];
-        this.trackList = newList;
-      }
-    });
-    this.userJoin$ = this.webSocketSvc.userJoinedOrLeft.subscribe((e: any) => {
-      console.log('fetching room data');
+    this.webSocketPlayerSvc.initializeConnection().subscribe((connected) => {
       this.fetchRoomData();
+      this.onAddTrack = this.roomSvc.trackAdded.subscribe((id) => {
+        const newList = [...this.trackList, id];
+        this.trackList = newList;
+        this.webSocketPlayerSvc.sendCommand(id);
+      });
+      this.command$ = this.webSocketPlayerSvc.newCommand.subscribe((e: any) => {
+        if (e.toString().startsWith('index:')) {
+          this.trackIndex = Number.parseInt(e.toString().replace('index:', ''));
+        } else if (e.toString().startsWith('{"track')) {
+          // do nothing
+        } else if (e == 'Play' || e == 'Pause') {
+          // do something
+        } else {
+          this.fetchRoomData();
+          const newList = [...this.trackList, e];
+          this.trackList = newList;
+        }
+      });
+      this.userJoin$ = this.webSocketSvc.userJoinedOrLeft.subscribe(
+        (e: any) => {
+          this.fetchRoomData();
+        }
+      );
     });
   }
 
@@ -79,12 +83,17 @@ export class RoomComponent implements OnInit {
   }
   fetchRoomListeners() {
     const userList = this.room.userList.split(',');
-    this.roomListeners = new Map<string, User>();
-    for (let user of userList) {
-      this.userSvc
-        .getUserDetails(user)
-        .then((user: any) => this.roomListeners.set(user['email'], user));
+    let listeners = new Map<string, User>();
+    if (this.room.userList != '') {
+      console.log(userList);
+      for (let user of userList) {
+        this.userSvc.getUserDetails(user).then((user: any) => {
+          console.log(user);
+          listeners.set(user['email'], user);
+        });
+      }
     }
+    this.roomListeners = listeners;
   }
 
   onTrackIndexChange(e: any) {
@@ -94,10 +103,6 @@ export class RoomComponent implements OnInit {
 
   updatePlayerTrack(e: any) {
     this.trackIndex = e;
-  }
-
-  updateRoomUserCount() {
-    // Todo
   }
 
   backToLobby() {

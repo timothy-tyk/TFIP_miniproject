@@ -1,1 +1,5 @@
-
+.add-room-div {
+  display: flex;
+  margin: 0 auto;
+  width: 350px;
+}

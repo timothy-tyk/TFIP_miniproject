@@ -16,5 +16,6 @@ public class User {
   private Boolean isOnline;
   private String location;
   private String accessToken;
+  private String savedTracks;
   
 }

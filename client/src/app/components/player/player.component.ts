@@ -1,20 +1,15 @@
 import {
-  AfterViewChecked,
-  AfterViewInit,
   Component,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService, User } from '@auth0/auth0-angular';
 import { FastAverageColor } from 'fast-average-color';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Room } from 'src/app/models/room-model';
-import { Track } from 'src/app/models/track-model';
 import { SpotifyAuthService } from 'src/app/services/auth/spotify-auth.service';
 import { RoomService } from 'src/app/services/room/room.service';
 import { SpotifySdkWebPlayerService } from 'src/app/services/spotify/spotify-sdk-web-player.service';
@@ -35,6 +30,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   onUserInfo$!: Subscription;
   pos: number = 0;
   @Input() roomInfo!: Room;
+  @Output() onRoomInfoChange: Subject<string> = new Subject<string>();
   @Input() trackList!: string[];
   trackIndex: number = 0;
   trackPosition: number = 0;
@@ -56,33 +52,34 @@ export class PlayerComponent implements OnInit, OnChanges {
     private roomSvc: RoomService
   ) {}
   ngOnInit(): void {
-    // this.spotifyWebSDK.createWebPlayer(localStorage.getItem('access_token')!);
     this.auth.user$.subscribe((user) => {
-      // console.log(user);
       this.userInfo = user as User;
       this.userInfoSubject.next(this.userInfo);
     });
-    this.createIFrame().then(() => {
-      this.onUserInfo$ = this.userInfoSubject.subscribe((user) => {
-        // initialize only after userInfo is collected
-        console.log(user);
-        this.getTrackIndexPosition();
-        this.onStartingGetTrackIndexPosition();
-        this.websocketPlayerSvc.initializeConnection();
-      });
+    this.createIFrame();
+    this.onUserInfo$ = this.userInfoSubject.subscribe((user) => {
+      // initialize only after userInfo is collected
+      console.log(user);
+      this.getTrackIndexPosition();
+      this.onStartingGetTrackIndexPosition();
+      this.websocketPlayerSvc.initializeConnection();
     });
-
     // Subscribe to clicks on the Play/Pause Button, Track Change, Track Seek Position change
     this.command$ = this.websocketPlayerSvc.newCommand.subscribe((e: any) => {
       // Toggle Play/Pause of Player in other instances
       if (e == 'Play' || e == 'Pause') {
         this.playerStatus = e;
         this.IFrameController.togglePlay();
+        this.roomSvc
+          .updateRoomPlayerStatus(
+            this.roomInfo.roomId,
+            this.playerStatus == 'Play'
+          )
+          .then((res) => this.onRoomInfoChange.next('room updated'));
         this.playerStatus == 'Pause'
           ? this.spinEffect.pause()
           : this.spinEffect.play();
       } else if (e.startsWith('index')) {
-        console.log('track change');
         const idx = Number.parseInt(e.replace('index:', ''));
         this.trackIndex = idx;
         this.IFrameController.loadUri(`spotify:track:${this.trackList[idx]}`);
@@ -105,8 +102,6 @@ export class PlayerComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['trackIndex'] && !changes['trackIndex'].firstChange) {
-      console.log('changing track');
-      console.log(changes['trackIndex']);
       this.changeTrack(this.trackIndex, true);
       this.spinEffect.play();
     }
@@ -138,7 +133,6 @@ export class PlayerComponent implements OnInit, OnChanges {
   }
 
   async createIFrame() {
-    console.log(this.trackList[this.trackIndex]);
     const iFrameScript = document.createElement('script');
     iFrameScript.src = 'https://open.spotify.com/embed-podcast/iframe-api/v1';
     iFrameScript.addEventListener('load', (e) => {
@@ -151,15 +145,19 @@ export class PlayerComponent implements OnInit, OnChanges {
       const options = {
         uri: `spotify:track:${this.trackList[this.trackIndex]}`,
         height: 100,
-        width: '90%',
+        width: 340,
       };
       this.getImageAvgColour(this.trackList[this.trackIndex]);
 
       // @ts-ignore
       const callback = (EmbedController) => {
         EmbedController.addListener('playback_update', (e: any) => {
+          // Sync Spinning effect with play/pause state of player
+          if (e.data.isPaused) this.spinEffect.pause();
+          else this.spinEffect.play();
+
+          // If User click on track position to seek, update.
           if (Math.abs(e.data.position - this.pos) >= 6000) {
-            console.log('user clicked');
             if (this.userInfo.email == this.roomInfo.ownerEmail) {
               this.onTrackPositionChange(e, true);
             } else {
@@ -173,8 +171,6 @@ export class PlayerComponent implements OnInit, OnChanges {
           }
           // Proceed to Next Track on Completion
           if (e.data.duration == e.data.position && e.data.duration > 0) {
-            console.log(e);
-            console.log('track over, next track');
             this.trackIndex++;
             this.onTrackEnded.next(this.trackIndex);
             this.changeTrack(this.trackIndex, true);
@@ -183,11 +179,8 @@ export class PlayerComponent implements OnInit, OnChanges {
         });
         // EmbedController.play();
         EmbedController.addListener('ready', () => {
-          console.log('ready');
           if (this.pos > 0) {
             setTimeout(() => {
-              console.log('after 3s');
-              console.log(this.trackIndex, this.trackPosition);
               EmbedController.seek(this.trackPosition / 1000);
             }, 3000);
           }
@@ -195,13 +188,11 @@ export class PlayerComponent implements OnInit, OnChanges {
         this.IFrameController = EmbedController;
       };
       IFrameAPI.createController(element, options, callback);
-      console.log('controller created');
       this.spinImage();
     };
   }
 
   changeTrack(idx: number, autoplay: boolean) {
-    console.log(`changetrack, autoplay ${autoplay}`);
     this.getImageAvgColour(this.trackList[idx]);
     this.IFrameController.loadUri(`spotify:track:${this.trackList[idx]}`);
     if (autoplay) {
@@ -217,7 +208,6 @@ export class PlayerComponent implements OnInit, OnChanges {
       this.IFrameController.play();
       // this.IFrameController.seek(this.trackPosition / 1000);
       setTimeout(() => {
-        console.log(this.trackPosition);
         this.IFrameController.seek(this.trackPosition / 1000);
       }, 2000);
     }
@@ -237,7 +227,6 @@ export class PlayerComponent implements OnInit, OnChanges {
     }
   }
   updateTrackIndexPosition(trackIndex: number, trackPosition: number) {
-    console.log('updating track index' + trackIndex);
     this.roomSvc.updateRoomTrackInfo(
       this.roomInfo.roomId,
       trackIndex,
@@ -246,14 +235,11 @@ export class PlayerComponent implements OnInit, OnChanges {
   }
 
   onTogglePlay() {
-    this.IFrameController.togglePlay();
     if (this.playerStatus == 'Play') {
       this.playerStatus = 'Pause';
-      this.spinEffect.pause();
       this.websocketPlayerSvc.sendCommand('Pause');
     } else {
       this.playerStatus = 'Play';
-      this.spinEffect.play();
       this.websocketPlayerSvc.sendCommand('Play');
     }
   }

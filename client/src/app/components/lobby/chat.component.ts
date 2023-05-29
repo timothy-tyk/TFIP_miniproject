@@ -1,18 +1,9 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ChatMessage } from 'src/app/models/chatmessage-model';
 import { Friends } from 'src/app/models/friends-model';
-import { Room } from 'src/app/models/room-model';
 import { User } from 'src/app/models/user-model';
-import { ChatService } from 'src/app/services/chat/chat.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { WebsocketService } from 'src/app/services/websocket/websocket.service';
 
@@ -33,32 +24,25 @@ export class ChatComponent implements OnInit, OnDestroy {
   // Dialog
   dialogVisible: boolean = false;
   dialogInfo!: User;
+  searchDialogVisible: boolean = false;
 
   constructor(
     private fb: FormBuilder,
-    // private chatSvc: ChatService,
     private websocketSvc: WebsocketService,
     private userSvc: UserService
   ) {}
   ngOnInit(): void {
-    this.websocketSvc.initializeConnection();
-    // this.initializeConnectionAndUserLogin();
+    this.websocketSvc.initializeConnection().subscribe((connected) => {
+      this.msgSubscription = this.websocketSvc.messageAdded.subscribe(
+        () => (this.chatlog = this.websocketSvc.messages.get('/lobby')!)
+      );
+      this.websocketSvc.onJoinLobby(this.userInfo);
+    });
     this.initializeChatForm();
-    this.msgSubscription = this.websocketSvc.messageAdded.subscribe(
-      () => (this.chatlog = this.websocketSvc.messages.get('/lobby')!)
-    );
-    this.websocketSvc.onJoinLobby(this.userInfo);
   }
   ngOnDestroy(): void {
     this.websocketSvc.disconnect(this.currentLocation);
   }
-
-  // async initializeConnectionAndUserLogin() {
-  //   await this.websocketSvc.initializeConnection();
-  //   setTimeout(() => {
-  //     this.websocketSvc.onUserLoginLogout(this.userInfo, 'login');
-  //   }, 500);
-  // }
 
   initializeChatForm() {
     this.chatForm = this.fb.group({
@@ -66,7 +50,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
   onSubmitMessage() {
-    // const msg = this.chatForm.get('message')?.value;
     const msg: ChatMessage = {
       email: this.userInfo.email,
       message: this.chatForm.get('message')?.value,
@@ -79,12 +62,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.websocketSvc.sendMessage(msg);
     this.initializeChatForm();
   }
-
-  // retrieveChatMessages() {
-  //   this.chatSvc.getChatMessages('lobby').then((res) => {
-  //     this.chatlog = res as ChatMessage[];
-  //   });
-  // }
 
   showDialog(email: string) {
     this.selectedUserEmail = email;
@@ -102,5 +79,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.userSvc
       .addFriend(friends)
       .then((res: any) => (this.friendsList = res as Friends[]));
+  }
+
+  onSearchClick() {
+    this.searchDialogVisible = true;
+  }
+  onSearchClose() {
+    this.searchDialogVisible = false;
   }
 }

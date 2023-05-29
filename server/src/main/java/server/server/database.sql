@@ -6,11 +6,12 @@ create table users(
 id int not null auto_increment,
 name varchar(50) not null,
 email varchar(50) not null,
-picture varchar(150) not null,
+picture text not null,
 bio text,
 is_online boolean default false,
 location varchar(50),
 access_token text,
+saved_tracks text,
 primary key(id)
 )
 
@@ -35,7 +36,7 @@ create table rooms(
   owner_email varchar(50) not null,
   user_count integer not null,
   room_id varchar(8) not null,
-  active boolean default true,
+  active boolean default false,
   track_list text,
   track_index int not null default 0,
   track_position int not null default 0,

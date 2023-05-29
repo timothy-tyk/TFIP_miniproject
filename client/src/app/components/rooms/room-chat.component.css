@@ -1,7 +1,7 @@
 .room-chat-div {
   margin-top: 2vh;
-  width: 100%;
-  height: 40vh;
+  width: 373px;
+  height: 358px;
   border-radius: 8px;
   background-size: 100% 100%;
   background: url('data:image/svg+xml,<svg viewBox="0 0 353 358" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M142 1H26C12.1929 1 1 12.1929 1 26V332.5C1 346.307 12.1929 357.5 26 357.5H327C340.807 357.5 352 346.307 352 332.5V77.5C352 63.6929 340.807 52.5 327 52.5H192C178.193 52.5 167 41.3071 167 27.5V26C167 12.1929 155.807 1 142 1Z" fill="%23A4A4A4" stroke="white"/></svg>');
@@ -11,17 +11,29 @@
   align-self: flex-end;
   direction: rtl;
 }
-.room-chat {
-  margin-left: 5vw;
-  margin-right: 5vw;
-  overflow-y: hidden;
-}
-.room-chat:hover {
-  margin-left: 5vw;
-  margin-right: 5vw;
-  overflow-y: scroll;
-}
+
 .textwrapper {
   display: block;
   width: 100%;
+}
+.chat-log {
+  width: 100%;
+  height: 280px;
+  overflow-y: hidden;
+  display: inline-flex;
+  flex-direction: column-reverse;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.chat-log:hover {
+  width: 100%;
+  height: 280px;
+  overflow-y: scroll;
+  display: inline-flex;
+  flex-direction: column-reverse;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.chat-log:hover::-webkit-scrollbar {
+  display: none;
 }

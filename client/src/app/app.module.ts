@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from '../environments/environment';
 
@@ -46,8 +46,9 @@ import { SpotifyCodeComponent } from './components/landing/spotify-code.componen
 import { InviteComponent } from './components/lobby/invite.component';
 import { LogoutComponent } from './components/auth/logout.component';
 import { TopMenuComponent } from './components/menu/top-menu.component';
-// import { StoreModule } from '@ngrx/store';
-// import { userReducer } from './user-state-store/user.reducer';
+import { SearchComponent } from './components/lobby/search.component';
+import { UserPlayerComponent } from './components/user/user-player.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,8 @@ import { TopMenuComponent } from './components/menu/top-menu.component';
     SpotifyCodeComponent,
     InviteComponent,
     LogoutComponent,
+    SearchComponent,
+    UserPlayerComponent,
   ],
   imports: [
     BrowserModule,
@@ -94,7 +97,12 @@ import { TopMenuComponent } from './components/menu/top-menu.component';
     AngularFireStorageModule,
     PrimeModule,
     BrowserAnimationsModule,
-    // StoreModule.forRoot({ userInfo: userReducer }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [UserService, ChatService, WebsocketService, SpotifyAuthService],
   bootstrap: [AppComponent],

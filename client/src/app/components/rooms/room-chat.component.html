@@ -14,54 +14,54 @@
       </button>
     </div>
   </div>
-  <table *ngIf="chatlog != null" class="flex flex-column room-chat">
-    <tr
-      *ngFor="let msg of chatlog"
-      [ngClass]="msg.email == userInfo.email ? 'userMessage' : ''"
-    >
-      <div *ngIf="msg.type == 'JOIN' || msg.type == 'LEAVE'" class="chat-msg">
-        <td colspan="3">
-          <p class="font-12">{{ msg.message }}</p>
-        </td>
-      </div>
-      <div *ngIf="msg.type != 'JOIN' && msg.type != 'LEAVE'">
-        <div style="margin-top: 0px">
-          <td class="chat-badge-td">
-            <p-badge
-              value="{{ msg.email }}"
-              (click)="showUserDialog(msg.email)"
-            ></p-badge>
-          </td>
-          <td class="chat-msg-td">
-            <p class="font-12" style="margin: 0 1vw">
-              {{ msg.message }}
-            </p>
+  <div class="chat-log">
+    <table *ngIf="chatlog != null" class="flex flex-column room-chat">
+      <tr
+        *ngFor="let msg of chatlog"
+        [ngClass]="msg.email == userInfo.email ? 'userMessage' : ''"
+      >
+        <div *ngIf="msg.type == 'JOIN' || msg.type == 'LEAVE'" class="chat-msg">
+          <td colspan="3">
+            <p class="font-12" style="direction: ltr">{{ msg.message }}</p>
           </td>
         </div>
-      </div>
-    </tr>
-  </table>
-</div>
-
-<div style="margin-top: 1vh; margin-bottom: 60px">
-  <form [formGroup]="chatForm" (ngSubmit)="onSubmitMessage()">
-    <table>
-      <tr class="textwrapper">
-        <div>
-          <textarea pInputTextarea formControlName="message"></textarea>
-          <div class="flex flex-row-reverse">
-            <button
-              pButton
-              class="p-button-rounded small-button"
-              type="submit"
-              style="margin-top: -40px; margin-right: 5px"
-            >
-              Send
-            </button>
+        <div *ngIf="msg.type != 'JOIN' && msg.type != 'LEAVE'">
+          <div style="margin-top: 0px">
+            <td class="chat-badge-td">
+              <p-badge
+                value="{{ msg.email }}"
+                (click)="showUserDialog(msg.email)"
+              ></p-badge>
+            </td>
+            <td class="chat-msg-td">
+              <p class="font-12" style="margin: 0 1vw; direction: ltr">
+                {{ msg.message }}
+              </p>
+            </td>
           </div>
         </div>
       </tr>
     </table>
+  </div>
+</div>
+
+<div style="margin-top: 5px">
+  <form [formGroup]="chatForm" (ngSubmit)="onSubmitMessage()">
+    <div class="grid">
+      <div class="col-12">
+        <textarea pInputTextarea formControlName="message"></textarea>
+        <div class="flex flex-row-reverse">
+          <button
+            pButton
+            class="p-button-rounded small-button"
+            type="submit"
+            style="margin-top: -40px; margin-right: 35px"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
   </form>
 </div>
 

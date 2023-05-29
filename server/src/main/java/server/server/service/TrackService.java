@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.hc.core5.http.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
@@ -25,13 +24,11 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonReader;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
-import se.michaelthelin.spotify.model_objects.specification.Track;
 import server.server.model.TrackModel;
 
 @Service
 public class TrackService {
-  @Autowired
-  SpotifyService spotifySvc;
+  
 
   public String storeTrackDetails(TrackModel trackModel, String roomId) throws InterruptedException, ExecutionException, ParseException, SpotifyWebApiException, IOException{
     Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -60,6 +57,7 @@ public class TrackService {
     response.add("playlist", jArrB.build());
     return response.build();
   }
+
 
 
 }

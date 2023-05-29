@@ -74,7 +74,6 @@ export class FriendsComponent implements OnInit {
     this.inviteDialogVisible = true;
   }
   closeInviteDialog(e: any) {
-    console.log(e);
     this.inviteDialogVisible = false;
   }
 }

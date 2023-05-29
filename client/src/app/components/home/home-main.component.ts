@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
-import { Subject } from 'rxjs';
 import { User } from 'src/app/models/user-model';
-import { SpotifyService } from 'src/app/services/spotify/spotify.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -16,12 +14,10 @@ export class HomeMainComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private userSvc: UserService,
-    private router: Router,
-    private spotifySvc: SpotifyService
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.getUserDetails();
-    // this.getSpotifyLogin();
   }
 
   getUserDetails() {

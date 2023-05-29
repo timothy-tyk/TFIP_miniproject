@@ -7,8 +7,9 @@
           class="p-button-rounded small-button"
           type="submit"
           style="height: 40px; margin: 0 auto; display: flex"
+          (click)="onSearchClick()"
         >
-          <p class="font-20">Invite +</p>
+          <p class="font-20">Search</p>
         </button>
       </div>
       <div class="col-7" style="padding-bottom: 0px">
@@ -26,9 +27,20 @@
           *ngFor="let msg of chatlog"
           [ngClass]="msg.email == userInfo.email ? 'userMessage' : ''"
         >
-          <!-- <td>{{ msg.timestamp | date : "medium" }}</td> -->
-
-          <div style="margin-top: 0px">
+          <div
+            *ngIf="msg.type == 'JOIN' || msg.type == 'LEAVE'"
+            class="chat-msg"
+          >
+            <td colspan="3">
+              <p class="font-12" style="direction: ltr">
+                {{ msg.message }}
+              </p>
+            </td>
+          </div>
+          <div
+            *ngIf="msg.type != 'JOIN' && msg.type != 'LEAVE'"
+            style="margin-top: 0px"
+          >
             <td class="chat-badge-td">
               <p-badge
                 value="{{ msg.email }}"
@@ -36,7 +48,7 @@
               ></p-badge>
             </td>
             <td class="chat-msg-td">
-              <p class="font-12" style="margin: 0 1vw">
+              <p class="font-12" style="margin: 0 1vw; direction: ltr">
                 {{ msg.message }}
               </p>
             </td>
@@ -50,27 +62,9 @@
       [email]="selectedUserEmail"
       (closeDialog)="closeDialog()"
     ></app-user-dialog-info>
-    <!-- <div class="card flex justify-content-center" *ngIf="dialogInfo != null">
-      <p-dialog
-        header="{{ dialogInfo.email }}"
-        [(visible)]="dialogVisible"
-        [style]="{ width: '75vw' }"
-      >
-        <p>Info Here for {{ dialogInfo.email }}</p>
-        <button
-          pButton
-          type="button"
-          (click)="addFriend(dialogInfo.email)"
-          [disabled]=""
-          class="p-button-outlined p-button-rounded small-button"
-        >
-          Add Friend
-        </button>
-      </p-dialog>
-    </div> -->
   </p-card>
 </div>
-<div class="absolute bottom-0" style="margin-bottom: 60px; margin-top: 2vh">
+<div class="/absolute /bottom-0" style="margin-top: 5px">
   <form [formGroup]="chatForm" (ngSubmit)="onSubmitMessage()">
     <table>
       <tr class="textwrapper">
@@ -95,3 +89,7 @@
     </table>
   </form>
 </div>
+<app-search
+  [dialogVisible]="searchDialogVisible"
+  (onDialogClose)="onSearchClose()"
+></app-search>

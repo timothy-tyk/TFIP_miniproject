@@ -3,7 +3,7 @@
     header="{{ dialogInfo.name }}"
     [(visible)]="dialogVisible"
     (onHide)="cancel()"
-    [style]="{ width: '90vw' }"
+    class="user-info-container"
   >
     <div class="grid">
       <div class="col-5">
@@ -48,7 +48,12 @@
         </p>
       </div>
     </div>
-    <button pButton [disabled]="true" class="p-button-rounded small-button">
+    <button
+      (click)="addFriend(dialogInfo.email)"
+      pButton
+      [disabled]="selectedUserIsFriend"
+      class="p-button-rounded small-button"
+    >
       <p class="font-15">Add Friend</p>
     </button>
     <button

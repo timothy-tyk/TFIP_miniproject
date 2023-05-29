@@ -34,7 +34,6 @@ export class InviteComponent implements OnInit {
       recipientEmail: this.inviteForm.get('email')?.value,
       message: this.inviteForm.get('message')?.value,
     };
-    console.log(details);
     this.userSvc.sendInviteEmail(details).then((res) => console.log(res));
     this.cancel();
   }

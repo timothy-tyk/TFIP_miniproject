@@ -46,4 +46,8 @@ public class UserService {
   public Integer updateUserLocation(String email, String location){
     return userRepo.updateUserLocation(email, location);
   }
+
+  public Integer updateUserSavedTracks(String trackId, String email){
+    return userRepo.addUserSavedTracks(trackId, email);
+  }
 }

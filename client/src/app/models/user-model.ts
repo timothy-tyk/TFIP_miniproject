@@ -5,4 +5,5 @@ export interface User {
   bio: string;
   isOnline: number;
   location: string;
+  savedTracks: string;
 }

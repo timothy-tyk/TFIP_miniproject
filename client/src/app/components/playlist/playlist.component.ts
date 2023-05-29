@@ -1,6 +1,5 @@
 import {
   Component,
-  EventEmitter,
   Input,
   OnChanges,
   OnInit,
@@ -9,7 +8,9 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Track } from 'src/app/models/track-model';
+import { User } from 'src/app/models/user-model';
 import { RoomService } from 'src/app/services/room/room.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-playlist',
@@ -18,15 +19,17 @@ import { RoomService } from 'src/app/services/room/room.service';
 })
 export class PlaylistComponent implements OnInit, OnChanges {
   playList!: Track[];
+  userInfo!: User;
   @Input() trackList!: string[];
   @Input() trackIndex!: number;
   @Output() trackIndexChange: Subject<number> = new Subject<number>();
 
-  constructor(private roomSvc: RoomService) {}
+  constructor(private roomSvc: RoomService, private userSvc: UserService) {}
   ngOnInit(): void {
     this.loadPlayList();
   }
   ngOnChanges(changes: SimpleChanges): void {
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
     if (
       this.playList &&
       this.trackList &&
@@ -45,5 +48,11 @@ export class PlaylistComponent implements OnInit, OnChanges {
   }
   selectTrack(idx: number) {
     this.trackIndexChange.next(idx);
+  }
+  saveTrack(idx: number) {
+    const trackId = this.trackList[idx];
+    this.userSvc.saveTrack(trackId, this.userInfo.email).then((res) => {
+      this.userInfo = res as User;
+    });
   }
 }

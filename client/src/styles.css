@@ -12,6 +12,22 @@
   right: 0;
  
 } */
+:host {
+  width: 390px;
+  height: 844px !important;
+}
+.host {
+  width: 390px;
+  height: 844px !important;
+  display: flex;
+  margin: 0 auto;
+  /* padding: 10px; */
+}
+.content {
+  width: 390px;
+  height: 760px;
+  overflow: hidden;
+}
 .small-button {
   height: 25px;
 }
@@ -31,6 +47,7 @@
   margin-left: -10px;
   margin-right: -10px;
   margin-top: -10px;
+  margin-bottom: 5px;
 }
 /* Table */
 .p-datatable .p-datatable-tbody > tr {
@@ -64,21 +81,6 @@ body {
   padding: 0;
 }
 
-/* .ui-tabview {
-  padding: 0.25em;
-  text-align: center;
-}
-
-.ui-tabview .ui-tabview-nav li {
-  list-style: none;
-  float: none;
-  position: relative;
-  margin: 0 0.125em 1px 0;
-  padding: 0;
-  white-space: nowrap;
-  display: inline-block !important;
-} */
-
 .p-badge {
   background: #ffffff;
   color: #474747;
@@ -88,6 +90,16 @@ body {
   background: #ffb600;
   border-radius: 50%;
   margin-left: 2vw;
+}
+.playlist-index.orange-badge.p-badge {
+  background: #ffb600;
+  border-radius: 50%;
+  margin-left: 0;
+}
+.playlist-index.gray-badge.p-badge {
+  background: #d9d9d9;
+  border-radius: 25px;
+  margin-left: 0;
 }
 .gray-badge.p-badge {
   background: #d9d9d9;
@@ -101,7 +113,8 @@ body {
 .font-24 {
   font-size: 24px !important;
   font-weight: 200;
-  margin: 5px 0;
+  margin: 0;
+  padding: 5px 0;
   text-align: center;
 }
 .font-12 {
@@ -114,20 +127,21 @@ body {
 }
 .font-36 {
   font-size: 36px;
-  margin-top: 3vw;
-  margin-bottom: 3vw;
+  margin-top: 20px;
+  margin-bottom: 20px;
   font-weight: 200;
 }
 .p-inputtextarea {
   line-height: 30px;
   border-radius: 25px;
   width: 370px;
-  height: 19vh;
+  height: 190px;
 }
 
 /* Tab Menu */
 .p-tabmenu .p-tabmenu-nav {
   background-color: #d7d7d7;
+  margin-top: 10px;
 }
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem {
   padding: auto 0;
@@ -137,7 +151,6 @@ body {
   flex-direction: column; */
   font-weight: 300;
   background-color: #a4a4a4;
-  height: 6vh;
   border-radius: 50px;
   width: 100%;
   margin: 0;
@@ -157,10 +170,10 @@ body {
   text-align: center;
 }
 .bottomMenu {
-  position: fixed;
-  bottom: 0;
+  /* position: fixed;
+  bottom: 0; */
   width: 95%;
-  display: flex;
+  display: block;
   justify-content: center;
 }
 /* Avatar */
@@ -169,6 +182,9 @@ body {
 }
 
 /* Dialog */
+.p-dialog {
+  width: 390px;
+}
 .p-dialog.p-dialog-header {
   border-top-right-radius: 25px;
   border-top-left-radius: 25px;

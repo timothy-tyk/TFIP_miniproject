@@ -9,8 +9,6 @@ import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.google.gson.Gson;
 
 import jakarta.json.JsonObject;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -39,7 +35,6 @@ public class RoomController {
 
   @GetMapping()
   public ResponseEntity<List<Room>> getRoomList(){
-    // System.out.println("grabbing all room data");
     return roomSvc.getAllRooms();
   }
 
@@ -52,10 +47,9 @@ public class RoomController {
   public ResponseEntity<Room> createRoom(@RequestBody Room room) throws ParseException, SpotifyWebApiException, InterruptedException, ExecutionException, IOException{
     String roomId = UUID.randomUUID().toString().substring(0,8);
     room.setRoomId(roomId);
-    System.out.println(room);
     trackSvc.storeTrackDetails(room.getStartingTrack(), roomId);
     String destination = "/topic/message";
-      this.smTemplate.convertAndSend(destination, "new room added");
+    this.smTemplate.convertAndSend(destination, "new room added");
     return roomSvc.addRoom(room);
   }
 
@@ -81,15 +75,10 @@ public class RoomController {
     return roomSvc.updateRoomTrackInfo(roomId, trackInfo.getTrackIndex(), trackInfo.getTrackPosition());
   }
 
-  //   @MessageMapping("/app/chat/joinLeaveRoom")
-  //   public void onUserJoinOrLeave(String message){
-  //     String destination = "/topic/message";
-  //     System.out.println(message);
-  //     // Update Room List Info
-  //     this.smTemplate.convertAndSend(destination, message);
-  //     // Update Lobby Friends List Info
-  //     this.smTemplate.convertAndSend(destination+"/lobby", message);
-  //   }
+  @PutMapping("/{roomId}/playerStatus")
+  public ResponseEntity<Room> updateRoomPlayerStatus(@PathVariable String roomId,@RequestParam Boolean isActive){
+    return roomSvc.updateRoomPlayerStatus(roomId, isActive);
+  }
   
 
 }

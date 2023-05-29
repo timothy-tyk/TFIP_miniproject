@@ -1,6 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
-import { firstValueFrom, Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { SpotifyAuthService } from '../auth/spotify-auth.service';
 
@@ -55,5 +55,18 @@ export class SpotifyService {
         this.refreshAccessToken();
         this.getTrackInfoById(id);
       });
+  }
+
+  getUserTopItems() {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('access_token')
+    );
+    return firstValueFrom(
+      this.httpClient.get(
+        'https://api.spotify.com/v1/me/shows?offset=0&limit=20',
+        { headers }
+      )
+    );
   }
 }

@@ -1,61 +1,56 @@
-<p class="font-24" style="display: flex">Add New Room</p>
-<form [formGroup]="addRoomForm" (ngSubmit)="submitRoomForm()">
-  <table>
-    <tr>
-      <td>Room Name:</td>
-      <td>
-        <input
-          type="text"
-          pInputText
-          formControlName="name"
-          class="radius-25"
-          style="width: 100%"
-        />
-      </td>
-    </tr>
-    <tr>
-      <td>Room Description:</td>
-      <td>
-        <textarea
-          rows="5"
-          cols="30"
-          pInputText
-          formControlName="description"
-          class="radius-25"
-        ></textarea>
-      </td>
-    </tr>
-    <tr hidden>
-      <td>Starting Track:</td>
-      <td>
-        <input
-          type="text"
-          pInputText
-          formControlName="startingTrack"
-          class="radius-25"
-        />
-      </td>
-
-      <!-- <app-search-add-track></app-search-add-track> -->
-    </tr>
-    <td>Search:</td>
-    <td>
-      <app-add-room-search-track
-        (selectedTrackId)="onSelectTrack($event)"
-      ></app-add-room-search-track>
-    </td>
-    <tr>
-      <td colspan="2">
-        <button
-          type="submit"
-          pButton
-          class="p-button-rounded large-button absolute bottom-0"
-          [disabled]="addRoomForm.invalid"
-          style="width: 95%; margin-bottom: 60px"
-        >
-          <p class="font-24" style="margin: 0 auto">Create Room</p>
-        </button>
-      </td>
-    </tr>
-  </table>
-</form>
+<div class="card flex justify-content-center">
+  <p-dialog
+    [(visible)]="showDialog"
+    (onHide)="closeDialog()"
+    class="add-room-div"
+  >
+    <p class="font-24" style="display: flex">Add New Room</p>
+    <form [formGroup]="addRoomForm" (ngSubmit)="submitRoomForm()">
+      <div class="grid">
+        <div class="col-3"><p class="font-15">Room Name:</p></div>
+        <div class="col-9">
+          <input
+            type="text"
+            pInputText
+            formControlName="name"
+            class="radius-25"
+            style="width: 100%"
+          />
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col-3"><p class="font-15">Room Description:</p></div>
+        <div class="col-9">
+          <textarea
+            rows="5"
+            pInputText
+            formControlName="description"
+            class="radius-25"
+            style="width: 100%"
+          ></textarea>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col-3"><p class="font-15">Starting Track:</p></div>
+        <div class="col-9">
+          <app-add-room-search-track
+            (selectedTrackId)="onSelectTrack($event)"
+          ></app-add-room-search-track>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="col-12">
+          <button
+            type="submit"
+            pButton
+            [disabled]="!addRoomForm.valid"
+            class="p-button-rounded xlarge-button"
+            style="width: 100%; display: block"
+          >
+            <p class="font-24">Create Room</p>
+          </button>
+        </div>
+      </div>
+    </form>
+  </p-dialog>
+</div>

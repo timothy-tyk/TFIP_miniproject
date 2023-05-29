@@ -1,26 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { User } from '../../models/user-model';
-import { UserService } from '../../services/user/user.service';
 import { WebsocketService } from '../../services/websocket/websocket.service';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-bottom-tab-menu',
   templateUrl: './bottom-tab-menu.component.html',
   styleUrls: ['./bottom-tab-menu.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BottomTabMenuComponent implements OnInit {
+export class BottomTabMenuComponent implements OnInit, OnDestroy {
   items!: MenuItem[];
   userInfo!: User;
   activeItem!: MenuItem;
-  constructor(
-    private router: Router,
-    private webSocketSvc: WebsocketService,
-    // private auth: AuthService,
-    private userSvc: UserService
-  ) {}
+  route$!: Subscription;
+
+  constructor(private router: Router, private webSocketSvc: WebsocketService) {}
   ngOnInit() {
+    this.route$ = this.router.events
+      .pipe(filter((e: any) => e instanceof NavigationEnd))
+      .subscribe((e) => {
+        this.activatedLocation(e.url);
+      });
     this.items = [
       {
         label: 'Lobby',
@@ -44,7 +48,6 @@ export class BottomTabMenuComponent implements OnInit {
         },
       },
     ];
-    this.activatedLocation();
     this.getUserInfoAndLogin();
   }
 
@@ -54,38 +57,23 @@ export class BottomTabMenuComponent implements OnInit {
     });
   }
   onLobbyClick() {
-    this.router.navigate([`/lobby`]).then(() => {
-      window.location.reload();
-    });
+    this.router.navigate([`/lobby`]).then(() => {});
   }
   onRoomsClick() {
-    this.router.navigate([`/rooms`]).then(() => {
-      window.location.reload();
+    this.router.navigate([`/rooms`]).then(() => {});
+  }
+
+  getUserInfoAndLogin() {
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
+    this.webSocketSvc.initializeConnection().subscribe((connected) => {
+      if (connected) {
+        this.onUserLoginLogout('login');
+      }
     });
   }
 
-  // getUserInfoAndLogin() {
-  //   this.auth.user$.subscribe(
-  //     // get user data from db
-  //     (user) => {
-  //       this.userSvc.getUserDetails(user?.email!).then((res) => {
-  //         this.userInfo = res as User;
-  //         this.onUserLoginLogout('login');
-  //       });
-  //     }
-  //   );
-  // }
-  getUserInfoAndLogin() {
-    this.webSocketSvc.initializeConnection();
-    setTimeout(() => {
-      this.userInfo = JSON.parse(localStorage.getItem('userInfo')!) as User;
-
-      this.onUserLoginLogout('login');
-    }, 1000);
-  }
-
-  activatedLocation() {
-    const currentLocation = location.pathname.replace('/', '');
+  activatedLocation(url: string) {
+    const currentLocation = url;
     for (let item of this.items) {
       if (currentLocation.includes(item.label?.toLowerCase()!)) {
         this.activeItem = item;
@@ -95,5 +83,16 @@ export class BottomTabMenuComponent implements OnInit {
 
   onUserLoginLogout(loginLogout: string) {
     this.webSocketSvc.onUserLoginLogout(this.userInfo, loginLogout);
+  }
+
+  ngOnDestroy(): void {
+    this.onUserLoginLogout('logout');
+    this.route$.unsubscribe();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHander(event: any) {
+    this.onUserLoginLogout('logout');
+    return true;
   }
 }

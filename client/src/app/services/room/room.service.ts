@@ -47,4 +47,11 @@ export class RoomService {
       this.httpClient.put(`${SERVER_URL}/rooms/${id}/trackInfo`, trackInfo)
     );
   }
+  updateRoomPlayerStatus(id: string, active: boolean) {
+    return firstValueFrom(
+      this.httpClient
+        .put(`${SERVER_URL}/rooms/${id}/playerStatus?isActive=${active}`, {})
+        .pipe()
+    );
+  }
 }

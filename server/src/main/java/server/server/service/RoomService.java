@@ -43,4 +43,10 @@ public class RoomService {
     Room updatedRoom = roomRepo.updateRoomUsers(roomId, userEmail, joinOrLeave);
     return ResponseEntity.ok().body(updatedRoom);
   }
+
+  public ResponseEntity<Room> updateRoomPlayerStatus(String roomId, Boolean isActive){
+    Room updatedRoom = roomRepo.updateRoomPlayerStatus(roomId, isActive);
+    return ResponseEntity.ok().body(updatedRoom);
+  }
+
 }

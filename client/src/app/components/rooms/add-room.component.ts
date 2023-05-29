@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
@@ -16,6 +16,8 @@ import { WebsocketService } from 'src/app/services/websocket/websocket.service';
   styleUrls: ['./add-room.component.css'],
 })
 export class AddRoomComponent implements OnInit {
+  @Input() showDialog!: boolean;
+  @Output() onDialogClose: Subject<string> = new Subject<string>();
   addRoomForm!: FormGroup;
   roomInfo!: Room;
   userEmail!: string;
@@ -48,8 +50,7 @@ export class AddRoomComponent implements OnInit {
       userCount: 0,
       userList: '',
       roomId: '',
-      active: true,
-      // replace with spotify API
+      active: false,
       trackList: this.addRoomForm.get('startingTrackId')?.value,
       trackIndex: 0,
       startingTrack: this.selectedTrack,
@@ -64,7 +65,7 @@ export class AddRoomComponent implements OnInit {
       .then(() => {
         this.websocketSvc.initializeChatRoom(this.roomInfo);
       })
-      .then(() => this.websocketSvc.onAddNewRoom())
+
       .then(() =>
         this.router
           .navigate([`/rooms/${this.roomInfo.roomId}`])
@@ -76,5 +77,9 @@ export class AddRoomComponent implements OnInit {
     this.selectedTrack = e;
     this.selectedTrack.userEmail = this.userEmail;
     this.addRoomForm.patchValue({ startingTrackId: this.selectedTrack.id });
+  }
+
+  closeDialog() {
+    this.onDialogClose.next('');
   }
 }

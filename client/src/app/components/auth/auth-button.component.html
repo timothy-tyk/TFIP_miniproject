@@ -1,2 +1,35 @@
-<button (click)="loginWithRedirect()">Log In</button>
-<button (click)="logout()">Log Out</button>
+<div class="grid">
+  <div class="col-12" style="display: flex; margin-top: 150px">
+    <svg
+      width="300"
+      height="300"
+      viewBox="0 0 300 300"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style="margin: 0 auto"
+      class="spinning-album"
+    >
+      <path
+        d="M300 150C300 232.843 232.843 300 150 300C67.1573 300 0 232.843 0 150C0 67.1573 67.1573 0 150 0C232.843 0 300 67.1573 300 150Z"
+        fill="#FFB600"
+      />
+      <path
+        d="M28 150C28 152.761 25.7614 155 23 155C20.2386 155 18 152.761 18 150C18 147.239 20.2386 145 23 145C25.7614 145 28 147.239 28 150Z"
+        fill="#D9D9D9"
+      />
+    </svg>
+  </div>
+</div>
+<br />
+<div class="grid">
+  <div class="col-12" style="display: flex; margin-top: 60px">
+    <button
+      pButton
+      class="p-button-rounded xlarge-button"
+      (click)="loginWithRedirect()"
+      style="margin: 0 auto"
+    >
+      <p class="font-20" style="margin: 0 auto; font-weight: 200">Enter</p>
+    </button>
+  </div>
+</div>

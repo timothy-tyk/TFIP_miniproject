@@ -1,22 +1,29 @@
 .lobby-chat-div {
-  width: 100%;
-  height: 40vh;
-  background-image: url('data:image/svg+xml,<svg viewBox="0 0 353 358" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M178 1H327C340.807 1 352 12.1929 352 26V332.5C352 346.307 340.807 357.5 327 357.5H26C12.1929 357.5 1 346.307 1 332.5V80.0652C1 66.2581 12.1929 55.0652 26 55.0652H128C141.807 55.0652 153 43.8723 153 30.0652V26C153 12.1929 164.193 1 178 1Z" fill="%23A4A4A4" stroke="white"/></svg>');
-  margin-bottom: 0.5vh;
+  width: 372px;
+  height: 358px;
+  background-image: url('data:image/svg+xml,<svg width="372" height="358" viewBox="0 0 353 358" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M178 1H327C340.807 1 352 12.1929 352 26V332.5C352 346.307 340.807 357.5 327 357.5H26C12.1929 357.5 1 346.307 1 332.5V80.0652C1 66.2581 12.1929 55.0652 26 55.0652H128C141.807 55.0652 153 43.8723 153 30.0652V26C153 12.1929 164.193 1 178 1Z" fill="%23A4A4A4" stroke="white"/></svg>');
 }
 .userMessage {
   align-self: flex-end;
   direction: rtl;
 }
 .lobbyChat {
-  height: 32vh;
+  display: inline-flex;
+  flex-direction: column-reverse;
+  height: 280px;
+  width: 100%;
   overflow-y: hidden;
-  padding-right: 15px;
+  padding-bottom: 20px;
 }
 .lobbyChat:hover {
-  height: 32vh;
+  display: inline-flex;
+  flex-direction: column-reverse;
+  height: 280px;
+  width: 100%;
   overflow-y: scroll;
-  padding-right: 0;
+}
+.lobbyChat:hover::-webkit-scrollbar {
+  display: none;
 }
 .textwrapper {
   display: block;
@@ -25,7 +32,6 @@
 textarea {
   line-height: 30px;
   border-radius: 25px;
-  width: 370px;
 }
 .chat-badge-td {
   vertical-align: middle;

@@ -64,6 +64,15 @@ export class UserService {
       .then(() => this.friendsSubject.next(this.friendsList));
   }
 
+  saveTrack(trackId: string, email: string) {
+    return firstValueFrom(
+      this.httpClient.post(
+        `${SERVER_URL}/user/tracks?trackId=${trackId}&email=${email}`,
+        {}
+      )
+    );
+  }
+
   // Invite User Service
   sendInviteEmail(email: InviteEmail) {
     return firstValueFrom(

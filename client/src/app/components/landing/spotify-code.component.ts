@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpotifyAuthService } from 'src/app/services/auth/spotify-auth.service';
 
@@ -18,6 +18,5 @@ export class SpotifyCodeComponent {
     this.code = this.activatedRoute.snapshot.queryParams['code'];
     this.spotifyAuth.getExchangeToken(this.code);
     this.router.navigate(['/lobby']);
-    // this.router.navigate(['/rooms/cf5a8eda']);
   }
 }

@@ -2,3 +2,9 @@
   display: flex;
   align-items: center;
 }
+
+.user-info-container {
+  display: flex;
+  margin: 0 auto;
+  width: 350px;
+}

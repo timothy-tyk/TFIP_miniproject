@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>Client</title>
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <meta charset="utf-8"/>
+    <title>Listening Room</title>
+    <base href="/"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <script>
       var global = window; // fix global is undefined in socketjs-client
     </script>
-    <script
-      src="https://open.spotify.com/embed-podcast/iframe-api/v1"
-      async
-    ></script>
-
-    <!-- <script src="https://sdk.scdn.co/spotify-player.js"></script> -->
-  </head>
+    <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1976d2">
+</head>
   <body>
-    <app-root></app-root>
-  </body>
+    <div class="host">
+      <app-root></app-root>
+    </div>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
+</body>
 </html>

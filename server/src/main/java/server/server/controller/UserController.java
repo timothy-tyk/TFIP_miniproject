@@ -50,8 +50,18 @@ public class UserController {
       user.setName(name);
       user.setPicture(picture);
       user.setBio(bio);
-      System.out.println(user);
       return userSvc.updateUserDetails(user);
+  }
+
+  @PostMapping(path = "/user/tracks")
+  public ResponseEntity<User> addUserSavedTracks(@RequestParam String trackId, @RequestParam String email){
+    Integer updated = userSvc.updateUserSavedTracks(trackId, email);
+    if(updated>0){
+      return userSvc.getUserDetails(email);
+    }
+    else{
+      return null;
+    }
   }
 
   @GetMapping(path = "/user/friends")
@@ -84,6 +94,9 @@ public class UserController {
         String email = message.replace("login:", "");
       headerAccessor.getSessionAttributes().put("User email", email);
       userSvc.updateUserLogin(email, true);
+    }else{
+      String email = message.replace("logout:", "");
+      userSvc.updateUserLogin(email, false);
     }
       String destination = "/topic/message/lobby";
       this.smTemplate.convertAndSend(destination, message);

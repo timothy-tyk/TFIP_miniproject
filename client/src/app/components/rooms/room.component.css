@@ -1,7 +1,17 @@
-.room-info-div {
-  margin-top: 2vh;
+.room-container {
   width: 100%;
-  height: 30vh;
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.room-container::-webkit-scrollbar {
+  display: none;
+}
+.room-info-div {
+  margin-top: 10px;
+  width: 373px;
+  height: 270px;
   border-radius: 8px;
   background-size: 100% 100%;
   background: url('data:image/svg+xml,<svg viewBox="0 0 353 233" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M159.75 1.00002L26 1.00003C12.1929 1.00003 1 12.1929 1 26L0.999988 207.5C0.999989 221.307 12.1929 232.5 26 232.5L327 232.5C340.807 232.5 352 221.307 352 207.5L352 72.5C352 58.6929 340.807 47.5 327 47.5L206.25 47.5C193.409 47.5 183 37.0906 183 24.25C183 11.4094 172.591 1.00002 159.75 1.00002Z" fill="%23A4A4A4" stroke="white"/></svg>');
@@ -11,7 +21,6 @@
   display: flex;
   height: 100%;
   justify-content: end;
-  /* vertical-align: middle;
-  align-items: center; */
-  margin: auto 0;
+  padding-top: 0px;
+  margin: auto auto;
 }

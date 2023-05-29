@@ -1,97 +1,99 @@
-<div class="room-info-div" *ngIf="room != null">
-  <div class="grid">
-    <div class="col-6"><p class="font-24">Listening To</p></div>
-    <div class="col-6 invite-button">
-      <button
-        pButton
-        class="p-button-rounded small-button"
-        style="height: 40px"
-      >
-        <p class="font-20">Invite +</p>
-      </button>
-    </div>
-  </div>
-  <table>
-    <tr>
-      <td colspan="2">
-        <p class="font-36" style="margin-left: 2vw">{{ room.name }}</p>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <p class="font-12" style="margin-left: 2vw">{{ room.description }}</p>
-      </td>
-    </tr>
-    <tr>
-      <td style="width: 100px">
-        <p class="font-12" style="margin-left: 2vw">
-          {{ roomListeners.size }} Listeners
-        </p>
-      </td>
-      <td>
-        <p-avatarGroup
-          *ngIf="roomListeners != null"
-          [style]="{ 'margin-left': '2vw' }"
+<div class="room-container">
+  <div class="room-info-div" *ngIf="room != null">
+    <div class="grid">
+      <div class="col-6"><p class="font-24">Listening To</p></div>
+      <div class="col-6 invite-button">
+        <button
+          pButton
+          class="p-button-rounded small-button"
+          style="height: 40px"
         >
-          <p-avatar
-            size="large"
-            *ngFor="let user of roomListeners | keyvalue"
-            image="{{ user.value.picture }}"
-            shape="circle"
-            [ngStyle]="{ border: 0 }"
-            (click)="showListenerDialog(user.key)"
-          ></p-avatar>
-        </p-avatarGroup>
-      </td>
-    </tr>
-  </table>
-  <app-user-dialog-info
-    [email]="selectedUserEmail"
-    (closeDialog)="closeListenerDialog()"
-  ></app-user-dialog-info>
-
-  <!-- <p>Started by: {{ room.ownerEmail }}</p> -->
-</div>
-<div *ngIf="trackList.length > 0">
-  <app-player
-    (onTrackEnded)="updatePlayerTrack($event)"
-    [trackList]="trackList"
-    [roomInfo]="room"
-    (addTrackClick)="showAddTrackDialog($event)"
-  ></app-player>
-  <!-- <app-new-player></app-new-player> -->
-</div>
-
-<app-room-chat
-  [roomId]="id"
-  (showPlaylist)="showPlaylistDialog($event)"
-></app-room-chat>
-
-<!-- Add Track Dialog -->
-<div class="card flex justify-content-center">
-  <p-dialog
-    header="Add Track"
-    [(visible)]="addTrackDialogVisible"
-    [style]="{ width: '90vw' }"
-  >
-    <app-search-add-track
-      [roomId]="id"
+          <p class="font-20">Invite +</p>
+        </button>
+      </div>
+    </div>
+    <table>
+      <tr>
+        <td colspan="2">
+          <p class="font-36" style="margin-left: 20px">{{ room.name }}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <p class="font-12" style="margin-left: 20px">
+            {{ room.description }}
+          </p>
+        </td>
+      </tr>
+      <tr *ngIf="roomListeners != null && roomListeners.size > 0">
+        <td style="width: 100px">
+          <p class="font-12" style="margin-left: 20px">
+            {{ roomListeners.size }} Listeners
+          </p>
+        </td>
+        <td>
+          <p-avatarGroup
+            *ngIf="roomListeners != null"
+            [style]="{ 'margin-left': '2vw' }"
+          >
+            <p-avatar
+              size="large"
+              *ngFor="let user of roomListeners | keyvalue"
+              image="{{ user.value.picture }}"
+              shape="circle"
+              [ngStyle]="{ border: 0 }"
+              (click)="showListenerDialog(user.key)"
+            ></p-avatar>
+          </p-avatarGroup>
+        </td>
+      </tr>
+    </table>
+    <app-user-dialog-info
+      [email]="selectedUserEmail"
+      (closeDialog)="closeListenerDialog()"
+    ></app-user-dialog-info>
+  </div>
+  <div *ngIf="trackList.length > 0">
+    <app-player
+      (onTrackEnded)="updatePlayerTrack($event)"
       [trackList]="trackList"
-    ></app-search-add-track>
-  </p-dialog>
-</div>
+      [roomInfo]="room"
+      (onRoomInfoChange)="fetchRoomData()"
+      (addTrackClick)="showAddTrackDialog($event)"
+    ></app-player>
+  </div>
 
-<!-- Playlist Dialog -->
-<div class="card flex justify-content-center">
-  <p-dialog
-    header="Playlist"
-    [(visible)]="playlistDialogVisible"
-    [style]="{ width: '90vw' }"
-  >
-    <app-playlist
-      [trackList]="trackList"
-      [trackIndex]="trackIndex"
-      (trackIndexChange)="onTrackIndexChange($event)"
-    ></app-playlist>
-  </p-dialog>
+  <app-room-chat
+    [roomId]="id"
+    (showPlaylist)="showPlaylistDialog($event)"
+  ></app-room-chat>
+
+  <!-- Add Track Dialog -->
+  <div class="card flex justify-content-center">
+    <p-dialog
+      header="Add Track"
+      [(visible)]="addTrackDialogVisible"
+      [style]="{ width: '390px' }"
+    >
+      <app-search-add-track
+        [roomId]="id"
+        [trackList]="trackList"
+      ></app-search-add-track>
+    </p-dialog>
+  </div>
+
+  <!-- Playlist Dialog -->
+  <div class="card flex justify-content-center">
+    <p-dialog
+      header="Playlist"
+      [(visible)]="playlistDialogVisible"
+      [style]="{ width: '390px' }"
+    >
+      <app-playlist
+        [trackList]="trackList"
+        [trackIndex]="trackIndex"
+        (trackIndexChange)="onTrackIndexChange($event)"
+      ></app-playlist>
+    </p-dialog>
+  </div>
 </div>

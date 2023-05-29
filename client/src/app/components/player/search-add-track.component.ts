@@ -1,11 +1,9 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { Track } from 'src/app/models/track-model';
 import { User } from 'src/app/models/user-model';
 import { RoomService } from 'src/app/services/room/room.service';
 import { SpotifyService } from 'src/app/services/spotify/spotify.service';
-import { WebsocketPlayerService } from 'src/app/services/websocket/websocket-player.service';
 
 @Component({
   selector: 'app-search-add-track',
@@ -44,7 +42,6 @@ export class SearchAddTrackComponent implements OnInit {
     this.roomSvc.updateRoomAddTrack(this.roomId, track);
     this.createSearchForm();
     this.searchResults = [];
-    // this.websocketPlayerSvc.sendCommand(id);
   }
 
   createSearchForm() {
@@ -59,10 +56,7 @@ export class SearchAddTrackComponent implements OnInit {
   searchSpotifyAPI() {
     const query = this.searchForm.get('query')?.value;
     this.spotifySvc.searchSpotifyCatalog(query).then((res: any) => {
-      console.log(res);
       this.searchResults = res as Track[];
     });
   }
 }
-
-// 5xo1Gj4WTssjQgQ0w03cf2?si=5715f0abd1da4dec

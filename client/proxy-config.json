@@ -1,10 +1,15 @@
 {
   "/api": {
-    "target": "http://localhost:8080",
-    "secure": false
+    "target": "https://listening-room-production-24f9.up.railway.app/api",
+    "secure": false,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "logLevel": "debug",
+    "changeOrigin": true
   },
   "/ws": {
-    "target": "http://localhost:8080",
+    "target": "https://listening-room-production-24f9.up.railway.app",
     "changeOrigin": true,
     "ws": true
   }

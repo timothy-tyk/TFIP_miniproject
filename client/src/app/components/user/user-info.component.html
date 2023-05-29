@@ -1,12 +1,7 @@
 <div *ngIf="userInfo != null">
-  <!-- <p-accordion>
-    <p-accordionTab> -->
-  <!-- <ng-template pTemplate="header"
-        >Welcome Back, {{ userInfo.name }}</ng-template
-      > -->
   <div class="grid">
     <div class="col-5">
-      <img class="profile-pic-div" [src]="userInfo.picture" />
+      <img class="profile-pic-div profile-img" [src]="userInfo.picture" />
     </div>
     <div class="col-7 relative user-info-div">
       <p class="font-20">{{ userInfo.email }}</p>
@@ -14,7 +9,7 @@
   </div>
   <div class="grid">
     <div class="col-5">
-      <p class="font-12" style="margin-left: 10vw">Username</p>
+      <p class="font-12" style="margin-left: 30px">Username</p>
     </div>
     <div class="col-7">
       <p class="font-12">{{ userInfo.name }}</p>
@@ -22,11 +17,46 @@
   </div>
   <div class="grid">
     <div class="col-5">
-      <p class="font-12" style="margin-left: 10vw">Bio</p>
+      <p class="font-12" style="margin-left: 30px">Bio</p>
     </div>
     <div class="col-7">
       <p class="font-12">{{ userInfo.bio }}</p>
     </div>
   </div>
   <hr style="width: 80%" />
+</div>
+<div>
+  <div class="grid" *ngIf="trackList != null">
+    <div class="col-8"><p class="font-24">Personal Playlist</p></div>
+  </div>
+  <app-user-player
+    [trackUrl]="trackList[trackIndex]"
+    *ngIf="trackList != null && trackList.length > 0"
+  ></app-user-player>
+  <table class="playlist">
+    <tr
+      *ngFor="let track of userTracks | keyvalue : mapSortedAsIs; index as i"
+      (click)="changeTrack(i)"
+    >
+      <td>
+        <p-badge
+          value="{{ i + 1 }}"
+          styleClass="{{ trackIndex == i ? 'orange-badge' : 'gray-badge' }}"
+        ></p-badge>
+      </td>
+      <td style="padding-left: 20px">
+        <img
+          [src]="track.value.album.images[2].url"
+          height="40"
+          class="track-img"
+        />
+      </td>
+      <td style="padding-left: 20px">
+        <p class="font-12">{{ track.value.name }}</p>
+      </td>
+      <td style="padding-left: 20px">
+        <p class="font-12">{{ track.value.artists[0].name }}</p>
+      </td>
+    </tr>
+  </table>
 </div>

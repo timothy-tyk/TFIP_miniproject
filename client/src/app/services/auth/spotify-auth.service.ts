@@ -1,9 +1,8 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-// import * as SpotifyWebApi from 'spotify-web-api-node';
-import SpotifyWebApi from 'spotify-web-api-node';
+import { environment } from 'src/environments/environment';
 const SERVER_URL = '/api';
 
 @Injectable({
@@ -16,8 +15,6 @@ export class SpotifyAuthService {
   ) {}
 
   getSpotifyUserLogin(email: string) {
-    // const email = localStorage.getItem.
-    // const params = new HttpParams().set('email', )
     return firstValueFrom(
       this.httpClient
         .post(`${SERVER_URL}/spotify/login?email=${email}`, {})
@@ -33,8 +30,8 @@ export class SpotifyAuthService {
 
   // PKCE FLOW
 
-  clientId = 'bf828884d19840dcafa60811d407887c';
-  redirectUri = 'http://localhost:4200/get-user-code';
+  clientId = environment.spotify.clientId;
+  redirectUri = environment.spotify.redirectUri;
 
   spotifyPKCELogin() {
     this.activatedRoute.params.subscribe((p) => console.log(p));
@@ -59,11 +56,11 @@ export class SpotifyAuthService {
       let args = new URLSearchParams({
         response_type: 'code',
         client_id: this.clientId,
-        scope: scope,
         redirect_uri: this.redirectUri,
         state: state,
         code_challenge_method: 'S256',
         code_challenge: codeChallenge,
+        scope: scope,
       });
       window.location.href = 'https://accounts.spotify.com/authorize?' + args;
     });

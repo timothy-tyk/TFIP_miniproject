@@ -7,7 +7,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-// @RequestMapping("/api")
 public class PlayerController {
   @Autowired
   SimpMessagingTemplate smTemplate;
